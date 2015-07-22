@@ -1,7 +1,8 @@
 (ns emerald.db.core
   (:refer-clojure :exclude [update])
   (:use
-   [korma.core])
+   [korma.core]
+   [emerald.util.core])
   (:require
     [clojure.java.jdbc :as jdbc]
     [korma.db :refer [defdb]]
@@ -24,18 +25,31 @@
 (declare
  placements
  publishers
- creatives)
+ creatives
+ clients
+ channels)
+
+(defentity clients
+  (prepare to-dash)
+  (transform camel-case)
+  (belongs-to channels {:fk :channel_id})
+  (table :narwhal.clients :client))
+
+(defentity channels
+  (transform camel-case)
+  (table :narwhal.channels :channel))
 
 (defentity placements
+  (transform camel-case)
   (belongs-to publishers {:fk :publisher_id})
   (many-to-many creatives :narwhal.targets {:lfk :placement_id :rfk :creative_id})
-  (table :narwhal.placements))
+  (table :narwhal.placements :placement))
 
 (defentity publishers
-  (table :narwhal.publishers))
+  (table :narwhal.publishers :publisher))
 
 (defentity creatives
-  (table :narwhal.creatives))
+  (table :narwhal.creatives :creative))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))

@@ -3,16 +3,7 @@
   (:use
    [korma.db :only (transaction)]
    [korma.core]
-   [emerald.db.core])
-  (:require
-   [clojure.string :as s]))
-
-(defn camel-case [m]
-  (into {}
-        (for [[k v] m]
-          [(let [t (s/split (name k) #"_")]
-             (apply str (first t) (map s/capitalize (rest t)))) v]
-     )))
+   [emerald.db.core]))
 
 (defn get [id]
   (->
@@ -42,7 +33,6 @@
                  (fields :id :name))
            (where {:id id}))
    first
-   camel-case
    ))
 
 (defn all
