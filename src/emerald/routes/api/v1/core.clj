@@ -2,6 +2,7 @@
   (:require
    [emerald.routes.api.v1.placements :refer [placement-routes]]
    [emerald.routes.api.v1.clients :refer [client-routes]]
+   [emerald.routes.api.v1.accounts :refer [account-routes]]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -17,4 +18,5 @@
    {:info {:title "CRUD API V1"}})
   (context "/api/v1" []
            placement-routes
-           client-routes))
+           client-routes
+           account-routes))

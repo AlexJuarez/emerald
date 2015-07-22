@@ -27,13 +27,26 @@
  publishers
  creatives
  clients
- channels)
+ channels
+ accounts
+ industries)
 
 (defentity clients
   (prepare to-dash)
   (transform camel-case)
   (belongs-to channels {:fk :channel_id})
   (table :narwhal.clients :client))
+
+(defentity accounts
+  (prepare to-dash)
+  (transform camel-case)
+  (belongs-to industries {:fk :industry_id})
+  (table :narwhal.accounts :account))
+
+(defentity industries
+  (prepare to-dash)
+  (transform camel-case)
+  (table :narwhal.industries :industries))
 
 (defentity channels
   (transform camel-case)

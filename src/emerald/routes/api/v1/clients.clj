@@ -2,7 +2,6 @@
   (:require
    [emerald.models.client :as client]
    [emerald.models.channel :as channel]
-   [clojure.test :refer :all]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -22,7 +21,7 @@
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
    :name String
-   :requireRepInfo Boolean})
+   (s/optional-key :requireRepInfo) Boolean})
 
 (defroutes* client-routes
   (context* "/client/:id" []
