@@ -18,7 +18,7 @@
 (defn update-account [id slug]
   (account/update! id slug))
 
-(s/defschema account
+(s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :name String
    (s/optional-key :keywords) String
@@ -31,7 +31,7 @@
                   :summary "gets a account by id"
                   (ok (get-account id)))
             (PUT* "/" []
-                  :body [account account]
+                  :body [account Account]
                   :summary "updates a account"
                   (ok (update-account id account))
             ))
@@ -40,6 +40,6 @@
         :summary "looks up a list of accounts"
         (ok (accounts)))
   (POST* "/accounts" []
-         :body [account account]
+         :body [account Account]
          :summary "creates a new account"
          (ok (create-account account))))

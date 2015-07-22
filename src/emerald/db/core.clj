@@ -29,7 +29,8 @@
  clients
  channels
  accounts
- industries)
+ industries
+ campaigns)
 
 (defentity clients
   (prepare to-dash)
@@ -47,6 +48,12 @@
   (prepare to-dash)
   (transform camel-case)
   (table :narwhal.industries :industries))
+
+(defentity campaigns
+  (prepare to-dash)
+  (transform camel-case)
+  (belongs-to accounts {:fk :account_id})
+  (table :narwhal.campaigns :campaigns))
 
 (defentity channels
   (transform camel-case)

@@ -13,6 +13,10 @@
            (where {:id id}))
    first))
 
+(defn exists? [id]
+  (not (empty? (select accounts
+                       (where {:id :id})))))
+
 (defn prep [account]
   (assoc account :id (java.util.UUID/randomUUID)))
 
