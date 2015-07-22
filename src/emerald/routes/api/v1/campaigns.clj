@@ -21,6 +21,16 @@
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?))
    :name String
+   :startDate java.util.Date
+   :endDate java.util.Date
+   :repName String
+   :repEmail String
+   (s/optional-key :description) String
+   (s/optional-key :measureReach) Boolean
+   (s/optional-key :googleAnalytics) Boolean
+   (s/optional-key :conversionTracking) Boolean
+   (s/optional-key :objective) String
+   (s/optional-key :budget) Long
    (s/optional-key :keywords) String
    (s/optional-key :clickthroughUrl) String})
 
