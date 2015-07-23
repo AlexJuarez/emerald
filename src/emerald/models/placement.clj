@@ -8,25 +8,6 @@
 (defn get [id]
   (->
    (select placements
-           (fields :name
-                   :id
-                   :play_mode
-                   :skip_321
-                   :audio_off
-                   :mute_on_roll_out
-                   :hotspot
-                   :open_links
-                   :allow_animations
-                   :flight_start
-                   :flight_end
-                   :booked_impressions
-                   ;;keyword
-                   :cost ;;interperate with rate_type
-                   :rate_type
-                   :type
-                   :embed_height
-                   :embed_width
-                   :spanish)
            (with publishers
                  (fields [:name :publisher.name] [:id :publisher.id]))
            (with creatives
@@ -34,6 +15,19 @@
            (where {:id id}))
    first
    ))
+
+(defn prep [placement]
+  (assoc placement :id (java.util.UUID/randomUUID)))
+
+(defn add! [placement]
+  (insert placements
+          (values placement)))
+
+(defn update! [id placement]
+  (update placements
+          (set-fields placement)
+          (where {:id id}))
+  {:success "updated the placement"})
 
 (defn all
   ([]

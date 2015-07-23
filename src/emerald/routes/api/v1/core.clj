@@ -4,6 +4,8 @@
    [emerald.routes.api.v1.clients :refer [client-routes]]
    [emerald.routes.api.v1.accounts :refer [account-routes]]
    [emerald.routes.api.v1.campaigns :refer [campaign-routes]]
+   [emerald.routes.api.v1.creatives :refer [creative-routes]]
+   [emerald.routes.api.v1.publishers :refer [publisher-routes]]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -21,4 +23,6 @@
            placement-routes
            client-routes
            account-routes
-           campaign-routes))
+           campaign-routes
+           creative-routes
+           publisher-routes))

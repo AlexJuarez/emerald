@@ -30,7 +30,8 @@
  channels
  accounts
  industries
- campaigns)
+ campaigns
+ creatives)
 
 (defentity clients
   (prepare to-dash)
@@ -66,9 +67,13 @@
   (table :narwhal.placements :placement))
 
 (defentity publishers
+  (prepare to-dash)
+  (transform camel-case)
   (table :narwhal.publishers :publisher))
 
 (defentity creatives
+  (prepare to-dash)
+  (transform camel-case)
   (table :narwhal.creatives :creative))
 
 (defn to-date [sql-date]
