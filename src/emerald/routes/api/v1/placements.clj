@@ -42,6 +42,7 @@
 
 (defroutes* placement-routes
   (context* "/placement/:id" []
+            :tags ["placements"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a placement by id"
@@ -52,10 +53,12 @@
                   (ok (update-placement id placement))
             ))
   (GET* "/placements" []
+        :tags ["placements"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of placements"
         (ok (placements)))
   (POST* "/placements" []
+         :tags ["placements"]
          :body [placement Placement]
          :summary "creates a new placement"
          (ok (create-placement placement))))

@@ -1,6 +1,7 @@
 (ns emerald.session)
 
 (defonce mem (atom {}))
+
 (def half-hour 1800000)
 
 (defn- current-time []

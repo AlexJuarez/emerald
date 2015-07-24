@@ -8,8 +8,6 @@
 (defn get [id]
   (->
    (select publishers
-           (with industries
-                 (fields [:name :industry.name]))
            (where {:id id}))
    first))
 

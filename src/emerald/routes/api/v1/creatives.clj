@@ -39,6 +39,7 @@
 
 (defroutes* creative-routes
   (context* "/creative/:id" []
+            :tags ["creatives"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a creative by id"
@@ -49,10 +50,12 @@
                   (ok (update-creative id creative))
             ))
   (GET* "/creatives" []
+        :tags ["creatives"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of creatives"
         (ok (creatives)))
   (POST* "/creatives" []
+         :tags ["creatives"]
          :body [creative Creative]
          :summary "creates a new creative"
          (ok (create-creative creative))))

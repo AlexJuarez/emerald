@@ -12,6 +12,7 @@
                  [compojure "1.4.0"] ;;Status dsl, POST, GET ect
                  [ring/ring-defaults "0.1.5"]
                  [ring/ring-session-timeout "0.1.0"]
+                 [clojurewerkz/spyglass "1.1.0"];;couchbase interface
                  [ring "1.4.0"
                   :exclusions [ring/ring-jetty-adapter]]
                  [prismatic/schema "0.4.3"] ;;api validation

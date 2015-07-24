@@ -14,12 +14,12 @@
 (defapi api-routes
   {:formats [:json-kw]}
   (swagger-ui
-   "/api/v1/docs"
-   :swagger-docs "/api/v1/docs.json") ;;Change swagger.json endpoint
+   "/api/crud/docs"
+   :swagger-docs "/api/crud/docs.json") ;;Change swagger.json endpoint
   (swagger-docs
-   "/api/v1/docs.json"
+   "/api/crud/docs.json"
    {:info {:title "CRUD API V1"}})
-  (context "/api/v1" []
+  (context "/api/crud" []
            placement-routes
            client-routes
            account-routes

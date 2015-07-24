@@ -26,6 +26,7 @@
 
 (defroutes* account-routes
   (context* "/account/:id" []
+            :tags ["accounts"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a account by id"
@@ -36,10 +37,12 @@
                   (ok (update-account id account))
             ))
   (GET* "/accounts" []
+        :tags ["accounts"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of accounts"
         (ok (accounts)))
   (POST* "/accounts" []
+         :tags ["accounts"]
          :body [account Account]
          :summary "creates a new account"
          (ok (create-account account))))

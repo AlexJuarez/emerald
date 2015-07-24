@@ -25,6 +25,7 @@
 
 (defroutes* client-routes
   (context* "/client/:id" []
+            :tags ["clients"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a client by id"
@@ -35,10 +36,12 @@
                   (ok (update-client id client))
             ))
   (GET* "/clients" []
+        :tags ["clients"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of clients"
         (ok (clients)))
   (POST* "/clients" []
+         :tags ["clients"]
          :body [client Client]
          :summary "creates a new client"
          (ok (create-client client))))

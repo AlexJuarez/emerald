@@ -36,6 +36,7 @@
 
 (defroutes* campaign-routes
   (context* "/campaign/:id" []
+            :tags ["campaigns"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a campaign by id"
@@ -46,10 +47,12 @@
                   (ok (update-campaign id campaign))
             ))
   (GET* "/campaigns" []
-        :query-params [{limit :- Long 10} {offset :- Long 0}]
+        :tags ["campaigns"]
+        :query-params [{limit :- Long 0} {offset :- Long 0} {dimensions :- String ""}]
         :summary "looks up a list of campaigns"
         (ok (campaigns)))
   (POST* "/campaigns" []
+         :tags ["campaigns"]
          :body [campaign Campaign]
          :summary "creates a new campaign"
          (ok (create-campaign campaign))))

@@ -23,6 +23,7 @@
 
 (defroutes* publisher-routes
   (context* "/publisher/:id" []
+            :tags ["publishers"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a publisher by id"
@@ -33,10 +34,12 @@
                   (ok (update-publisher id publisher))
             ))
   (GET* "/publishers" []
+        :tags ["publishers"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of publishers"
         (ok (publishers)))
   (POST* "/publishers" []
+         :tags ["publishers"]
          :body [publisher Publisher]
          :summary "creates a new publisher"
          (ok (create-publisher publisher))))

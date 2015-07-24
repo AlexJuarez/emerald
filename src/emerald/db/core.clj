@@ -31,7 +31,9 @@
  accounts
  industries
  campaigns
- creatives)
+ creatives
+ divisions
+ accounts)
 
 (defentity clients
   (prepare to-dash)
@@ -42,6 +44,7 @@
 (defentity accounts
   (prepare to-dash)
   (transform camel-case)
+  (belongs-to divisions {:fk :division_id})
   (belongs-to industries {:fk :industry_id})
   (table :narwhal.accounts :account))
 
@@ -55,6 +58,11 @@
   (transform camel-case)
   (belongs-to accounts {:fk :account_id})
   (table :narwhal.campaigns :campaigns))
+
+(defentity divisions
+  (prepare to-dash)
+  (transform camel-case)
+  (table :narwhal.divisions :divisions))
 
 (defentity channels
   (transform camel-case)

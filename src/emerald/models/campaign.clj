@@ -5,6 +5,14 @@
    [korma.core]
    [emerald.db.core]))
 
+(defn get-columns []
+  (-> (exec-raw
+   ["SELECT column_name FROM information_schema.columns WHERE table_name ='campaigns'"]
+   :results)
+      ))
+
+(defonce columns (map #(-> % :column_name keyword) (get-columns)))
+
 (defn get [id]
   (->
    (select campaigns
@@ -26,10 +34,7 @@
           (where {:id id}))
   {:success "updated the campaign"})
 
-(defn all
-  ([]
-   (all 10 0))
-  ([lim os]
-   (select campaigns
-           (limit lim)
-           (offset os))))
+(defn all []
+  (select campaigns
+          (fields :name :id :account_id)
+          (limit 10)))
