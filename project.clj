@@ -39,7 +39,13 @@
 
   :plugins [[lein-environ "1.0.0"]
             [lein-ancient "0.6.5"]
+            [lein-ring "0.9.6"]
             [migratus-lein "0.1.5"]]
+  :ring
+  {:handler emerald.handler/app
+   :init emerald.handler/init
+   :destroy emerald.handler/destroy
+   :uberwar-name "emerald.war"}
   :profiles
   {:uberjar {:omit-source true
              :env {:production true}
