@@ -2,6 +2,7 @@
   (:require
    [emerald.models.campaign :as campaign]
    [emerald.models.account :as account]
+   [emerald.models.creative :as creative]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -17,6 +18,9 @@
 
 (defn update-campaign [id slug]
   (campaign/update! id slug))
+
+(defn get-creatives [id]
+  (creative/all-for-campaign id))
 
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?))
@@ -42,6 +46,9 @@
             (GET* "/" []
                   :summary "gets a campaign by id"
                   (ok (get-campaign id)))
+            (GET* "/creatives" []
+                  :summary "gets the cratives for a campaign"
+                  (ok (get-creatives id)))
             (PUT* "/" []
                   :body [campaign Campaign]
                   :summary "updates a campaign"

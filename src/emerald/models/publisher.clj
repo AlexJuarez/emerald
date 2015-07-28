@@ -35,3 +35,8 @@
    (select publishers
            (limit lim)
            (offset os))))
+
+(defn all-for-client
+  [client-id]
+  (select publishers
+          (where {:client_id client-id})))

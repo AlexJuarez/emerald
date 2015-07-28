@@ -12,7 +12,7 @@
 
 (defn exists? [id]
   (not (empty? (select creatives
-                       (where {:id id})))))
+                       (where {:id id :deleted false})))))
 
 (defn prep [creative]
   (assoc creative :id (java.util.UUID/randomUUID)))
@@ -32,5 +32,11 @@
    (all 10 0))
   ([lim os]
    (select creatives
+           (where {:deleted false})
            (limit lim)
            (offset os))))
+
+(defn all-for-campaign
+  ([campaign-id]
+   (select creatives
+           (where {:campaign_id campaign-id}))))

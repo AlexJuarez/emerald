@@ -33,12 +33,15 @@
  campaigns
  creatives
  divisions
- accounts)
+ accounts
+ geo-profiles)
 
 (defentity clients
   (prepare to-dash)
   (transform camel-case)
   (belongs-to channels {:fk :channel_id})
+  (has-many geo-profiles {:fk :client_id})
+  (has-many publishers {:fk :client_id})
   (table :narwhal.clients :client))
 
 (defentity accounts
@@ -78,12 +81,19 @@
 (defentity publishers
   (prepare to-dash)
   (transform camel-case)
+  (belongs-to clients {:fk :client_id})
   (table :narwhal.publishers :publisher))
 
 (defentity creatives
   (prepare to-dash)
   (transform camel-case)
   (table :narwhal.creatives :creative))
+
+(defentity geo-profiles
+  (prepare to-dash)
+  (transform camel-case)
+  (belongs-to clients {:fk :client_id})
+  (table :narwhal.geo_profiles :geo_profiles))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))

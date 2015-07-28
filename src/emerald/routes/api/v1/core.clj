@@ -7,6 +7,7 @@
    [emerald.routes.api.v1.creatives :refer [creative-routes]]
    [emerald.routes.api.v1.publishers :refer [publisher-routes]]
    [emerald.routes.api.v1.divisions :refer [division-routes]]
+   [emerald.routes.api.v1.industries :refer [industry-routes]]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -27,4 +28,5 @@
            campaign-routes
            creative-routes
            division-routes
-           publisher-routes))
+           publisher-routes
+           industry-routes))

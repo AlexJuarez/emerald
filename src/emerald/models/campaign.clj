@@ -5,13 +5,13 @@
    [korma.core]
    [emerald.db.core]))
 
-(defn get-columns []
-  (-> (exec-raw
-   ["SELECT column_name FROM information_schema.columns WHERE table_name ='campaigns'"]
-   :results)
-      ))
+;; (defn get-columns []
+;;   (-> (exec-raw
+;;    ["SELECT column_name FROM information_schema.columns WHERE table_name ='campaigns'"]
+;;    :results)
+;;       ))
 
-(defonce columns (map #(-> % :column_name keyword) (get-columns)))
+;; (defonce columns (map #(-> % :column_name keyword) (get-columns)))
 
 (defn get [id]
   (->
@@ -36,6 +36,6 @@
 
 (defn all []
   (select campaigns
-          (fields :name :id :account_id)
+          ;;(fields :name :id :account_id)
           (where {:deleted false})
           (limit 10)))

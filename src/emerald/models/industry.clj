@@ -7,3 +7,6 @@
 (defn exists? [id]
   (not (empty? (select industries
                   (where {:id id})))))
+
+(defn all []
+  (select industries))
