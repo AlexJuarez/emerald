@@ -65,6 +65,7 @@
   (table :narwhal.divisions :divisions))
 
 (defentity channels
+  (prepare to-dash)
   (transform camel-case)
   (table :narwhal.channels :channel))
 

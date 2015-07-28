@@ -4,7 +4,7 @@
    [korma.core]
    [emerald.db.core]))
 
-(defn device-types []
+(defn- device-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.device_type) as device_types"]
    :results)
@@ -12,7 +12,9 @@
       (:device_types)
       ))
 
-(defn ad-types []
+(defonce device-types (atom (map keyword (device-types*))))
+
+(defn- ad-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.creative_type) as ad_types"]
    :results)
@@ -20,7 +22,9 @@
       (:ad_types)
       ))
 
-(defn expand-anchors []
+(defonce ad-types (atom (map keyword (ad-types*))))
+
+(defn- expand-anchors* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_anchor) as expand_anchors"]
    :results)
@@ -28,7 +32,9 @@
       (:expand_anchors)
       ))
 
-(defn expand-directions []
+(defonce expand-anchors (atom (map keyword (expand-anchors*))))
+
+(defn- expand-directions* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_direction) as expand_directions"]
    :results)
@@ -36,7 +42,9 @@
       (:expand_directions)
       ))
 
-(defn expand-types []
+(defonce expand-directions (atom (map keyword (expand-directions*))))
+
+(defn- expand-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_type) as expand_types"]
    :results)
@@ -44,7 +52,9 @@
       (:expand_types)
       ))
 
-(defn play-modes []
+(defonce expand-types (atom (map keyword (expand-types*))))
+
+(defn- play-modes* []
     (-> (exec-raw
    ["select enum_range(NULL::narwhal.play_mode_type) as play_modes"]
    :results)
@@ -52,10 +62,14 @@
       (:play_modes)
       ))
 
-(defn window-types []
+(defonce play-modes (atom (map keyword (play-modes*))))
+
+(defn- window-types* []
     (-> (exec-raw
    ["select enum_range(NULL::narwhal.window_type) as window_types"]
    :results)
       first
       (:window_types)
       ))
+
+(defonce window-types (atom (map keyword (window-types*))))

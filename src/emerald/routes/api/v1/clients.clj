@@ -21,6 +21,7 @@
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
    :name String
+   (s/optional-key :deleted) Boolean
    (s/optional-key :requireRepInfo) Boolean})
 
 (defroutes* client-routes

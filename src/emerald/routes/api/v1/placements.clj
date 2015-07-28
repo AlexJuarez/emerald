@@ -8,10 +8,6 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defonce play-modes (atom (map keyword (enums/play-modes))))
-(defonce window-types (atom (map keyword (enums/window-types))))
-(defonce ad-types (atom (map keyword (enums/ad-types))))
-
 (defn placements []
   (placement/all))
 
@@ -27,18 +23,19 @@
 (s/defschema Placement
   {:name String
    :publisherId (s/both java.util.UUID (s/pred publisher/exists? 'publisher/exists?))
-   :playMode (apply s/enum @play-modes)
-   :openLinks (apply s/enum @window-types)
+   (s/optional-key :playMode) (apply s/enum @enums/play-modes)
+   (s/optional-key :openLinks) (apply s/enum @enums/window-types)
    :flightStart java.util.Date
    :flightEnd java.util.Date
-   :type (apply s/enum @ad-types)
+   :type (apply s/enum @enums/ad-types)
+   (s/optional-key :embedHeight) Long
+   (s/optional-key :embedWidth) Long
    (s/optional-key :bookedImpressions) Long
    (s/optional-key :cost) Long
    (s/optional-key :allowAnimations) Boolean
    (s/optional-key :skip321) Boolean
    (s/optional-key :audioOff) Boolean
-   (s/optional-key :muteOnRollOut) Boolean
-   })
+   (s/optional-key :muteOnRollOut) Boolean})
 
 (defroutes* placement-routes
   (context* "/placement/:id" []

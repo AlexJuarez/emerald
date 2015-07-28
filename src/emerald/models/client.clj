@@ -31,5 +31,6 @@
    (all 10 0))
   ([lim os]
    (select clients
+           (where {:deleted false})
            (limit lim)
            (offset os))))

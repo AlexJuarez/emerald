@@ -6,12 +6,6 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defonce ad-types (atom (map keyword (enums/ad-types))))
-(defonce device-types (atom (map keyword (enums/device-types))))
-(defonce expand-anchors (atom (map keyword (enums/expand-anchors))))
-(defonce expand-directions (atom (map keyword (enums/expand-directions))))
-(defonce expand-types (atom (map keyword (enums/expand-types))))
-
 (defn creatives []
   (creative/all))
 
@@ -26,14 +20,14 @@
 
 (s/defschema Creative
   {:name String
-   :device (apply s/enum @device-types)
-   :type (apply s/enum @ad-types)
-   :embedHeight Long
-   :embedWidth Long
+   :device (apply s/enum @enums/device-types)
+   :type (apply s/enum @enums/ad-types)
+   (s/optional-key :embedHeight) Long
+   (s/optional-key :embedWidth) Long
    (s/optional-key :keywords) String
-   (s/optional-key :expandMode) (apply s/enum @expand-types)
-   (s/optional-key :expandAnchor) (apply s/enum @expand-anchors)
-   (s/optional-key :expandDirection) (apply s/enum @expand-directions)
+   (s/optional-key :expandMode) (apply s/enum @enums/expand-types)
+   (s/optional-key :expandAnchor) (apply s/enum @enums/expand-anchors)
+   (s/optional-key :expandDirection) (apply s/enum @enums/expand-directions)
    (s/optional-key :expandedWidth) Long
    (s/optional-key :expandedHeight) Long})
 

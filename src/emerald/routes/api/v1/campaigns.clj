@@ -25,6 +25,7 @@
    :endDate java.util.Date
    :repName String
    :repEmail String
+   (s/optional-key :deleted) Boolean
    (s/optional-key :description) String
    (s/optional-key :measureReach) Boolean
    (s/optional-key :googleAnalytics) Boolean

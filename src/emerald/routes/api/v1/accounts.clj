@@ -21,6 +21,7 @@
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :name String
+   (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String
    (s/optional-key :clickthroughUrl) String})
 

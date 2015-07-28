@@ -12,7 +12,7 @@
                  (fields [:name :publisher.name] [:id :publisher.id]))
            (with creatives
                  (fields :id :name))
-           (where {:id id}))
+           (where {:id id :deleted false}))
    first
    ))
 
@@ -35,4 +35,5 @@
   ([lim os]
    (select placements
            (limit lim)
+           (where {:deleted false})
            (offset os))))

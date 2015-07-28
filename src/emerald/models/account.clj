@@ -35,5 +35,6 @@
    (all 10 0))
   ([lim os]
    (select accounts
+           (where {:deleted false})
            (limit lim)
            (offset os))))

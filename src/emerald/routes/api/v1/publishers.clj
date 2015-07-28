@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.publishers
   (:require
    [emerald.models.publisher :as publisher]
+   [emerald.models.enums :as enums]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -19,7 +20,13 @@
 
 (s/defschema Publisher
   {:name String
-   (s/optional-key :requireRepInfo) Boolean})
+   (s/optional-key :skip321)  Boolean
+   (s/optional-key :audioOff) Boolean
+   (s/optional-key :playMode) (apply s/enum @enums/play-modes)
+   (s/optional-key :hotspot) Boolean
+   (s/optional-key :allowAnimations) Boolean
+   (s/optional-key :muteOnRollOut) Boolean
+   (s/optional-key :openLinks) (apply s/enum @enums/window-types)})
 
 (defroutes* publisher-routes
   (context* "/publisher/:id" []

@@ -2,7 +2,7 @@
  {:env
   {:db-spec
    {:subprotocol "postgresql"
-    :subname "//thorwhal-dev.mixpo.net/"
+    :subname "//localhost/"
     :user "bowser"
     :password "koopa"
     :test-connection-query true}}}}

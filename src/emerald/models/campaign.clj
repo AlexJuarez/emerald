@@ -37,4 +37,5 @@
 (defn all []
   (select campaigns
           (fields :name :id :account_id)
+          (where {:deleted false})
           (limit 10)))
