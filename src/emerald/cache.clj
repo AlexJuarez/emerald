@@ -8,7 +8,7 @@
 (defonce ce (atom nil))
 
 (defn init []
-  (swap! ce (c/text-connection address)))
+  (reset! ce (c/text-connection address)))
 
 (defrecord CouchBaseSessionStore [conn ttl-secs]
   session-store/SessionStore
