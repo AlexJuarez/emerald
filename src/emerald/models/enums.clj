@@ -1,75 +1,85 @@
 (ns emerald.models.enums
   (:refer-clojure :exclude [update get])
+  (:require [emerald.db.core :refer [db]]
+            [korma.db])
   (:use
-   [korma.core]
-   [emerald.db.core]))
+   [korma.core]))
 
 (defn- device-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.device_type) as device_types"]
    :results)
       first
-      (:device_types)
+      :device_types
       ))
 
-(defonce device-types (atom (map keyword (device-types*))))
+(defonce device-types (atom []))
 
 (defn- ad-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.creative_type) as ad_types"]
    :results)
       first
-      (:ad_types)
+      :ad_types
       ))
 
-(defonce ad-types (atom (map keyword (ad-types*))))
+(defonce ad-types (atom []))
 
 (defn- expand-anchors* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_anchor) as expand_anchors"]
    :results)
       first
-      (:expand_anchors)
+      :expand_anchors
       ))
 
-(defonce expand-anchors (atom (map keyword (expand-anchors*))))
+(defonce expand-anchors (atom []))
 
 (defn- expand-directions* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_direction) as expand_directions"]
    :results)
       first
-      (:expand_directions)
+      :expand_directions
       ))
 
-(defonce expand-directions (atom (map keyword (expand-directions*))))
+(defonce expand-directions (atom []))
 
 (defn- expand-types* []
   (-> (exec-raw
    ["select enum_range(NULL::narwhal.expand_type) as expand_types"]
    :results)
       first
-      (:expand_types)
+      :expand_types
       ))
 
-(defonce expand-types (atom (map keyword (expand-types*))))
+(defonce expand-types (atom []))
 
 (defn- play-modes* []
     (-> (exec-raw
    ["select enum_range(NULL::narwhal.play_mode_type) as play_modes"]
    :results)
       first
-      (:play_modes)
+      :play_modes
       ))
 
-(defonce play-modes (atom (map keyword (play-modes*))))
+(defonce play-modes (atom []))
 
 (defn- window-types* []
     (-> (exec-raw
    ["select enum_range(NULL::narwhal.window_type) as window_types"]
    :results)
       first
-      (:window_types)
+      :window_types
       ))
 
-(defonce window-types (atom (map keyword (window-types*))))
+(defonce window-types (atom []))
+
+(defn init []
+  (swap! device-types (map keyword (device-types*)))
+  (swap! ad-types (map keyword (ad-types*)))
+  (swap! expand-anchors (map keyword (expand-anchors*)))
+  (swap! expand-directions (map keyword (expand-directions*)))
+  (swap! expand-types (map keyword (expand-types*)))
+  (swap! play-modes (map keyword (play-modes*)))
+  (swap! window-types (map keyword (window-types*))))

@@ -5,7 +5,10 @@
 
 (def ^:private address "127.0.0.1:11211")
 
-(defonce ce (c/text-connection address))
+(defonce ce (atom nil))
+
+(defn init []
+  (swap! ce (c/text-connection address)))
 
 (defrecord CouchBaseSessionStore [conn ttl-secs]
   session-store/SessionStore
@@ -18,16 +21,16 @@
 
 (defn store
   []
-  (->CouchBaseSessionStore ce (* 60 60 10)))
+  (->CouchBaseSessionStore @ce (* 60 60 10)))
 
 (defn set [key value & ttl]
-  (c/set ce key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede
+  (c/set @ce key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede
 
 (defn get [key]
-  (c/get ce key))
+  (c/get @ce key))
 
 (defn delete [key]
-  (c/delete ce key))
+  (c/delete @ce key))
 
 (defmacro cache! [key & forms]
   (let [value# (get ~key)]

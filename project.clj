@@ -62,7 +62,13 @@
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]
                   ;;when :nrepl-port is set the application starts the nREPL server on load
-                  :env {:dev        true
+                  :env {:db-spec
+                        {:subprotocol "postgresql"
+                         :subname "//localhost/"
+                         :user "bowser"
+                         :password "koopa"
+                         :test-connection-query true}
+                        :dev        true
                         :port       3000
                         :nrepl-port 7000}}
    :project/test {:env {:test       true
