@@ -13,7 +13,7 @@
       :device_types
       ))
 
-(defonce device-types (atom []))
+(defonce device-types (device-types*))
 
 (defn- ad-types* []
   (-> (exec-raw
@@ -23,7 +23,7 @@
       :ad_types
       ))
 
-(defonce ad-types (atom []))
+(defonce ad-types (ad-types*))
 
 (defn- expand-anchors* []
   (-> (exec-raw
@@ -33,7 +33,7 @@
       :expand_anchors
       ))
 
-(defonce expand-anchors (atom []))
+(defonce expand-anchors (expand-anchors*))
 
 (defn- expand-directions* []
   (-> (exec-raw
@@ -43,7 +43,7 @@
       :expand_directions
       ))
 
-(defonce expand-directions (atom []))
+(defonce expand-directions (expand-directions*))
 
 (defn- expand-types* []
   (-> (exec-raw
@@ -53,7 +53,7 @@
       :expand_types
       ))
 
-(defonce expand-types (atom []))
+(defonce expand-types (expand-types*))
 
 (defn- play-modes* []
     (-> (exec-raw
@@ -63,7 +63,7 @@
       :play_modes
       ))
 
-(defonce play-modes (atom []))
+(defonce play-modes (play-modes*))
 
 (defn- window-types* []
     (-> (exec-raw
@@ -73,13 +73,4 @@
       :window_types
       ))
 
-(defonce window-types (atom []))
-
-(defn init []
-  (reset! device-types (map keyword (device-types*)))
-  (reset! ad-types (map keyword (ad-types*)))
-  (reset! expand-anchors (map keyword (expand-anchors*)))
-  (reset! expand-directions (map keyword (expand-directions*)))
-  (reset! expand-types (map keyword (expand-types*)))
-  (reset! play-modes (map keyword (play-modes*)))
-  (reset! window-types (map keyword (window-types*))))
+(defonce window-types (window-types*))

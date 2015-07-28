@@ -6,13 +6,13 @@
    [schema.core :as s]))
 
 (defn all []
-  {:deviceTypes @enums/device-types
-   :adTypes @enums/ad-types
-   :expandAnchors @enums/expand-anchors
-   :expandDirections @enums/expand-directions
-   :expandTypes @enums/expand-types
-   :playModes @enums/play-modes
-   :windowTypes @enums/window-types
+  {:deviceTypes enums/device-types
+   :adTypes enums/ad-types
+   :expandAnchors enums/expand-anchors
+   :expandDirections enums/expand-directions
+   :expandTypes enums/expand-types
+   :playModes enums/play-modes
+   :windowTypes enums/window-types
    })
 
 (defroutes* enum-routes

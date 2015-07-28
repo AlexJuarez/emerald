@@ -23,11 +23,11 @@
 (s/defschema Placement
   {:name String
    :publisherId (s/both java.util.UUID (s/pred publisher/exists? 'publisher/exists?))
-   (s/optional-key :playMode) (apply s/enum @enums/play-modes)
-   (s/optional-key :openLinks) (apply s/enum @enums/window-types)
+   (s/optional-key :playMode) (apply s/enum enums/play-modes)
+   (s/optional-key :openLinks) (apply s/enum enums/window-types)
    :flightStart java.util.Date
    :flightEnd java.util.Date
-   :type (apply s/enum @enums/ad-types)
+   :type (apply s/enum enums/ad-types)
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long

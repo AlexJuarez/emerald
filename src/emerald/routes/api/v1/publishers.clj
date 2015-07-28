@@ -22,11 +22,11 @@
   {:name String
    (s/optional-key :skip321)  Boolean
    (s/optional-key :audioOff) Boolean
-   (s/optional-key :playMode) (apply s/enum @enums/play-modes)
+   (s/optional-key :playMode) (apply s/enum enums/play-modes)
    (s/optional-key :hotspot) Boolean
    (s/optional-key :allowAnimations) Boolean
    (s/optional-key :muteOnRollOut) Boolean
-   (s/optional-key :openLinks) (apply s/enum @enums/window-types)})
+   (s/optional-key :openLinks) (apply s/enum enums/window-types)})
 
 (defroutes* publisher-routes
   (context* "/publisher/:id" []

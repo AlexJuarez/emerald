@@ -17,18 +17,17 @@
 (defapi api-routes
   {:formats [:json-kw]}
   (swagger-ui
-   "/api/crud/docs"
-   :swagger-docs "/api/crud/docs.json") ;;Change swagger.json endpoint
+   "/docs"
+   :swagger-docs "/docs.json") ;;Change swagger.json endpoint
   (swagger-docs
-   "/api/crud/docs.json"
+   "/docs.json"
    {:info {:title "CRUD API V1"}})
-  (context "/api/crud" []
-           placement-routes
-           client-routes
-           account-routes
-           campaign-routes
-           creative-routes
-           division-routes
-           publisher-routes
-           industry-routes
-           enum-routes))
+  placement-routes
+  client-routes
+  account-routes
+  campaign-routes
+  creative-routes
+  division-routes
+  publisher-routes
+  industry-routes
+  enum-routes)
