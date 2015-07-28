@@ -20,7 +20,13 @@
             Timestamp
             PreparedStatement]))
 
-(defdb db (env :db-spec))
+(defonce dbspec {:subprotocol "postgresql"
+                 :subname "//localhost/"
+                 :user "bowser"
+                 :password "koopa"
+                 :test-connection-query true})
+
+(defdb db dbspec)
 
 (declare
  placements
