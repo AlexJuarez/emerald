@@ -9,6 +9,7 @@
    [emerald.routes.api.v1.divisions :refer [division-routes]]
    [emerald.routes.api.v1.industries :refer [industry-routes]]
    [emerald.routes.api.v1.enums :refer [enum-routes]]
+   [emerald.routes.api.v1.channels :refer [channel-routes]]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -30,4 +31,5 @@
   division-routes
   publisher-routes
   industry-routes
-  enum-routes)
+  enum-routes
+  channel-routes)

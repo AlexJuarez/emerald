@@ -7,3 +7,8 @@
 (defn exists? [id]
   (not (empty? (select channels
                   (where {:id id})))))
+
+(defn all []
+  (select channels
+   (fields :name :id)
+   ))
