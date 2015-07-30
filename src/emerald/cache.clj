@@ -28,7 +28,7 @@
   ([]
    (create-couchbase-session-store "session:"))
   ([namespace]
-   (create-couchbase-session-store namespace (c/text-connection address)))
+   (create-couchbase-session-store namespace @ce))
   ([namespace connection]
    (->CouchBaseSessionStore namespace connection (* 60 60 10))))
 
