@@ -9,37 +9,36 @@
 
 (defonce ce (atom nil))
 
-(defn init []
-  (try
-    (reset! ce (c/text-connection address))
-    (catch Exception e
-      (timbre/error e))))
+(defn init-connection []
+  (if (nil? @ce)
+    (reset! ce (c/text-connection address))))
 
-(defrecord CouchBaseSessionStore [namespace conn ttl-secs]
+(defn get-connection []
+  (cast net.spy.memcached.MemcachedClient @ce))
+
+(defrecord CouchBaseSessionStore [namespace ttl-secs]
   session-store/SessionStore
-  (read-session [_ key] (or (when key (c/get conn (str namespace key))) {}))
-  (delete-session [_ key] (c/delete conn (str namespace key)) nil)
+  (read-session [_ key] (or (when key (c/get (get-connection) (str namespace key))) {}))
+  (delete-session [_ key] (c/delete (get-connection) (str namespace key)) nil)
   (write-session [_ key data]
     (let [key (or key (str (java.util.UUID/randomUUID)))]
-      (c/set conn (str namespace key) (+ ttl-secs (rand-int ttl-secs)) data)
+      (c/set (get-connection) (str namespace key) (+ ttl-secs (rand-int ttl-secs)) data)
       key)))
 
 (defn create-couchbase-session-store
   ([]
    (create-couchbase-session-store "session:"))
   ([namespace]
-   (create-couchbase-session-store namespace @ce))
-  ([namespace connection]
-   (->CouchBaseSessionStore namespace connection (* 60 60 10))))
+   (->CouchBaseSessionStore namespace (* 60 60 10))))
 
 (defn set [key value & ttl]
-  (c/set @ce key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede
+  (c/set (get-connection) key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede
 
 (defn get [key]
-  (c/get @ce key))
+  (c/get (get-connection) key))
 
 (defn delete [key]
-  (c/delete @ce key))
+  (c/delete (get-connection) key))
 
 (defmacro cache! [key & forms]
   (let [value# (get ~key)]

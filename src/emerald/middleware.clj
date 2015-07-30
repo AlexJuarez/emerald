@@ -60,6 +60,8 @@
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
-            (assoc-in  [:session :store] (cache/create-couchbase-session-store))))
+            (assoc-in  [:session :store] (if (env :dev)
+                                           (cache/create-couchbase-session-store)
+                                           (memory-store session/mem)))))
       wrap-servlet-context
       wrap-internal-error))

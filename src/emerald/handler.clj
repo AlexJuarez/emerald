@@ -61,8 +61,7 @@
   (if (env :dev) (parser/cache-off!))
   (start-nrepl)
   ;;start the expired session cleanup job
-  ;;(session/start-cleanup-job!)
-  (cache/init)
+  (session/start-cleanup-job!)
   (timbre/info (str
                  "\n-=[emerald started successfully"
                  (when (env :dev) " using the development profile")

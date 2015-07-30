@@ -2,6 +2,7 @@
   (:require [emerald.handler :refer [app init destroy parse-port]]
             [org.httpkit.server :as http-kit]
             [taoensso.timbre :as timbre]
+            [emerald.cache :as cache]
             [environ.core :refer [env]])
   (:gen-class))
 
@@ -9,7 +10,6 @@
   (parse-port (or port (env :port) 3000)))
 
 (defonce server (atom nil))
-
 
 (defn start-server [port]
   (init)
@@ -31,5 +31,6 @@
     (start-server port)))
 
 (defn -main [& args]
+  (if (env :dev) (cache/init-connection))
   (start-app args))
 
