@@ -1,27 +1,36 @@
 (ns emerald.cache
-  (:refer-clojure :exclude [set get])
+  (:refer-clojure :exclude [set get namespace])
   (:require [clojurewerkz.spyglass.client :as c]
-            [ring.middleware.session.store :as session-store]))
+            [ring.middleware.session.store :as session-store]
+            [clauth.store :refer [Store]]
+            [taoensso.timbre :as timbre]))
 
 (def ^:private address "127.0.0.1:11211")
 
 (defonce ce (atom nil))
 
 (defn init []
-  (reset! ce (c/text-connection address)))
+  (try
+    (reset! ce (c/text-connection address))
+    (catch Exception e
+      (timbre/error e))))
 
-(defrecord CouchBaseSessionStore [conn ttl-secs]
+(defrecord CouchBaseSessionStore [namespace conn ttl-secs]
   session-store/SessionStore
-  (read-session [_ key] (or (when key (c/get conn (str "session:" key))) {}))
-  (delete-session [_ key] (c/delete conn (str "session:" key)) nil)
+  (read-session [_ key] (or (when key (c/get conn (str namespace key))) {}))
+  (delete-session [_ key] (c/delete conn (str namespace key)) nil)
   (write-session [_ key data]
     (let [key (or key (str (java.util.UUID/randomUUID)))]
-      (c/set conn (str "session:" key) (+ ttl-secs (rand-int ttl-secs)) data)
+      (c/set conn (str namespace key) (+ ttl-secs (rand-int ttl-secs)) data)
       key)))
 
-(defn store
-  []
-  (->CouchBaseSessionStore @ce (* 60 60 10)))
+(defn create-couchbase-session-store
+  ([]
+   (create-couchbase-session-store "session:"))
+  ([namespace]
+   (create-couchbase-session-store namespace (c/text-connection address)))
+  ([namespace connection]
+   (->CouchBaseSessionStore namespace connection (* 60 60 10))))
 
 (defn set [key value & ttl]
   (c/set @ce key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede

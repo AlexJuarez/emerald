@@ -40,7 +40,12 @@
  creatives
  divisions
  accounts
- geo-profiles)
+ geo-profiles
+ users)
+
+(defentity users
+  (belongs-to clients {:fk :client_id})
+  (table :mixpo.users :users))
 
 (defentity clients
   (prepare to-dash)
@@ -48,58 +53,58 @@
   (belongs-to channels {:fk :channel_id})
   (has-many geo-profiles {:fk :client_id})
   (has-many publishers {:fk :client_id})
-  (table :narwhal.clients :client))
+  (table :mixpo.clients :client))
 
 (defentity accounts
   (prepare to-dash)
   (transform camel-case)
   (belongs-to divisions {:fk :division_id})
   (belongs-to industries {:fk :industry_id})
-  (table :narwhal.accounts :account))
+  (table :mixpo.accounts :account))
 
 (defentity industries
   (prepare to-dash)
   (transform camel-case)
-  (table :narwhal.industries :industries))
+  (table :mixpo.industries :industries))
 
 (defentity campaigns
   (prepare to-dash)
   (transform camel-case)
   (belongs-to accounts {:fk :account_id})
-  (table :narwhal.campaigns :campaigns))
+  (table :mixpo.campaigns :campaigns))
 
 (defentity divisions
   (prepare to-dash)
   (transform camel-case)
-  (table :narwhal.divisions :divisions))
+  (table :mixpo.divisions :divisions))
 
 (defentity channels
   (prepare to-dash)
   (transform camel-case)
-  (table :narwhal.channels :channel))
+  (table :mixpo.channels :channel))
 
 (defentity placements
   (transform camel-case)
   (belongs-to publishers {:fk :publisher_id})
-  (many-to-many creatives :narwhal.targets {:lfk :placement_id :rfk :creative_id})
-  (table :narwhal.placements :placement))
+  (many-to-many creatives :mixpo.targets {:lfk :placement_id :rfk :creative_id})
+  (table :mixpo.placements :placement))
 
 (defentity publishers
   (prepare to-dash)
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
-  (table :narwhal.publishers :publisher))
+  (table :mixpo.publishers :publisher))
 
 (defentity creatives
   (prepare to-dash)
   (transform camel-case)
-  (table :narwhal.creatives :creative))
+  (table :mixpo.creatives :creative))
 
 (defentity geo-profiles
   (prepare to-dash)
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
-  (table :narwhal.geo_profiles :geo_profiles))
+  (table :mixpo.geo_profiles :geo_profiles))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))

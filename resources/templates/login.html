@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Authenicate with Mixpo.com</title>
+  </head>
+  <style>
+    html {
+      background: #0378bd;
+      font-size: 62.5%;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      font-size: 1.6rem;
+      font-family: sans-serif;
+    }
+
+
+    .input:-webkit-autofill {
+      background-color: white !important;
+      -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+      -webkit-text-fill-color: #333;
+    }
+
+    h1 {
+      font-family: Oswald, sans-serif;
+      font-size: 3rem;
+      margin-top: 0;
+    }
+
+    form {
+      display: block;
+      width: 300px;
+      padding: 2rem;
+      background: white;
+      margin: 3rem auto 0 auto;
+    }
+
+    .input {
+      color: black;
+      background: white;
+      outline: none;
+      width: 100%;
+      font-size: 1.8rem;
+      padding: 0;
+      margin-bottom: 3rem;
+      border: none;
+      border-bottom: 1px solid black;
+      box-sizing: content-box;
+    }
+
+    .input:focus {
+      border-color: #0378bd;
+    }
+
+    .btn, button {
+      display: inline-block;
+      margin-bottom: 0;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      padding: .6rem 1.2rem;
+      font-size: 16px;
+      font-size: 1.6rem;
+      line-height: 1.42857;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: 0;
+    }
+
+    .btn-default.solid {
+      background: #3f403f;
+      color: #fff;
+      box-shadow: none;
+    }
+    .btn {
+      border: none;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      font-family: Lato,sans-serif;
+      font-weight: 700;
+    }
+
+  </style>
+  <body>
+    <form method="post">
+      {% csrf-field %}
+      <h1>Sign In</h1>
+      {% if error %}
+        <p>{{error}}</p>
+      {% endif %}
+      <input class="input" type="text" placeholder="Email" name="email" value="{{email}}" />
+      <input class="input" type="password" placeholder="Password" name="password" />
+      <br />
+      <button class="btn btn-default solid" type="submit">GO</button>
+    </form>
+  </body>
+</html>

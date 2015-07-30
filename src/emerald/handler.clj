@@ -4,6 +4,7 @@
             [emerald.routes.api.v1.core :refer [api-routes]]
             [emerald.middleware :as middleware]
             [emerald.session :as session]
+            [emerald.cache :as cache]
             [emerald.models.enums :as enums]
             [emerald.db.core :as db]
             [compojure.route :as route]
@@ -60,7 +61,8 @@
   (if (env :dev) (parser/cache-off!))
   (start-nrepl)
   ;;start the expired session cleanup job
-  (session/start-cleanup-job!)
+  ;;(session/start-cleanup-job!)
+  (cache/init)
   (timbre/info (str
                  "\n-=[emerald started successfully"
                  (when (env :dev) " using the development profile")

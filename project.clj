@@ -23,6 +23,7 @@
                  [org.clojure/tools.nrepl "0.2.10"]
                  [metosin/compojure-api "0.22.0"]
                  [metosin/ring-swagger-ui "2.1.1-M2"]
+                 [clauth "1.0.0-rc17"] ;;oauth 2 provider
                  [migratus "0.8.2"] ;;table migration
                  [org.clojure/java.jdbc "0.3.7"]
                  [com.mchange/c3p0 "0.9.5.1"] ;;connection pooling

@@ -1,5 +1,6 @@
 (ns emerald.middleware
   (:require [emerald.session :as session]
+            [emerald.cache :as cache]
             [emerald.layout :refer [*servlet-context*]]
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]]
@@ -59,6 +60,6 @@
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
-            (assoc-in  [:session :store] (memory-store session/mem))))
+            (assoc-in  [:session :store] (cache/create-couchbase-session-store))))
       wrap-servlet-context
       wrap-internal-error))

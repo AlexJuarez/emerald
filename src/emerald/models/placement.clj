@@ -37,3 +37,7 @@
            (limit lim)
            (where {:deleted false})
            (offset os))))
+
+(defn all-for-campaign [campaign-id]
+   (select placements
+           (where {:campaign_id campaign-id})))
