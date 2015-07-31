@@ -1,4 +1,6 @@
 (ns emerald.routes.api.v1.accounts
+  (:use
+   [emerald.util.core])
   (:require
    [emerald.models.account :as account]
    [emerald.models.industry :as industry]
@@ -18,6 +20,12 @@
 (defn update-account [id slug]
   (account/update! id slug))
 
+(defn create-pin [id]
+  )
+
+(defn delete-pin [id]
+  )
+
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :name String
@@ -25,18 +33,26 @@
    (s/optional-key :keywords) String
    (s/optional-key :clickthroughUrl) String})
 
+(s/defschema Edit-Account (make-optional Account))
+
 (defroutes* account-routes
-  (context* "/account/:id" []
+  (context* "/accounts/:id" []
             :tags ["accounts"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a account by id"
                   (ok (get-account id)))
             (PUT* "/" []
-                  :body [account Account]
+                  :body [account Edit-Account]
                   :summary "updates a account"
-                  (ok (update-account id account))
-            ))
+                  (ok (update-account id account)))
+            (POST* "/pin" []
+                   :summary "pins an account for the user"
+                   (ok (create-pin id)))
+            (DELETE* "/pin" []
+                     :summary "removes the pinned account for the user"
+                     (ok (delete-pin id)))
+            )
   (GET* "/accounts" []
         :tags ["accounts"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]

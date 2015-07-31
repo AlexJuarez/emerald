@@ -41,6 +41,7 @@
  divisions
  accounts
  geo-profiles
+ applications
  users)
 
 (defentity users
@@ -105,6 +106,12 @@
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
   (table :mixpo.geo_profiles :geo_profiles))
+
+(defentity applications
+  (prepare to-dash)
+  (transform camel-case)
+  (belongs-to users {:fk :user_id})
+  (table :mixpo.applications :applications))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))

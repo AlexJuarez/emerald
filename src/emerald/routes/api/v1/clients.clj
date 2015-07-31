@@ -1,4 +1,6 @@
 (ns emerald.routes.api.v1.clients
+  (:use
+   [emerald.util.core])
   (:require
    [emerald.models.client :as client]
    [emerald.models.channel :as channel]
@@ -26,14 +28,22 @@
 (defn get-publishers [id]
   (publisher/all-for-client id))
 
+(defn create-pin [id]
+  )
+
+(defn delete-pin [id]
+  )
+
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
    :name String
    (s/optional-key :deleted) Boolean
    (s/optional-key :requireRepInfo) Boolean})
 
+(s/defschema Edit-Client (make-optional Client))
+
 (defroutes* client-routes
-  (context* "/client/:id" []
+  (context* "/clients/:id" []
             :tags ["clients"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
@@ -46,10 +56,16 @@
                   :summary "gets the available publishers for a client"
                   (ok (get-publishers id)))
             (PUT* "/" []
-                  :body [client Client]
+                  :body [client Edit-Client]
                   :summary "updates a client"
-                  (ok (update-client id client))
-            ))
+                  (ok (update-client id client)))
+            (POST* "/pin" []
+                   :summary "pins an client for the user"
+                   (ok (create-pin id)))
+            (DELETE* "/pin" []
+                     :summary "removes the pinned client for the user"
+                     (ok (delete-pin id)))
+            )
   (GET* "/clients" []
         :tags ["clients"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]

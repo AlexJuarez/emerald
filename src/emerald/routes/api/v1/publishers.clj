@@ -1,4 +1,6 @@
 (ns emerald.routes.api.v1.publishers
+  (:use
+   [emerald.util.core])
   (:require
    [emerald.models.publisher :as publisher]
    [emerald.models.enums :as enums]
@@ -28,15 +30,17 @@
    (s/optional-key :muteOnRollOut) Boolean
    (s/optional-key :openLinks) (apply s/enum enums/window-types)})
 
+(s/defschema Edit-Publisher (make-optional Publisher))
+
 (defroutes* publisher-routes
-  (context* "/publisher/:id" []
+  (context* "/publishers/:id" []
             :tags ["publishers"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a publisher by id"
                   (ok (get-publisher id)))
             (PUT* "/" []
-                  :body [publisher Publisher]
+                  :body [publisher Edit-Publisher]
                   :summary "updates a publisher"
                   (ok (update-publisher id publisher))
             ))

@@ -1,4 +1,6 @@
 (ns emerald.routes.api.v1.creatives
+  (:use
+   [emerald.util.core])
   (:require
    [emerald.models.creative :as creative]
    [emerald.models.enums :as enums]
@@ -32,15 +34,17 @@
    (s/optional-key :expandedWidth) Long
    (s/optional-key :expandedHeight) Long})
 
+(s/defschema Edit-Creative (make-optional Creative))
+
 (defroutes* creative-routes
-  (context* "/creative/:id" []
+  (context* "/creatives/:id" []
             :tags ["creatives"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a creative by id"
                   (ok (get-creative id)))
             (PUT* "/" []
-                  :body [creative Creative]
+                  :body [creative Edit-Creative]
                   :summary "updates a creative"
                   (ok (update-creative id creative))
             ))

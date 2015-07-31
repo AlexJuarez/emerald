@@ -1,4 +1,6 @@
 (ns emerald.routes.api.v1.placements
+  (:use
+   [emerald.util.core])
   (:require
    [emerald.models.placement :as placement]
    [emerald.models.publisher :as publisher]
@@ -38,15 +40,17 @@
    (s/optional-key :audioOff) Boolean
    (s/optional-key :muteOnRollOut) Boolean})
 
+(s/defschema Edit-Placement (make-optional Placement))
+
 (defroutes* placement-routes
-  (context* "/placement/:id" []
+  (context* "/placements/:id" []
             :tags ["placements"]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a placement by id"
                   (ok (get-placement id)))
             (PUT* "/" []
-                  :body [placement Placement]
+                  :body [placement Edit-Placement]
                   :summary "updates a placement"
                   (ok (update-placement id placement))
             ))
