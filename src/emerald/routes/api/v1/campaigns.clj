@@ -2,6 +2,7 @@
   (:use
    [emerald.util.core])
   (:require
+   [emerald.util.session :as session]
    [emerald.models.campaign :as campaign]
    [emerald.models.account :as account]
    [emerald.models.creative :as creative]
@@ -28,11 +29,16 @@
 (defn get-placements [id]
   (placement/all-for-campaign id))
 
+(defn pinned-campaigns []
+  (campaign/all-pins (session/get :user_id)))
+
 (defn create-pin [id]
-  )
+  (campaign/pin! id (session/get :user_id))
+  {"success" "campaign has been pinned"})
 
 (defn delete-pin [id]
-  )
+  (campaign/unpin! id (session/get :user_id))
+  {"succss" "campaign has been successfully removed"})
 
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?))
@@ -54,6 +60,10 @@
 (s/defschema Edit-Campaign (make-optional Campaign))
 
 (defroutes* campaign-routes
+  (GET* "/campaigns/pinned" []
+        :tags ["campaigns"]
+        :summary "looks up a list of pinned campaigns"
+        (ok (pinned-campaigns)))
   (context* "/campaigns/:id" []
             :tags ["campaigns"]
             :path-params [id :- java.util.UUID]

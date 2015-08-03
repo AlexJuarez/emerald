@@ -12,7 +12,9 @@
                  [compojure "1.4.0"] ;;Status dsl, POST, GET ect
                  [ring/ring-defaults "0.1.5"]
                  [ring/ring-session-timeout "0.1.0"]
+                 [crypto-random "1.2.0"] ;;crypto lib
                  [clojurewerkz/spyglass "1.1.0"];;couchbase interface
+                 [buddy/buddy-auth "0.6.1"];;ring based authentication
                  [ring "1.4.0"
                   :exclusions [ring/ring-jetty-adapter]]
                  [prismatic/schema "0.4.3"] ;;api validation

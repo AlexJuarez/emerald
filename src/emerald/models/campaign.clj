@@ -28,6 +28,23 @@
   (insert campaigns
           (values campaign)))
 
+(defn get-pin [campaign-id user-id]
+  (first (select campaign-pins
+                 (where {:campaign_id campaign-id :user_id user-id}))))
+
+(defn pin! [campaign-id user-id]
+  (when (nil? (get-pin campaign-id user-id))
+    (insert campaign-pins
+            (values {:campaign_id campaign-id :user_id user-id}))))
+
+(defn unpin! [campaign-id user-id]
+  (delete campaign-pins
+          (where {:campaign_id campaign-id :user_id user-id})))
+
+(defn all-pins [user-id]
+  (select campaign-pins
+          (fields :campaign_id)))
+
 (defn update! [id campaign]
   (update campaigns
           (set-fields campaign)

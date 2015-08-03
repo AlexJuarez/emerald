@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [set get namespace])
   (:require [clojurewerkz.spyglass.client :as c]
             [ring.middleware.session.store :as session-store]
-            [clauth.store :refer [Store]]
             [taoensso.timbre :as timbre]))
 
 (def ^:private address "127.0.0.1:11211")
@@ -22,7 +21,7 @@
   (delete-session [_ key] (c/delete (get-connection) (str namespace key)) nil)
   (write-session [_ key data]
     (let [key (or key (str (java.util.UUID/randomUUID)))]
-      (c/set (get-connection) (str namespace key) (+ ttl-secs (rand-int ttl-secs)) data)
+      (c/set (get-connection) (str namespace key) ttl-secs data)
       key)))
 
 (defn create-couchbase-session-store

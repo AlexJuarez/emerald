@@ -42,7 +42,8 @@
  accounts
  geo-profiles
  applications
- users)
+ users
+ campaign-pins)
 
 (defentity users
   (belongs-to clients {:fk :client_id})
@@ -112,6 +113,10 @@
   (transform camel-case)
   (belongs-to users {:fk :user_id})
   (table :mixpo.applications :applications))
+
+(defentity campaign-pins
+  (transform camel-case)
+  (table :mixpo.user_campaign_pins))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))

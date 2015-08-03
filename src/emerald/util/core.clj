@@ -7,7 +7,7 @@
   (into {}
         (for [[k v] m]
           [(let [t (s/split (name k) #"_")]
-             (apply str (first t) (map s/capitalize (rest t)))) v])))
+             (keyword (apply str (first t) (map s/capitalize (rest t))))) v])))
 
 (defn to-dash [m]
   (into {}

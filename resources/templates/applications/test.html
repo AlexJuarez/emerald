@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Mixpo.com Applications</title>
+        {% style "/css/screen.css" %}
+    </head>
+    <body>
+        <div class="container">
+        <h1>OAuth Tool</h1>
+        <hr />
+        <form class="form-horizontal" method="POST" role="form">
+            {% csrf-field %}
+            <div class="form-group row">
+                <label for="inputName" class="col-sm-2 form-label">App Key:</label>
+                <div class="col-sm-10">
+                    <input name="name" value="{{appKey}}" type="text" class="form-control" id="inputName" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="website" class="col-sm-2 form-label">App Secret:</label>
+                <div class="col-sm-10">
+                    <input name="website" value="{{appSecret}}" type="text" class="form-control" id="website" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="callbackUrl" class="col-sm-2 form-label">Access token:</label>
+                <div class="col-sm-10">
+                    <input name="callbackUrl" value="{{accessToken}}" type="text" class="form-control" id="callbackUrl" />
+                </div>
+            </div>
+            <a href="../../../docs/index.html?api_key={{accessToken}}">Go to Documentation</a>
+        </form>
+        </div>
+
+    </body>
+</html>

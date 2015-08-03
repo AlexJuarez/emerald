@@ -7,5 +7,17 @@
     </head>
     <body>
         <a class="btn btn-default solid" href="apps/create">Create Application</a>
+        {% if applications %}
+        <ul>
+            {% for app in applications %}
+
+                <li>
+                    <a href="apps/{{app.id}}/oauth/test">{{app.name}}</a>
+                    <br />
+                    {{app.description}}
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </body>
 </html>

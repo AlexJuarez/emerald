@@ -1,12 +1,15 @@
 (ns emerald.middleware
   (:require [emerald.session :as session]
             [emerald.cache :as cache]
+            [emerald.util.session :as sess :refer [wrap-session]]
             [emerald.layout :refer [*servlet-context*]]
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]]
             [clojure.java.io :as io]
             [selmer.middleware :refer [wrap-error-page]]
             [prone.middleware :refer [wrap-exceptions]]
+            [buddy.auth.middleware :refer [wrap-authentication]]
+            [buddy.auth.accessrules :refer [restrict]]
             [ring.util.response :refer [redirect]]
             [ring.middleware.reload :as reload]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
@@ -50,12 +53,28 @@
 (defn wrap-formats [handler]
   (wrap-restful-format handler :formats [:json-kw :transit-json :transit-msgpack]))
 
+(defn authenticated? [request]
+  (let [t (or (get (:headers request) "Authorization") (get (:query-params request) "api_key"))
+        token (cache/get (str "oauth:" t))]
+    (sess/put! :user_id (get token :user_id))
+    (not (nil? token))))
+
+(defn on-error [request response]
+  {:status  403
+   :headers {"Content-Type" "text/plain"}
+   :body    (str "Access to " (:uri request) " is not authorized")})
+
+(defn wrap-api-restricted [handler]
+  (restrict handler {:handler authenticated?
+                     :on-error on-error}))
+
 (defn wrap-base [handler]
   (-> handler
       wrap-dev
       (wrap-idle-session-timeout
         {:timeout (* 60 30)
          :timeout-response (redirect "/")})
+      wrap-session
       wrap-formats
       (wrap-defaults
         (-> site-defaults

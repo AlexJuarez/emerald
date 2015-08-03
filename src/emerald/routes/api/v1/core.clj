@@ -10,10 +10,10 @@
    [emerald.routes.api.v1.industries :refer [industry-routes]]
    [emerald.routes.api.v1.enums :refer [enum-routes]]
    [emerald.routes.api.v1.channels :refer [channel-routes]]
+   [emerald.middleware :as middleware]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
-
 
 (defapi api-routes
   {:formats [:json-kw]}
@@ -23,13 +23,14 @@
   (swagger-docs
    "/docs.json"
    {:info {:title "CRUD API V1"}})
-  placement-routes
-  client-routes
-  account-routes
-  campaign-routes
-  creative-routes
-  division-routes
-  publisher-routes
-  industry-routes
-  enum-routes
-  channel-routes)
+  (middlewares [middleware/wrap-api-restricted]
+               placement-routes
+               client-routes
+               account-routes
+               campaign-routes
+               creative-routes
+               division-routes
+               publisher-routes
+               industry-routes
+               enum-routes
+               channel-routes))
