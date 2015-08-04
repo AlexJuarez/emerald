@@ -1,87 +1,87 @@
 [
   {
     "name": "Generic Javascript",
-    "template": "<script type='text/javascript'>var mixpoAd={width:{{width}},height:{{height}},guid:'{{id}}',prerender:'{{prerenderImg}}',clickthrough:'{{clickThroughUrl}}',subdomain:'www',embedv:'{{version}}',clicktag:'{{clicktag}}'};</script><script type='text/javascript' src='//swf.mixpo.com/js/loader.js'></script>",
+    "template": "<script type='text/javascript'>var mixpoAd={width:{{width}},height:{{height}},guid:'{{id}}',prerender:'{{prerenderUrl}}',clickthrough:'{{clickThroughUrl}}',subdomain:'www',embedv:'{{version}}',clicktag:'{{clicktag}}'};</script><script type='text/javascript' src='//swf.mixpo.com/js/loader.js'></script>",
+    "version_suffix": "js",
     "attributes": {
-      "clicktag": "CLICK_TRACKER",
-      "version_suffix": "js"
+      "clicktag": "CLICK_TRACKER"
     }
   },
   {
     "name": "ABC/Disney",
+    "version_suffix": "abcd",
     "attributes": {
-      "clicktag": "#{click('defaultClick')}",
-      "version_suffix": "abcd"
+      "clicktag": "#{click('defaultClick')}"
     }
   },
   {
     "name": "AdBrite",
+    "version_suffix": "ab",
     "attributes": {
-      "clicktag": "[ADBRITECLICK]",
-      "version_suffix": "ab"
+      "clicktag": "[ADBRITECLICK]"
     }
   },
   {
     "name": "ADI (Dynamic Z-index)",
+    "version_suffix": "adidynz",
     "attributes": {
       "clicktag": "%%C%%?",
-      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}",
-      "version_suffix": "adidynz"
+      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}"
     }
   },
   {
     "name": "ADI (Static Z-Index)",
+    "version_suffix": "adifixedz",
     "attributes": {
       "clicktag": "%%C%%?",
       "fixed_z_index": 1,
-      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}",
-      "version_suffix": "adifixedz"
+      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}"
     }
   },
   {
     "name": "ADTECH/AOL",
+    "version_suffix": "atjs",
     "attributes": {
       "prerender": "http:{{prerenderImg}}",
-      "clicktag": "%%CLICK_URL%%",
-      "version_suffix": "atjs"
+      "clicktag": "%%CLICK_URL%%"
     }
   },
   {
     "name": "Cobalt",
+    "version_suffix": "co",
     "attributes": {
       "clicktag": "%%C%%?",
       "dynClickthrough": "%%CLICKTHROUGH%%",
       "viewTracking": "%%VIEWTRACKING%%",
-      "customTarget": "%%WEB_ID%%",
-      "version_suffix": "co"
+      "customTarget": "%%WEB_ID%%"
     }
   },
   {
     "name": "Comcast",
+    "version_suffix": "coajs",
     "attributes": {
-      "version_suffix": "coajs",
       "clicktag": "%%C%%?",
       "customTarget": "%%PARAMS%%"
     }
   },
   {
     "name": "DART (DFP)",
+    "version_suffix": "dtjs",
     "attributes": {
-      "version_suffix": "dtjs",
       "clicktag": "%c"
     }
   },
   {
     "name": "DFP Premium",
+    "version_suffix": "dfpprem",
     "attributes": {
-      "version_suffix": "dfpprem",
       "clicktag": "%%CLICK_URL_ESC_ESC%%"
     }
   },
   {
     "name": "Google AdX",
+    "version_suffix": "ga",
     "attributes": {
-      "version_suffix": "ga",
       "clicktag": "%%CLICK_URL_ESC%%"
     }
   },
@@ -91,8 +91,8 @@
   },
   {
     "name": "Javascript (Static Z-Index)",
+    "version_suffix": "trib",
     "attributes": {
-      "version_suffix": "trib",
       "clicktag": "%c",
       "fixed_z_index": 1
     }
@@ -103,9 +103,9 @@
   },
   {
     "name": "Mobile In-App (MRAID)",
+    "version_suffix": "mraid",
     "attributes": {
       "prerender": "http:{{prerenderImg}}",
-      "version_suffix": "mraid",
       "clicktag": "CLICK_TRACKER",
       "enableMRAID": true,
       "template": "<script src=\"mraid.js\"></script>{{template}}"
@@ -124,8 +124,8 @@
   },
   {
     "name": "Yahoo APT Class 1 (JavaScript)",
+    "version_suffix": "y1jsapt",
     "attributes": {
-      "version_suffix": "y1jsapt",
       "clicktag": "${CLICKURL}{{clickthroughUrl}}",
       "yhdata": "yud=ekv%3D${ENC_VERSION}%26el%3D${ENC_ALGO}%26${ENC_START}ycg%3D${USER_GENDER}%26yyob%3D${USER_YOB}%26zip%3D${USER_ZIP}%26ybt%3D${USER_BT}%26host%3D${HOST}${ENC_END}",
       "yhcache": "${REQUESTID}"
@@ -133,8 +133,8 @@
   },
   {
     "name": "Yahoo APT Publisher",
+    "version_suffix": "yo",
     "attributes": {
-      "version_suffix": "yo",
       "clicktag": "${CLICKURL}"
     }
   },

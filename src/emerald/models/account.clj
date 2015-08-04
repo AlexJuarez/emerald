@@ -1,9 +1,12 @@
 (ns emerald.models.account
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
    [emerald.db.core]))
+
+(defonce ^:private changeToArray #{:keywords})
 
 (defn get [id]
   (->
@@ -16,6 +19,9 @@
 (defn exists? [id]
   (not (empty? (select accounts
                        (where {:id id})))))
+
+(defn prep-for-update [account]
+  (into {} (map #(update-fields % changeToArray) account)))
 
 (defn prep [account]
   (assoc account :id (java.util.UUID/randomUUID)))
@@ -39,11 +45,11 @@
 
 (defn add! [account]
   (insert accounts
-          (values account)))
+          (values (-> account prep prep-for-update))))
 
 (defn update! [id account]
   (update accounts
-          (set-fields account)
+          (set-fields (-> account prep-for-update))
           (where {:id id}))
   {:success "updated the account"})
 

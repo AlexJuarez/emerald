@@ -134,6 +134,7 @@
   (table :mixpo.user_campaign_pins))
 
 (defentity adtags
+  (transform camel-case)
   (table :mixpo.adtags))
 
 (defn to-date [sql-date]

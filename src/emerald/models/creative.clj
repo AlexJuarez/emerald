@@ -20,8 +20,8 @@
 (defn prep [creative]
   (assoc creative :id (java.util.UUID/randomUUID)))
 
-(defn prep-for-update [placement]
-  (into {} (map #(update-fields % changeToArray) placement)))
+(defn prep-for-update [creative]
+  (into {} (map #(update-fields % changeToArray) creative)))
 
 (defn add! [creative]
   (insert creatives

@@ -1,9 +1,12 @@
 (ns emerald.models.campaign
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
    [emerald.db.core]))
+
+(defonce ^:private changeToArray #{:keywords})
 
 ;; (defn get-columns []
 ;;   (-> (exec-raw
@@ -21,12 +24,15 @@
            (where {:id id}))
    first))
 
+(defn prep-for-update [account]
+  (into {} (map #(update-fields % changeToArray) account)))
+
 (defn prep [campaign]
   (assoc campaign :id (java.util.UUID/randomUUID)))
 
 (defn add! [campaign]
   (insert campaigns
-          (values campaign)))
+          (values (prep campaign))))
 
 (defn get-pin [campaign-id user-id]
   (first (select campaign-pins
@@ -47,7 +53,7 @@
 
 (defn update! [id campaign]
   (update campaigns
-          (set-fields campaign)
+          (set-fields (-> campaign prep prep-for-update))
           (where {:id id}))
   {:success "updated the campaign"})
 
