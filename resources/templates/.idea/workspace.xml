@@ -34,7 +34,7 @@
       <file leaf-file-name="test.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/applications/test.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4931071">
+            <state vertical-scroll-proportion="0.39306846">
               <caret line="31" column="45" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
               <folding />
             </state>
@@ -63,7 +63,7 @@
     <option name="x" value="681" />
     <option name="y" value="52" />
     <option name="width" value="1235" />
-    <option name="height" value="1070" />
+    <option name="height" value="1310" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -188,7 +188,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="681" y="52" width="1235" height="1070" extended-state="5" />
+    <frame x="681" y="52" width="1235" height="1310" extended-state="4" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28097165" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -251,7 +251,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/applications/test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4931071">
+        <state vertical-scroll-proportion="0.39306846">
           <caret line="31" column="45" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
           <folding />
         </state>

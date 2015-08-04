@@ -27,6 +27,7 @@
                  [metosin/ring-swagger-ui "2.1.1-M2"]
                  [clauth "1.0.0-rc17"] ;;oauth 2 provider
                  [migratus "0.8.2"] ;;table migration
+                 [to-jdbc-uri "0.2.0"] ;;jdbc uri parser
                  [org.clojure/java.jdbc "0.3.7"]
                  [com.mchange/c3p0 "0.9.5.1"] ;;connection pooling
                  [korma "0.4.2" :exclusions [c3p0/c3p0]] ;;sql dsl

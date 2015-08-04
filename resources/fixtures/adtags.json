@@ -1,0 +1,149 @@
+[
+  {
+    "name": "Generic Javascript",
+    "template": "<script type='text/javascript'>var mixpoAd={width:{{width}},height:{{height}},guid:'{{id}}',prerender:'{{prerenderImg}}',clickthrough:'{{clickThroughUrl}}',subdomain:'www',embedv:'{{version}}',clicktag:'{{clicktag}}'};</script><script type='text/javascript' src='//swf.mixpo.com/js/loader.js'></script>",
+    "attributes": {
+      "clicktag": "CLICK_TRACKER",
+      "version_suffix": "js"
+    }
+  },
+  {
+    "name": "ABC/Disney",
+    "attributes": {
+      "clicktag": "#{click('defaultClick')}",
+      "version_suffix": "abcd"
+    }
+  },
+  {
+    "name": "AdBrite",
+    "attributes": {
+      "clicktag": "[ADBRITECLICK]",
+      "version_suffix": "ab"
+    }
+  },
+  {
+    "name": "ADI (Dynamic Z-index)",
+    "attributes": {
+      "clicktag": "%%C%%?",
+      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}",
+      "version_suffix": "adidynz"
+    }
+  },
+  {
+    "name": "ADI (Static Z-Index)",
+    "attributes": {
+      "clicktag": "%%C%%?",
+      "fixed_z_index": 1,
+      "customTarget": "%%CAMP%%&%%ADID%%|${CP_ID}&${CREATIVE_ID}",
+      "version_suffix": "adifixedz"
+    }
+  },
+  {
+    "name": "ADTECH/AOL",
+    "attributes": {
+      "prerender": "http:{{prerenderImg}}",
+      "clicktag": "%%CLICK_URL%%",
+      "version_suffix": "atjs"
+    }
+  },
+  {
+    "name": "Cobalt",
+    "attributes": {
+      "clicktag": "%%C%%?",
+      "dynClickthrough": "%%CLICKTHROUGH%%",
+      "viewTracking": "%%VIEWTRACKING%%",
+      "customTarget": "%%WEB_ID%%",
+      "version_suffix": "co"
+    }
+  },
+  {
+    "name": "Comcast",
+    "attributes": {
+      "version_suffix": "coajs",
+      "clicktag": "%%C%%?",
+      "customTarget": "%%PARAMS%%"
+    }
+  },
+  {
+    "name": "DART (DFP)",
+    "attributes": {
+      "version_suffix": "dtjs",
+      "clicktag": "%c"
+    }
+  },
+  {
+    "name": "DFP Premium",
+    "attributes": {
+      "version_suffix": "dfpprem",
+      "clicktag": "%%CLICK_URL_ESC_ESC%%"
+    }
+  },
+  {
+    "name": "Google AdX",
+    "attributes": {
+      "version_suffix": "ga",
+      "clicktag": "%%CLICK_URL_ESC%%"
+    }
+  },
+  {
+    "name": "Google GDN Expandables",
+    "template": "<script src='//swf.mixpo.com/containers/www/{{folder}}/{{id}}/single.js?click=%%CLICK_URL_UNESC%%&ord=%%CACHEBUSTER%%&customTarget='></script>"
+  },
+  {
+    "name": "Javascript (Static Z-Index)",
+    "attributes": {
+      "version_suffix": "trib",
+      "clicktag": "%c",
+      "fixed_z_index": 1
+    }
+  },
+  {
+    "name": "Microsoft Javascript",
+    "template": "<script type=\"text/javascript\">\\n//<![CDATA[\\nif(document.body==null)document.write(\"<html><body>\");var mixpoAd={width:{{width}},height:{{height}},guid:\"{{id}}\",prerender:\"300x250.jpg\",clickthrough:\"{{clickthroughUrl}}\",clicktag:\"##G1OOB##.1?http://ads1.msn.com/ads/abuimg/clear.gif##G3##\",subdomain:\"www\",embedv:\"{{version}}-ms\"};document.write(\"<scr\"+\"ipt type='text/javascr\"+\"ipt' src='//swf.mixpo.com/js/loader.js'></scr\"+\"ipt>\");if(document.body==null)document.write(\"</body></html>\");\\n//]]>\\n</script>"
+  },
+  {
+    "name": "Mobile In-App (MRAID)",
+    "attributes": {
+      "prerender": "http:{{prerenderImg}}",
+      "version_suffix": "mraid",
+      "clicktag": "CLICK_TRACKER",
+      "enableMRAID": true,
+      "template": "<script src=\"mraid.js\"></script>{{template}}"
+    }
+  },
+  {
+    "name": "Open AdStream (24/7 Real Media)",
+    "attributes": {
+      "version_suffix": "oajs",
+      "clicktag": "%%C%%?"
+    }
+  },
+  {
+    "name": "Yahoo APT Class 1 (iframe)",
+    "template": "<iframe width=\"{{width}}\" height=\"{{height}}\" src=\"http://swf.mixpo.com/containers/www/{{folder}}/{{id}}/iframe.html?v={{version}}-y1ifapt&clickTag=${CLICKURL}{{clickthroughUrl}}#&yhdata=yud=ekv%3D${ENC_VERSION}%26el%3D${ENC_ALGO}%26${ENC_START}ycg%3D${USER_GENDER}%26yyob%3D${USER_YOB}%26zip%3D${USER_ZIP}%26ybt%3D${USER_BT}%26host%3D${HOST}${ENC_END}\" frameborder=\"0\" scrolling=\"no\"></iframe>"
+  },
+  {
+    "name": "Yahoo APT Class 1 (JavaScript)",
+    "attributes": {
+      "version_suffix": "y1jsapt",
+      "clicktag": "${CLICKURL}{{clickthroughUrl}}",
+      "yhdata": "yud=ekv%3D${ENC_VERSION}%26el%3D${ENC_ALGO}%26${ENC_START}ycg%3D${USER_GENDER}%26yyob%3D${USER_YOB}%26zip%3D${USER_ZIP}%26ybt%3D${USER_BT}%26host%3D${HOST}${ENC_END}",
+      "yhcache": "${REQUESTID}"
+    }
+  },
+  {
+    "name": "Yahoo APT Publisher",
+    "attributes": {
+      "version_suffix": "yo",
+      "clicktag": "${CLICKURL}"
+    }
+  },
+  {
+    "name": "Yahoo RMX Class 2 (Iframe)",
+    "template": "<iframe width=\"{{width}}\" height=\"{{height}}\" src=\"http://swf.mixpo.com/containers/www/{{folder}}/{{id}}/iframe.html?v={{version}}-y2if&clickTag=${CLICKURL}{{clickthroughUrl}}&yhcache=${REQUESTID}&yhdata=${QUERY_STRING}\" frameborder=\"0\" scrolling=\"no\"></iframe>"
+  },
+  {
+    "name": "Max Javascript",
+    "template": "<script type=\"text/javascript\">if(!window.mixpo){window.mixpo={}};window.mixpo.flashCallback=function(){window.mixpo.flashWasDetected=true;};document.write('<object width=0 height=0 data=\"'+document.location.protocol+'//swf.mixpo.com/player/fd.swf\"><param name=\"AllowScriptAccess\" value=\"always\"></object>');var mixpoAd={width:{{width}},height:{{height}},guid:{{id}}\",prerender:\"{{prerenderImg}}\",clickthrough:\"http://mixpo.com\",subdomain:\"www\",embedv:\"{{version}}-js\",clicktag:\"CLICK_TRACKER\"};</script><script type=\"text/javascript\" src=\"//swf.mixpo.com/js/loader.js\"></script>"
+  }
+]

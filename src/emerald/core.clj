@@ -1,6 +1,7 @@
 (ns emerald.core
   (:require [emerald.handler :refer [app init destroy parse-port]]
             [org.httpkit.server :as http-kit]
+            [emerald.db.migrations :as migrations]
             [taoensso.timbre :as timbre]
             [emerald.cache :as cache]
             [environ.core :refer [env]])
@@ -31,6 +32,9 @@
     (start-server port)))
 
 (defn -main [& args]
-  (if (env :dev) (cache/init-connection))
-  (start-app args))
+  (cond
+   (some #{"migrate" "rollback"} args) (migrations/migrate args)
+   :else (do
+           (if (env :dev) (cache/init-connection))
+           (start-app args))))
 

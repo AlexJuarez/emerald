@@ -27,6 +27,7 @@
 (defdb db dbspec)
 
 (declare
+  adtags
   placements
   publishers
   creatives
@@ -131,6 +132,9 @@
 (defentity campaign-pins
   (transform camel-case)
   (table :mixpo.user_campaign_pins))
+
+(defentity adtags
+  (table :mixpo.adtags))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))
