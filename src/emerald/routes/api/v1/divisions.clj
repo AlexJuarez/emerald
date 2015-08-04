@@ -2,6 +2,7 @@
   (:use
    [emerald.util.core])
   (:require
+   [emerald.util.session :as session]
    [emerald.models.division :as division]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
@@ -19,11 +20,16 @@
 (defn update-division [id slug]
   (division/update! id slug))
 
+(defn pinned-divisions []
+  (division/all-pins (session/get :user_id)))
+
 (defn create-pin [id]
-  )
+  (division/pin! id (session/get :user_id))
+  {"success" "division has been pinned"})
 
 (defn delete-pin [id]
-  )
+  (division/unpin! id (session/get :user_id))
+  {"succss" "division has been successfully removed"})
 
 (s/defschema Division
   {:name String
@@ -35,6 +41,10 @@
 (s/defschema Edit-Division (make-optional Division))
 
 (defroutes* division-routes
+  (GET* "/divisions/pinned" []
+        :tags ["divisions"]
+        :summary "looks up a list of pinned divisions"
+        (ok (pinned-divisions)))
   (context* "/divisions/:id" []
             :tags ["divisions"]
             :path-params [id :- java.util.UUID]

@@ -1,8 +1,11 @@
 (ns emerald.models.creative
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.util.model]
    [korma.core]
    [emerald.db.core]))
+
+(defonce ^:private changeToArray #{:keywords})
 
 (defn get [id]
   (->
@@ -17,13 +20,16 @@
 (defn prep [creative]
   (assoc creative :id (java.util.UUID/randomUUID)))
 
+(defn prep-for-update [placement]
+  (into {} (map #(update-fields % changeToArray) placement)))
+
 (defn add! [creative]
   (insert creatives
-          (values creative)))
+          (values (-> creative prep-for-update prep))))
 
 (defn update! [id creative]
   (update creatives
-          (set-fields creative)
+          (set-fields (-> creative prep-for-update))
           (where {:id id}))
   {:success "updated the creative"})
 

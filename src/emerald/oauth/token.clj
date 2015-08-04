@@ -4,4 +4,3 @@
 (defn generate-token []
   "generates a unique token"
   (random/base32 20))
-

@@ -2,6 +2,7 @@
   (:use
    [emerald.util.core])
   (:require
+   [emerald.util.session :as session]
    [emerald.models.client :as client]
    [emerald.models.channel :as channel]
    [emerald.models.geo-profile :as geo-profile]
@@ -28,11 +29,17 @@
 (defn get-publishers [id]
   (publisher/all-for-client id))
 
+(defn pinned-clients []
+  (client/all-pins (session/get :user_id)))
+
 (defn create-pin [id]
-  )
+  (client/pin! id (session/get :user_id))
+  {"success" "client has been pinned"})
 
 (defn delete-pin [id]
-  )
+  (client/unpin! id (session/get :user_id))
+  {"succss" "client has been successfully removed"})
+
 
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
@@ -43,6 +50,10 @@
 (s/defschema Edit-Client (make-optional Client))
 
 (defroutes* client-routes
+  (GET* "/clients/pinned" []
+        :tags ["clients"]
+        :summary "looks up a list of pinned clients"
+        (ok (pinned-clients)))
   (context* "/clients/:id" []
             :tags ["clients"]
             :path-params [id :- java.util.UUID]

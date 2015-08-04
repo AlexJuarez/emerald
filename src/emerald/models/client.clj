@@ -16,6 +16,23 @@
 (defn prep [client]
   (assoc client :id (java.util.UUID/randomUUID)))
 
+(defn get-pin [client-id user-id]
+  (first (select client-pins
+                 (where {:client_id client-id :user_id user-id}))))
+
+(defn pin! [client-id user-id]
+  (when (nil? (get-pin client-id user-id))
+    (insert client-pins
+            (values {:client_id client-id :user_id user-id}))))
+
+(defn unpin! [client-id user-id]
+  (delete client-pins
+          (where {:client_id client-id :user_id user-id})))
+
+(defn all-pins [user-id]
+  (select client-pins
+          (fields :client_id)))
+
 (defn add! [client]
   (insert clients
           (values client)))

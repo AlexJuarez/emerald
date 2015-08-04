@@ -30,6 +30,9 @@
    :flightStart java.util.Date
    :flightEnd java.util.Date
    :type (apply s/enum enums/ad-types)
+   (s/optional-key :clickTrackers) String
+   (s/optional-key :impressionTrackers) String
+   (s/optional-key :viewTrackers) String
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long

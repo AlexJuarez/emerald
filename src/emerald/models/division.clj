@@ -15,6 +15,23 @@
   (not (empty? (select divisions
                        (where {:id id :deleted false})))))
 
+(defn get-pin [division-id user-id]
+  (first (select division-pins
+                 (where {:division_id division-id :user_id user-id}))))
+
+(defn pin! [division-id user-id]
+  (when (nil? (get-pin division-id user-id))
+    (insert division-pins
+            (values {:division_id division-id :user_id user-id}))))
+
+(defn unpin! [division-id user-id]
+  (delete division-pins
+          (where {:division_id division-id :user_id user-id})))
+
+(defn all-pins [user-id]
+  (select division-pins
+          (fields :division_id)))
+
 (defn prep [division]
   (assoc division :id (java.util.UUID/randomUUID)))
 

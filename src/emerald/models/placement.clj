@@ -1,9 +1,12 @@
 (ns emerald.models.placement
   (:refer-clojure :exclude [get update])
   (:use
+   [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
    [emerald.db.core]))
+
+(defonce ^:private trackers #{:clickTrackers :impressionTrackers :viewTrackers :keywords})
 
 (defn get [id]
   (->
@@ -19,13 +22,18 @@
 (defn prep [placement]
   (assoc placement :id (java.util.UUID/randomUUID)))
 
+(defn prep-for-update [placement]
+  (into {} (map #(update-fields % trackers) placement)))
+
 (defn add! [placement]
   (insert placements
-          (values placement)))
+          (values (-> placement
+                      prep-for-update
+                      prep))))
 
 (defn update! [id placement]
   (update placements
-          (set-fields placement)
+          (set-fields (prep-for-update placement))
           (where {:id id}))
   {:success "updated the placement"})
 
