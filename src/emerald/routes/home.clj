@@ -3,11 +3,9 @@
             [compojure.core :refer [defroutes GET POST context]]
             [emerald.util.session :as session]
             [clojure.java.io :as io]
-            [emerald.cache :as cache]
             [emerald.models.user :as users]
             [emerald.oauth.token :as token]
             [emerald.models.application :as app]
-            [clauth.token :as ct]
             [ring.util.response :as resp]
             [clauth.endpoints :refer [authorization-handler]]
             [bouncer.core :as b]
@@ -24,18 +22,9 @@
   (let [applications (app/all-for-user (get-in req [:session :user :id]))]
     (layout/render "apps.html" {:applications applications})))
 
-(defn get-access-token [req]
-  (let [t (get-in req [:session :accessToken])]
-    (if (nil? t)
-      (let [t (token/generate-token)]
-        (cache/set (str "oauth:" t) {:user_id (get-in req [:session :user :id])} (* 60 60 10))
-        (session/put! :accessToken t)
-        t)
-      t)))
-
 (defn app-page [id req]
   (let [application (app/get id (get-in req [:session :user :id]))
-        token (get-access-token req)]
+        token (token/grant-for-user (session/get-in [:session :user :id]))]
     (layout/render "applications/test.html" (assoc application :accessToken token))))
 
 (defn app-creation-page

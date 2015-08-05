@@ -11,6 +11,7 @@
    [emerald.routes.api.v1.enums :refer [enum-routes]]
    [emerald.routes.api.v1.channels :refer [channel-routes]]
    [emerald.routes.api.v1.adtags :refer [adtag-routes]]
+   [emerald.routes.api.v1.oauth :refer [oauth-routes]]
    [emerald.middleware :as middleware]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
@@ -24,6 +25,7 @@
   (swagger-docs
    "/docs.json"
    {:info {:title "CRUD API V1"}})
+  oauth-routes
   (middlewares [middleware/wrap-api-restricted]
                placement-routes
                client-routes
