@@ -7,7 +7,7 @@
 
 (defn generate-token []
   "generates a unique token"
-  (random/base64 20))
+  (random/base32 20))
 
 (defn grant-for-user [user-id]
   (let [t (session/get-in [:session :accessToken])]

@@ -1,6 +1,8 @@
 (ns emerald.cache
   (:refer-clojure :exclude [set get namespace])
   (:require [clojurewerkz.spyglass.client :as c]
+            [environ.core :refer [env]]
+            [emerald.session :as mem]
             [ring.middleware.session.store :as session-store]
             [taoensso.timbre :as timbre]))
 
@@ -31,13 +33,20 @@
    (->CouchBaseSessionStore namespace (* 60 60 10))))
 
 (defn set [key value & ttl]
-  (c/set (get-connection) key (or (first ttl) (+ (* 60 10) (rand-int 600))) value));;Prevent stampede
+  (if (env :couchbase)
+    (c/set (get-connection) key (or (first ttl) (+ (* 60 10) (rand-int 600))) value)
+    (mem/set key value)
+    ));;Prevent stampede
 
 (defn get [key]
-  (c/get (get-connection) key))
+  (if (env :couchbase)
+    (c/get (get-connection) key)
+    (mem/get key)))
 
 (defn delete [key]
-  (c/delete (get-connection) key))
+  (if (env :couchbase)
+    (c/delete (get-connection) key)
+    (mem/delete key)))
 
 (defmacro cache! [key & forms]
   (let [value# (get ~key)]

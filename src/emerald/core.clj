@@ -4,6 +4,7 @@
             [emerald.db.migrations :as migrations]
             [taoensso.timbre :as timbre]
             [emerald.cache :as cache]
+            [emerald.db.migrations :as migrations]
             [environ.core :refer [env]])
   (:gen-class))
 
@@ -35,6 +36,7 @@
   (cond
    (some #{"migrate" "rollback"} args) (migrations/migrate args)
    :else (do
-           (if (env :dev) (cache/init-connection))
+           (if (env :couchbase) (cache/init-connection))
+           (migrations/init)
            (start-app args))))
 

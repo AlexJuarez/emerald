@@ -54,10 +54,11 @@
   (wrap-restful-format handler :formats [:json-kw :transit-json :transit-msgpack]))
 
 (defn authenticated? [request]
-  (let [t (or (get (:headers request) "Authorization") (get (:query-params request) "api_key"))
+  (let [t (or (get (:headers request) "authorization") (get (:query-params request) "api_key"))
         token (cache/get (str "oauth:" t))]
     (sess/put! :user_id (get token :user_id))
-    (not (nil? token))))
+    (or (not (env :auth)) (not (nil? token)));;todo remove this flag, this disables auth
+    ))
 
 (defn on-error [request response]
   {:status  403
@@ -79,7 +80,7 @@
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
-            (assoc-in  [:session :store] (if (env :dev)
+            (assoc-in  [:session :store] (if (env :couchbase)
                                            (cache/create-couchbase-session-store)
                                            (memory-store session/mem)))))
       wrap-servlet-context

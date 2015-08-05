@@ -1,4 +1,5 @@
-(ns emerald.session)
+(ns emerald.session
+  (:refer-clojure :exclude [get set]))
 
 (defonce mem (atom {}))
 
@@ -12,6 +13,15 @@
 
 (defn clear-expired-sessions []
   (clojure.core/swap! mem #(->> % (filter expired?) (into {}))))
+
+(defn get [key]
+  (clojure.core/get @mem key))
+
+(defn set [key value]
+  (swap! mem assoc key value))
+
+(defn delete [key]
+  (swap! mem dissoc key))
 
 (defn start-cleanup-job! []
   (future

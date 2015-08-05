@@ -51,11 +51,10 @@
    :destroy emerald.handler/destroy
    :uberwar-name "emerald.war"}
   :profiles
-  {:uberjar {:omit-source true
-             :env {:production true}
-             :aot :all}
+  {:uberjar       [:project/uberjar :profiles/prod]
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
+   :prod          [:project/prod :profiles/prod]
    :project/dev  {:dependencies [[ring/ring-mock "0.2.0"]
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.0"]
@@ -72,5 +71,7 @@
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}
-   :profiles/dev {}
-   :profiles/test {}})
+   :project/prod {}
+   :project/uberjar {:omit-source true
+                     :env {:production true}
+                     :aot :all}})

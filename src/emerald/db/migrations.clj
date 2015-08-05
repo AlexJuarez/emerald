@@ -1,4 +1,5 @@
 (ns emerald.db.migrations
+  (:refer-clojure :exclude [update])
   (:use
    [korma.core]
    [emerald.db.core])
@@ -9,7 +10,7 @@
    [environ.core :refer [env]]
    [to-jdbc-uri.core :refer [to-jdbc-uri]]))
 
-(def migration-uri "jdbc:postgresql://localhost/bowser?user=bowser&password=koopa")
+(def migration-uri (env :jdbc-uri))
 
 (defn map-keywords [m]
   (let [attributes (to-pg-json (get m "attributes"))]
@@ -18,8 +19,13 @@
     )))
 
 (defn migrate-adtags []
-  (insert adtags
-          (values (into [] (map map-keywords (jr/parse-string (slurp "resources/fixtures/adtags.json")))))))
+  (if
+    (empty? (select adtags))
+    (insert adtags
+            (values (into [] (map map-keywords (jr/parse-string (slurp "resources/fixtures/adtags.json"))))))))
+
+(defn init []
+  (migrate-adtags))
 
 (defn parse-ids [args]
   (map #(Long/parseLong %) (rest args)))
