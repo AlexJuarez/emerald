@@ -14,8 +14,7 @@
 (s/defschema Token
   {(s/optional-key :token_type) (s/enum :bearer)
    (s/optional-key :expires_in) Long
-   (s/optional-key :access_token) String
-   (s/optional-key :error) String})
+   (s/optional-key :access_token) String})
 
 (defn parse-token [auth]
   (let [[type client_id client_secret] (map st/trim (filter #(not (empty? %)) (distinct (st/split auth #" "))))]
