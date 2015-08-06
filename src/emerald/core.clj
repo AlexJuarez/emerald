@@ -37,6 +37,6 @@
    (some #{"migrate" "rollback"} args) (migrations/migrate args)
    :else (do
            (if (env :couchbase) (cache/init-connection))
-           (migrations/init)
+           (if (env :dev) (migrations/init))
            (start-app args))))
 
