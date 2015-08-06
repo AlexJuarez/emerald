@@ -27,16 +27,19 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
     For local development the application can be accessed in browser at localhost:3000/,
     For production the application can be accessed at server-url/api/crud/
 
-At the root of this application exists two areas, `localhost:3000/login` or `server-url/api/crud/login` to login and access your Application area.
+At the root of this application exists two areas, `localhost:3000/login` or [`server-url/api/crud/login`][3] to login and access your Application area.
 
-To get to the documentation area you can either view a application and click the take me documentation link or you can browse to `localhost:3000/docs`, `server-url/api/crud/docs`
+To get to the documentation area you can either view a application and click the take me documentation link or you can browse to `localhost:3000/docs`, [`server-url/api/crud/docs`][4]
+
+[3]: https://thorwhal-dev-api.mixpo.com/api/crud/login
+[4]: https://thorwhal-dev-api.mixpo.com/api/crud/docs
 
 ## Prerequisites
 
 Lein is included in the repository for easy of use.
-To update this script see [Leiningen][3].
+To update this script see [Leiningen][5].
 
-[3]: https://github.com/technomancy/leiningen
+[5]: https://github.com/technomancy/leiningen
 
 ## Running
 
