@@ -1,4 +1,4 @@
-# Emerald
+# ![Emerald](http://obsidian.mixpo.com/images/emerald-iconx32.png)Emerald
 
 To build emerald for tomcat deployment run `./lein ring uberwar`
 
