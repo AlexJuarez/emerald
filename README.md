@@ -5,7 +5,7 @@ To build emerald for tomcat deployment run `./lein ring uberwar`
 ## Configuration
 
 The configuration settings for the project can be found in `profiles.clj`.
-On a build the a new file called `.lein-env` is created and needs to be placed with the war.
+On a build the a new file called `.lein-env` is created and needs to be placed with the resulting war.
 
     eg. ~/tomcat/webapps/www
         |--api#crud.war
