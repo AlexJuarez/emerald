@@ -6,9 +6,10 @@ To build emerald for tomcat deployment run `./lein ring uberwar`
 
 The configuration settings for the project can be found in `profiles.clj`
 When the server is built using `./lein ring uberwar` the settings from :profiles/prod are pulled
-|Property|Description|
+
+| Property | Description |
 |:---|:---|
-| **dbspec** | should have the correct credentials for the postgres database. [kormasql][1] |
+| **dbspec** | should have the correct credentials for the postgres database. for details see [kormasql][1] |
 | **jdbc-uri** | is the jdbc uri used by the migrations in emerald, currently migrations are run using `./lein run migrate` however these migrations are only for testing |
 | **couchbase** | if false, a in memory store will be used instead of couchbase to manage both sessions, and oauth tokens. Switch to true only if a couchbase instance has been properly configured |
 | **couchbase-uri** | the uri for the instance of couchbase, currently set to point at `127.0.0.1:11211` for details see [spyglass][2]|
