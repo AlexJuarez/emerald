@@ -6,7 +6,7 @@
             [ring.middleware.session.store :as session-store]
             [taoensso.timbre :as timbre]))
 
-(def ^:private address "127.0.0.1:11211")
+(def ^:private address (env :couchbase-uri))
 
 (defonce ce (atom nil))
 

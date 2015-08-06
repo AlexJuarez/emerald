@@ -6,6 +6,7 @@
                           :test-connection-query true}
                  :jdbc-uri "jdbc:postgresql://localhost/bowser?user=bowser&password=koopa"
                  :couchbase true
+                 :couchbase-uri "127.0.0.1:11211"
                  :auth false
                  }}
  :profiles/prod {:env
@@ -16,5 +17,6 @@
                           :test-connection-query true}
                  :jdbc-uri "jdbc:postgresql://localhost/bowser?user=bowser&password=koopa"
                  :couchbase false
+                 :couchbase-uri "127.0.0.1:11211"
                  :auth false
                  }}}

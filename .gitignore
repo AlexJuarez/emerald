@@ -11,3 +11,4 @@ profiles.clj
 *.log
 *.swp
 .idea/
+resources/templates/.idea
