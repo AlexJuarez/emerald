@@ -3,7 +3,16 @@
   (:require [emerald.db.core :refer [db]]
             [korma.db])
   (:use
-   [korma.core]))
+   [korma.core]
+   [taoensso.timbre :only [trace debug info warn error fatal]]))
+
+(defonce device-types-mem (atom ["desktop" "tablet" "mobile" "multidevice"]))
+(defonce ad-types-mem (atom ["Display" "In-Banner" "In-Stream" "Rich Media"]))
+(defonce expand-anchors-mem (atom ["bottom" "bottomleft" "bottomright" "left" "right" "top" "topleft" "topright"]))
+(defonce expand-directions-mem (atom ["bottom" "left" "right" "top"]))
+(defonce expand-types-mem (atom ["traditional" "custom" "pushdown" "takeover"]))
+(defonce play-modes-mem (atom ["auto" "click" "rollover"]))
+(defonce window-types-mem (atom ["new" "modal" "same"]))
 
 (defn- device-types* []
   (-> (exec-raw
@@ -13,7 +22,7 @@
       :device_types
       ))
 
-(defonce device-types (device-types*))
+(defn device-types [] (into [] @device-types-mem))
 
 (defn- ad-types* []
   (-> (exec-raw
@@ -23,7 +32,7 @@
       :ad_types
       ))
 
-(defonce ad-types (ad-types*))
+(defn ad-types [] (into [] @ad-types-mem))
 
 (defn- expand-anchors* []
   (-> (exec-raw
@@ -33,7 +42,7 @@
       :expand_anchors
       ))
 
-(defonce expand-anchors (expand-anchors*))
+(defn expand-anchors [] (into [] @expand-anchors-mem))
 
 (defn- expand-directions* []
   (-> (exec-raw
@@ -43,7 +52,7 @@
       :expand_directions
       ))
 
-(defonce expand-directions (expand-directions*))
+(defn expand-directions [] (into [] @expand-anchors-mem))
 
 (defn- expand-types* []
   (-> (exec-raw
@@ -53,7 +62,7 @@
       :expand_types
       ))
 
-(defonce expand-types (expand-types*))
+(defn expand-types [] (into [] @expand-types-mem))
 
 (defn- play-modes* []
     (-> (exec-raw
@@ -63,7 +72,7 @@
       :play_modes
       ))
 
-(defonce play-modes (play-modes*))
+(defn play-modes [] (into [] @play-modes-mem))
 
 (defn- window-types* []
     (-> (exec-raw
@@ -73,4 +82,17 @@
       :window_types
       ))
 
-(defonce window-types (window-types*))
+(defn window-types [] (into [] @window-types-mem))
+
+(defn init []
+  (info "Populating enums locally")
+  (try
+    (reset! device-types-mem (device-types*))
+    (reset! ad-types-mem (ad-types*))
+    (reset! expand-anchors-mem (expand-anchors*))
+    (reset! expand-directions-mem (expand-directions*))
+    (reset! expand-types-mem (expand-types*))
+    (reset! play-modes-mem (play-modes*))
+    (reset! window-types-mem (window-types*))
+    (catch Exception e (error e "Failed to update enums"))
+    ))

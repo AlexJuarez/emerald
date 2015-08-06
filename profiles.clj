@@ -8,6 +8,7 @@
                  :couchbase true
                  :couchbase-uri "127.0.0.1:11211"
                  :auth false
+                 :log-path "emerald.log"
                  }}
  :profiles/prod {:env
                  {:dbspec {:subprotocol "postgresql"
@@ -19,4 +20,5 @@
                  :couchbase false
                  :couchbase-uri "127.0.0.1:11211"
                  :auth false
+                 :log-path "../../logs/emerald.log"
                  }}}

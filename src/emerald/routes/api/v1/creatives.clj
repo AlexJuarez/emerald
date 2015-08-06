@@ -22,15 +22,15 @@
 
 (s/defschema Creative
   {:name String
-   :device (apply s/enum enums/device-types)
-   :type (apply s/enum enums/ad-types)
+   :device (apply s/enum (enums/device-types))
+   :type (apply s/enum (enums/ad-types))
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
    (s/optional-key :keywords) String
-   (s/optional-key :expandMode) (apply s/enum enums/expand-types)
-   (s/optional-key :expandAnchor) (apply s/enum enums/expand-anchors)
-   (s/optional-key :expandDirection) (apply s/enum enums/expand-directions)
+   (s/optional-key :expandMode) (apply s/enum (enums/expand-types))
+   (s/optional-key :expandAnchor) (apply s/enum (enums/expand-anchors))
+   (s/optional-key :expandDirection) (apply s/enum (enums/expand-directions))
    (s/optional-key :expandedWidth) Long
    (s/optional-key :expandedHeight) Long})
 

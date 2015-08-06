@@ -3,6 +3,7 @@
             [org.httpkit.server :as http-kit]
             [emerald.db.migrations :as migrations]
             [taoensso.timbre :as timbre]
+            [emerald.models.enums :as enums]
             [emerald.cache :as cache]
             [emerald.db.migrations :as migrations]
             [environ.core :refer [env]])
@@ -38,5 +39,6 @@
    :else (do
            (if (env :couchbase) (cache/init-connection))
            (if (env :dev) (migrations/init))
+           (enums/init)
            (start-app args))))
 

@@ -1,18 +1,24 @@
 (ns emerald.cache
   (:refer-clojure :exclude [set get namespace])
+  (:use [taoensso.timbre :only [trace debug info warn error fatal]])
   (:require [clojurewerkz.spyglass.client :as c]
             [environ.core :refer [env]]
             [emerald.session :as mem]
-            [ring.middleware.session.store :as session-store]
-            [taoensso.timbre :as timbre]))
+            [ring.middleware.session.store :as session-store]))
 
 (def ^:private address (env :couchbase-uri))
 
 (defonce ce (atom nil))
 
 (defn init-connection []
-  (if (nil? @ce)
+  (when (nil? @ce)
+    (info "Starting couchbase connection")
     (reset! ce (c/text-connection address))))
+
+(defn shutdown-connection []
+  (when (not (nil? @ce))
+    (info "Shutting down couchbase connection")
+    (c/shutdown @ce)))
 
 (defn get-connection []
   (cast net.spy.memcached.MemcachedClient @ce))

@@ -54,7 +54,7 @@
   (timbre/merge-config!
     {:level     (if (env :dev) :trace :info)
      :appenders {:rotor (rotor/rotor-appender
-                          {:path "emerald.log"
+                          {:path (env :log-path)
                            :max-size (* 512 1024)
                            :backlog 10})}})
 
@@ -73,6 +73,7 @@
   []
   (timbre/info "emerald is shutting down...")
   (stop-nrepl)
+  (cache/shutdown-connection)
   (timbre/info "shutdown complete!"))
 
 (def app-base
