@@ -18,7 +18,13 @@
             Timestamp
             PreparedStatement]))
 
-(defonce dbspec (env :dbspec))
+(defonce db-default {:subprotocol "postgresql"
+                          :subname "//localhost/"
+                          :user "bowser"
+                          :password "koopa"
+                          :test-connection-query true})
+
+(defonce dbspec (or (env :dbspec) db-default))
 
 (defdb db dbspec)
 
