@@ -20,6 +20,7 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 | **couchbase** | if false, a in memory store will be used instead of couchbase to manage both sessions, and oauth tokens. Switch to true only if a couchbase instance has been properly configured |
 | **couchbase-uri** | the uri for the instance of couchbase, currently set to point at `127.0.0.1:11211` for details see [spyglass][2]|
 | **auth** | false disables authentication for the routes and user context, so routes depending on the current user id will not work. Eg. `/campaigns/:id/pin` |
+| **log-path** | set to the path of the log output relative to the root directory of the application |
 
 > If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token`
 
