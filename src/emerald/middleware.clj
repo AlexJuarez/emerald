@@ -1,21 +1,22 @@
 (ns emerald.middleware
   (:require [emerald.session :as session]
             [emerald.cache :as cache]
-            [emerald.util.session :as sess :refer [wrap-session]]
-            [emerald.layout :refer [*servlet-context*]]
+            [emerald.layout :refer [*servlet-context* error-page]]
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]]
             [clojure.java.io :as io]
+            [emerald.util.session :as sess :refer [wrap-session]]
             [selmer.middleware :refer [wrap-error-page]]
             [prone.middleware :refer [wrap-exceptions]]
             [buddy.auth.middleware :refer [wrap-authentication]]
             [buddy.auth.accessrules :refer [restrict]]
+            [ring.util.http-response :refer [internal-server-error]]
             [ring.util.response :refer [redirect]]
             [ring.middleware.reload :as reload]
+            [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [ring-ttl-session.core :refer [ttl-memory-store]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
-            [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
-            [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.format :refer [wrap-restful-format]]))
 
 (defn wrap-servlet-context [handler]
@@ -35,9 +36,10 @@
       (handler req)
       (catch Throwable t
         (timbre/error t)
-        {:status 500
-         :headers {"Content-Type" "text/html"}
-         :body (-> "templates/error.html" io/resource slurp)}))))
+        (internal-server-error
+          (error-page {:code 500
+                       :title "Something very bad has happened!"
+                       :message "We've dispatched a team of highly trained gnomes to take care of the problem."}))))))
 
 (defn wrap-dev [handler]
   (if (env :dev)
@@ -72,16 +74,14 @@
 (defn wrap-base [handler]
   (-> handler
       wrap-dev
-      (wrap-idle-session-timeout
-        {:timeout (* 60 30)
-         :timeout-response (redirect "/")})
-      wrap-session
       wrap-formats
+      wrap-webjars
+      wrap-session
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
             (assoc-in  [:session :store] (if (env :couchbase)
                                            (cache/create-couchbase-session-store)
-                                           (memory-store session/mem)))))
+                                           (ttl-memory-store (* 60 30))))))
       wrap-servlet-context
       wrap-internal-error))

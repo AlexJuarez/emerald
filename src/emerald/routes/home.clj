@@ -7,7 +7,6 @@
             [emerald.oauth.token :as token]
             [emerald.models.application :as app]
             [ring.util.response :as resp]
-            [clauth.endpoints :refer [authorization-handler]]
             [bouncer.core :as b]
             [bouncer.validators :as v]))
 
@@ -54,7 +53,6 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
-  (GET "/authorize" req ((authorization-handler) req))
   (GET "/login" [] (login-page))
   (POST "/login" req (try-login req))
   (context "/apps" []

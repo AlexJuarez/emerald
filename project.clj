@@ -4,35 +4,34 @@
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [selmer "0.8.5"] ;;templating language
+                 [selmer "0.8.8"] ;;templating language
                  [com.taoensso/timbre "4.0.2"] ;;logging
                  [com.taoensso/tower "3.0.2"] ;;localization
                  [markdown-clj "0.9.67"] ;;markdown parser
                  [environ "1.0.0"] ;;env variables
                  [compojure "1.4.0"] ;;Status dsl, POST, GET ect
+                 [ring-webjars "0.1.1"]
                  [ring/ring-defaults "0.1.5"]
-                 [ring/ring-session-timeout "0.1.0"]
-                 [crypto-random "1.2.0"] ;;crypto lib
-                 [clojurewerkz/spyglass "1.1.0"];;couchbase interface
-                 [buddy/buddy-auth "0.6.1"];;ring based authentication
+                 [ring-ttl-session "0.1.1"]
                  [ring "1.4.0"
                   :exclusions [ring/ring-jetty-adapter]]
-                 [prismatic/schema "0.4.3"] ;;api validation
                  [metosin/ring-middleware-format "0.6.0"]
                  [metosin/ring-http-response "0.6.3"]
                  [bouncer "0.3.3"] ;;validation dsl
                  [prone "0.8.2"] ;;better error reporting
                  [org.clojure/tools.nrepl "0.2.10"]
-                 [metosin/compojure-api "0.22.0"]
-                 [metosin/ring-swagger-ui "2.1.1-M2"]
-                 [clauth "1.0.0-rc17"] ;;oauth 2 provider
+                 [metosin/compojure-api "0.22.1"]
+                 [metosin/ring-swagger-ui "2.1.1"]
                  [migratus "0.8.2"] ;;table migration
                  [to-jdbc-uri "0.2.0"] ;;jdbc uri parser
                  [org.clojure/java.jdbc "0.3.7"]
                  [com.mchange/c3p0 "0.9.5.1"] ;;connection pooling
                  [korma "0.4.2" :exclusions [c3p0/c3p0]] ;;sql dsl
                  [org.postgresql/postgresql "9.3-1102-jdbc41"] ;;postgres adapter
-                 [http-kit "2.1.19"]] ;;server
+                 [org.immutant/web "2.0.2"];;server
+                 [crypto-random "1.2.0"] ;;crypto lib
+                 [clojurewerkz/spyglass "1.1.0"];;couchbase interface
+                 [buddy "0.6.1" :exclusions [org.clojure/tools.reader clj-time]]] ;;ring based authentication
 
   :min-lein-version "2.0.0"
   :uberjar-name "emerald.jar"
@@ -56,7 +55,7 @@
    :test          [:project/test :profiles/test]
    :prod          [:project/prod :profiles/prod]
    :project/dev  {:dependencies [[ring/ring-mock "0.2.0"]
-                                 [ring/ring-devel "1.4.0"]
+                                 [ring/ring-devel "1.4.0" :exclusions [org.clojure/tools.reader hiccup]]
                                  [pjstadig/humane-test-output "0.7.0"]
                                  [mvxcvi/puget "0.8.1"]]
 
