@@ -13,6 +13,9 @@
            (where {:id id}))
    first))
 
+(defn exists? [id]
+  (not (empty? (get id))))
+
 (defn prep [client]
   (assoc client :id (java.util.UUID/randomUUID)))
 

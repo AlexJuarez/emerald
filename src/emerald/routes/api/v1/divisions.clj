@@ -4,6 +4,7 @@
   (:require
    [emerald.util.session :as session]
    [emerald.models.division :as division]
+   [emerald.models.client :as client]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -33,6 +34,7 @@
 
 (s/defschema Division
   {:name String
+   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?))
    (s/optional-key :deleted) Boolean
    (s/optional-key :geoProfileId) java.util.UUID
    (s/optional-key :description) String

@@ -24,6 +24,9 @@
            (where {:id id}))
    first))
 
+(defn exists? [id]
+  (not (empty? (get id))))
+
 (defn prep-for-update [account]
   (into {} (map #(update-fields % changeToArray) account)))
 

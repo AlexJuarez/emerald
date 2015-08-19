@@ -5,6 +5,7 @@
    [emerald.util.session :as session]
    [emerald.models.account :as account]
    [emerald.models.industry :as industry]
+   [emerald.models.division :as division]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
@@ -34,6 +35,7 @@
 
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
+   :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?))
    :name String
    (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String

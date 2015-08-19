@@ -12,8 +12,7 @@
    first))
 
 (defn exists? [id]
-  (not (empty? (select divisions
-                       (where {:id id :deleted false})))))
+  (not (empty? (get id))))
 
 (defn get-pin [division-id user-id]
   (first (select division-pins

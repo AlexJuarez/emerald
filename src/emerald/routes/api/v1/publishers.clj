@@ -3,6 +3,7 @@
    [emerald.util.core])
   (:require
    [emerald.models.publisher :as publisher]
+   [emerald.models.client :as client]
    [emerald.models.enums :as enums]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
@@ -22,6 +23,7 @@
 
 (s/defschema Publisher
   {:name String
+   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?))
    (s/optional-key :skip321)  Boolean
    (s/optional-key :audioOff) Boolean
    (s/optional-key :playMode) (apply s/enum (enums/play-modes))

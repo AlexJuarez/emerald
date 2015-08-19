@@ -4,6 +4,7 @@
   (:require
    [emerald.models.placement :as placement]
    [emerald.models.publisher :as publisher]
+   [emerald.models.campaign :as campaign]
    [emerald.models.enums :as enums]
    [clojure.test :refer :all]
    [compojure.api.sweet :refer :all]
@@ -25,11 +26,14 @@
 (s/defschema Placement
   {:name String
    :publisherId (s/both java.util.UUID (s/pred publisher/exists? 'publisher/exists?))
+   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?))
+   (s/optional-key :targetId) java.util.UUID
    (s/optional-key :playMode) (apply s/enum (enums/play-modes))
    (s/optional-key :openLinks) (apply s/enum (enums/window-types))
    :flightStart java.util.Date
    :flightEnd java.util.Date
    :type (apply s/enum (enums/ad-types))
+   (s/optional-key :clickThroughUrl) String
    (s/optional-key :clickTrackers) String
    (s/optional-key :impressionTrackers) String
    (s/optional-key :viewTrackers) String

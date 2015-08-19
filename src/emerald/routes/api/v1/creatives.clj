@@ -3,6 +3,7 @@
    [emerald.util.core])
   (:require
    [emerald.models.creative :as creative]
+   [emerald.models.campaign :as campaign]
    [emerald.models.enums :as enums]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
@@ -22,6 +23,7 @@
 
 (s/defschema Creative
   {:name String
+   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?))
    :device (apply s/enum (enums/device-types))
    :type (apply s/enum (enums/ad-types))
    (s/optional-key :deleted) Boolean
