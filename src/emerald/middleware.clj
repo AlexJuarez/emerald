@@ -5,6 +5,7 @@
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]]
             [clojure.java.io :as io]
+            [emerald.models.user :as user]
             [emerald.util.session :as sess :refer [wrap-session]]
             [selmer.middleware :refer [wrap-error-page]]
             [prone.middleware :refer [wrap-exceptions]]
@@ -57,8 +58,11 @@
 
 (defn authenticated? [request]
   (let [t (or (get (:headers request) "authorization") (get (:query-params request) "api_key"))
-        token (cache/get (str "oauth:" t))]
-    (sess/put! :user_id (get token :user_id))
+        token (cache/get (str "oauth:" t))
+        user-id (get token :user_id)]
+    (sess/put! :user_id user-id)
+    (when (empty? (sess/get :user))
+      (sess/put! :user (user/get user-id)))
     (or (not (env :auth)) (not (nil? token)));;todo remove this flag, this disables auth
     ))
 

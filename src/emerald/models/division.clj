@@ -14,6 +14,12 @@
 (defn exists? [id]
   (not (empty? (get id))))
 
+(defn access? [id user-id]
+  (-> (select user-division-permissions
+              (where {:division_id id :user_id user-id}))
+      empty?
+      not))
+
 (defn get-pin [division-id user-id]
   (first (select division-pins
                  (where {:division_id division-id :user_id user-id}))))

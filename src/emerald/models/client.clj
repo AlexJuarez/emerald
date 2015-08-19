@@ -48,6 +48,7 @@
 
 (defn all
   ([]
+   (access? 1 1)
    (all 10 0))
   ([lim os]
    (select clients

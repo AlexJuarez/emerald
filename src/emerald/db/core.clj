@@ -47,7 +47,19 @@
   client-pins
   division-pins
   account-pins
-  campaign-pins)
+  campaign-pins
+  user-account-permissions
+  user-client-permissions
+  user-division-permissions)
+
+(defentity user-account-permissions
+  (table :mixpo.user_account_permissions))
+
+(defentity user-division-permissions
+  (table :mixpo.user_division_permissions))
+
+(defentity user-client-permissions
+  (table :mixpo.user_client_permissions))
 
 (defentity users
   (belongs-to clients {:fk :client_id})
