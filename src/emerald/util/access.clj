@@ -3,7 +3,8 @@
             [emerald.models.division :as division]
             [emerald.models.campaign :as campaign]
             [emerald.models.creative :as creative]
-
+            [emerald.models.placement :as placement]
+            [emerald.models.publisher :as publisher]
             [emerald.models.account :as account]))
 
 (defmacro access? [f id]
@@ -61,9 +62,25 @@
   [id]
   (access?
    (fn [id]
-     (let [campaign-id (creative/get id)]
+     (let [campaign-id (:campaignId (creative/get id))]
        (campaign-access? campaign-id)))
    id))
 
+(defn placement-access?
+  "Does the user have access to a placement"
+  [id]
+  (access?
+   (fn [id]
+     (let [campaign-id (:campaignId (placement/get id))]
+       (campaign-access? campaign-id)))
+   id))
 
+(defn publisher-access?
+  "Does the user have access to a publisher"
+  [id]
+  (access?
+   (fn [id]
+     (let [client-id (:clientId (publisher/get id))]
+       (client-access? client-id)))
+   id))
 
