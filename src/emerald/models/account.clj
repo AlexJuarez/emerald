@@ -17,8 +17,11 @@
    first))
 
 (defn exists? [id]
-  (not (empty? (select accounts
-                       (where {:id id})))))
+  (-> (select accounts
+              (where {:id id}))
+      empty?
+      not
+      ))
 
 (defn access? [id user-id]
   (->

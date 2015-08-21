@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.creatives
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.models.creative :as creative]
    [emerald.models.campaign :as campaign]
@@ -23,7 +24,7 @@
 
 (s/defschema Creative
   {:name String
-   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?))
+   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
    :device (apply s/enum (enums/device-types))
    :type (apply s/enum (enums/ad-types))
    (s/optional-key :deleted) Boolean
@@ -38,9 +39,13 @@
 
 (s/defschema Edit-Creative (make-optional Creative))
 
+(defn wrap-creative-access [handler]
+  (wrap-id-access handler creative-access?))
+
 (defroutes* creative-routes
   (context* "/creatives/:id" []
             :tags ["creatives"]
+            :middlewares [wrap-creative-access]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a creative by id"
@@ -52,6 +57,7 @@
             ))
   (GET* "/creatives" []
         :tags ["creatives"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of creatives"
         (ok (creatives)))

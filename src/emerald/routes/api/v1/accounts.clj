@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.accounts
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.util.session :as session]
    [emerald.models.account :as account]
@@ -35,7 +36,7 @@
 
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
-   :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?))
+   :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?) (s/pred division-access? 'division-access?))
    :name String
    (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String
@@ -43,14 +44,14 @@
 
 (s/defschema Edit-Account (make-optional Account))
 
+(defn wrap-account-access [handler]
+  (wrap-id-access handler account-access?))
+
 (defroutes* account-routes
-  (GET* "/accounts/pinned" []
-        :tags ["accounts"]
-        :summary "looks up a list of pinned accounts"
-        (ok (pinned-accounts)))
   (context* "/accounts/:id" []
             :tags ["accounts"]
-            :path-params [id :- java.util.UUID]
+            :middlewares [wrap-account-access]
+            :path-params [id :- (s/both java.util.UUID (s/pred account/exists? 'account/exists?))]
             (GET* "/" []
                   :summary "gets a account by id"
                   (ok (get-account id)))
@@ -65,8 +66,13 @@
                      :summary "removes the pinned account for the user"
                      (ok (delete-pin id)))
             )
+  (GET* "/accounts/pinned" []
+        :tags ["accounts"]
+        :summary "looks up a list of pinned accounts"
+        (ok (pinned-accounts)))
   (GET* "/accounts" []
         :tags ["accounts"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of accounts"
         (ok (accounts)))

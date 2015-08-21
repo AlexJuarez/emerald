@@ -1,5 +1,9 @@
 (ns emerald.util.access
   (:require [emerald.util.session :as sess]
+            [buddy.auth.middleware :refer [wrap-authentication]]
+            [buddy.auth.accessrules :refer [restrict]]
+            [taoensso.timbre :as timbre]
+            [cheshire.core :as json]
             [emerald.models.division :as division]
             [emerald.models.campaign :as campaign]
             [emerald.models.creative :as creative]
@@ -7,10 +11,32 @@
             [emerald.models.publisher :as publisher]
             [emerald.models.account :as account]))
 
+(defn on-error [request response]
+  {:status  200
+   :headers {"Content-Type" "application/json"}
+   :body    (json/encode {:error "insufficient permissions"})})
+
+(defmacro access-wrapper [f]
+  `(fn [request#]
+     (let [id# (try
+                 (java.util.UUID/fromString (get (:params request#) :id))
+                 (catch Exception e#
+                   (when (not (= (type e#) java.lang.NullPointerException)) (timbre/error "id cast error" e#))
+                   ""))
+                 ]
+       (~f id#))))
+
+(defmacro wrap-id-access [handler access]
+  `(restrict ~handler {:handler (access-wrapper ~access)
+                      :on-error on-error}))
+
 (defmacro access? [f id]
   `(= true
       (or (:employee (sess/get :user))
           (~f ~id (sess/get :user)))))
+
+(defn employee-access? [& id]
+  (= true (:employee (sess/get :user))))
 
 (defn client-access?
   "Does the user have access to the client"
@@ -19,8 +45,7 @@
    (fn [id user-id]
      (= (sess/get-in [:user :client_id])
        id))
-   id)
-   )
+   id))
 
 (defn division-access?
   "Does the user have access to the division"
@@ -84,3 +109,5 @@
        (client-access? client-id)))
    id))
 
+(defn wrap-employee-access [handler]
+  (wrap-id-access handler employee-access?))

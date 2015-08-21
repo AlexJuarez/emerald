@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.campaigns
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.util.session :as session]
    [emerald.models.campaign :as campaign]
@@ -41,7 +42,7 @@
   {"succss" "campaign has been successfully removed"})
 
 (s/defschema Campaign
-  {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?))
+  {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?) (s/pred account-access? 'account-access?))
    :name String
    :startDate java.util.Date
    :endDate java.util.Date
@@ -59,14 +60,14 @@
 
 (s/defschema Edit-Campaign (make-optional Campaign))
 
+(defn wrap-campaign-access [handler]
+  (wrap-id-access handler campaign-access?))
+
 (defroutes* campaign-routes
-  (GET* "/campaigns/pinned" []
-        :tags ["campaigns"]
-        :summary "looks up a list of pinned campaigns"
-        (ok (pinned-campaigns)))
   (context* "/campaigns/:id" []
             :tags ["campaigns"]
-            :path-params [id :- java.util.UUID]
+            :middlewares [wrap-campaign-access]
+            :path-params [id :- (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?))]
             (GET* "/" []
                   :summary "gets a campaign by id"
                   (ok (get-campaign id)))
@@ -87,8 +88,13 @@
                      :summary "removes the pinned campaign for the user"
                      (ok (delete-pin id)))
             )
+  (GET* "/campaigns/pinned" []
+        :tags ["campaigns"]
+        :summary "looks up a list of pinned campaigns"
+        (ok (pinned-campaigns)))
   (GET* "/campaigns" []
         :tags ["campaigns"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 0} {offset :- Long 0} {dimensions :- String ""}]
         :summary "looks up a list of campaigns"
         (ok (campaigns)))

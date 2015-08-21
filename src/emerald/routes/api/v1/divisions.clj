@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.divisions
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.util.session :as session]
    [emerald.models.division :as division]
@@ -30,11 +31,11 @@
 
 (defn delete-pin [id]
   (division/unpin! id (session/get :user_id))
-  {"succss" "division has been successfully removed"})
+  {"success" "division has been successfully removed"})
 
 (s/defschema Division
   {:name String
-   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?))
+   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?) (s/pred client-access? 'client-access?))
    (s/optional-key :deleted) Boolean
    (s/optional-key :geoProfileId) java.util.UUID
    (s/optional-key :description) String
@@ -42,14 +43,14 @@
 
 (s/defschema Edit-Division (make-optional Division))
 
+(defn wrap-division-access [handler]
+  (wrap-id-access handler division-access?))
+
 (defroutes* division-routes
-  (GET* "/divisions/pinned" []
-        :tags ["divisions"]
-        :summary "looks up a list of pinned divisions"
-        (ok (pinned-divisions)))
   (context* "/divisions/:id" []
             :tags ["divisions"]
-            :path-params [id :- java.util.UUID]
+            :middlewares [wrap-division-access]
+            :path-params [id :- (s/both java.util.UUID (s/pred division/exists? 'division/exists?))]
             (GET* "/" []
                   :summary "gets a division by id"
                   (ok (get-division id)))
@@ -64,8 +65,13 @@
                      :summary "removes the pinned division for the user"
                      (ok (delete-pin id)))
             )
+  (GET* "/divisions/pinned" []
+        :tags ["divisions"]
+        :summary "looks up a list of pinned divisions"
+        (ok (pinned-divisions)))
   (GET* "/divisions" []
         :tags ["divisions"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of divisions"
         (ok (divisions)))
