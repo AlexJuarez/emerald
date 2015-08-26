@@ -11,8 +11,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn clients []
-  (client/all))
+(defn clients [limit offset]
+  (client/all limit offset))
 
 (defn get-client [id]
   (client/get id))
@@ -39,7 +39,6 @@
 (defn delete-pin [id]
   (client/unpin! id (session/get :user_id))
   {"succss" "client has been successfully removed"})
-
 
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
@@ -81,7 +80,7 @@
         :tags ["clients"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of clients"
-        (ok (clients)))
+        (ok (clients limit offset)))
   (POST* "/clients" []
          :tags ["clients"]
          :body [client Client]

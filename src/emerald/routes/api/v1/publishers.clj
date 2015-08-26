@@ -9,8 +9,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn publishers []
-  (publisher/all))
+(defn publishers [limit offset]
+  (publisher/all limit offset))
 
 (defn get-publisher [id]
   (publisher/get id))
@@ -50,7 +50,7 @@
         :tags ["publishers"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of publishers"
-        (ok (publishers)))
+        (ok (publishers limit offset)))
   (POST* "/publishers" []
          :tags ["publishers"]
          :body [publisher Publisher]
