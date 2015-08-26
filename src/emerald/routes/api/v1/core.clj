@@ -12,6 +12,7 @@
    [emerald.routes.api.v1.channels :refer [channel-routes]]
    [emerald.routes.api.v1.adtags :refer [adtag-routes]]
    [emerald.routes.api.v1.oauth :refer [oauth-routes]]
+   [emerald.routes.api.v1.upload :refer [upload-routes]]
    [emerald.middleware :as middleware]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
@@ -36,5 +37,6 @@
                publisher-routes
                adtag-routes
                industry-routes
+               upload-routes
                enum-routes
                channel-routes))
