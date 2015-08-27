@@ -11,5 +11,6 @@
 (defroutes* adtag-routes
   (GET* "/adtags" []
         :tags ["adtags"]
+        :description "returns a model representation that can be used to reconstuct the adtags"
         :summary "gets all of the adtags"
         (ok (all))))

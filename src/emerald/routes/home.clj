@@ -11,8 +11,7 @@
             [bouncer.validators :as v]))
 
 (defn home-page []
-  (layout/render
-    "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
+  (resp/redirect "/docs"))
 
 (defn login-page [& user]
   (layout/render "login.html" (first user)))
