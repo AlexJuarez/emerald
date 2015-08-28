@@ -25,8 +25,8 @@
                           :message "Our highly trained operatives are working on it"}))
 
 (defapi api-routes
-  {:formats [:json-kw]
-   :exception-handler exception-handler}
+  {:format {:formats [:json-kw]}
+   :exceptions {:exception-handler exception-handler}}
   (swagger-ui
    "/docs"
    :swagger-docs "/docs.json") ;;Change swagger.json endpoint
