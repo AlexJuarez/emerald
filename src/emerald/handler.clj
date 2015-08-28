@@ -18,6 +18,11 @@
            (route/resources "/")
            (route/not-found "Not Found"))
 
+(defn log-path []
+  (if (env :dev)
+    (env :log-path)
+    (str (System/getProperty "user.home") "/tomcat" (env :log-path))))
+
 (defn init
   "init will be called once when
    app is deployed as a servlet on
@@ -28,7 +33,7 @@
   (timbre/merge-config!
     {:level     (if (env :dev) :trace :info)
      :appenders {:rotor (rotor/rotor-appender
-                          {:path (env :log-path)
+                          {:path (log-path)
                            :max-size (* 512 1024)
                            :backlog 10})}})
 

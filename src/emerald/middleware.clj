@@ -57,7 +57,9 @@
   (wrap-restful-format handler :formats [:json-kw :transit-json :transit-msgpack]))
 
 (defn authenticated? [request]
-  (let [t (or (get (:headers request) "authorization") (get (:query-params request) "api_key"))
+  (let [t (or (get (:headers request) "authorization")
+              (get (:query-params request) "api_key")
+              (get (:cookies request) "access_key"))
         token (cache/get (str "oauth:" t))
         user-id (get token :user_id)]
     (sess/put! :user_id user-id)

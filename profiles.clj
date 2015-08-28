@@ -18,5 +18,5 @@
                  :jdbc-uri "jdbc:postgresql://localhost/bowser?user=bowser&password=koopa"
                  :couchbase true
                  :auth true
-                 :log-path "../../logs/emerald.log"
+                 :log-path "/logs/emerald.log"
                  }}}
