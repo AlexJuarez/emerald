@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.placements
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.models.placement :as placement]
    [emerald.models.publisher :as publisher]
@@ -26,7 +27,7 @@
 (s/defschema Placement
   {:name String
    :publisherId (s/both java.util.UUID (s/pred publisher/exists? 'publisher/exists?))
-   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?))
+   :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
    (s/optional-key :targetId) java.util.UUID
    (s/optional-key :playMode) (apply s/enum (enums/play-modes))
    (s/optional-key :openLinks) (apply s/enum (enums/window-types))
@@ -49,9 +50,13 @@
 
 (s/defschema Edit-Placement (make-optional Placement))
 
+(defn wrap-placement-access [handler]
+  (wrap-id-access handler placement-access?))
+
 (defroutes* placement-routes
   (context* "/placements/:id" []
             :tags ["placements"]
+            :middlewares [wrap-placement-access]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a placement by id"
@@ -63,6 +68,7 @@
             ))
   (GET* "/placements" []
         :tags ["placements"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of placements"
         (ok (placements limit offset)))

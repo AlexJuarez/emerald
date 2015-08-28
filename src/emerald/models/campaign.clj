@@ -25,7 +25,11 @@
    first))
 
 (defn exists? [id]
-  (not (empty? (get id))))
+  (->
+   (select campaigns
+           (where {:id id}))
+   empty?
+   not))
 
 (defn prep-for-update [account]
   (into {} (map #(update-fields % changeToArray) account)))

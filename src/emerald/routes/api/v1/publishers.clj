@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.publishers
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.models.publisher :as publisher]
    [emerald.models.client :as client]
@@ -23,7 +24,7 @@
 
 (s/defschema Publisher
   {:name String
-   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?))
+   :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?) (s/pred client-access? 'client-access?))
    (s/optional-key :skip321)  Boolean
    (s/optional-key :audioOff) Boolean
    (s/optional-key :playMode) (apply s/enum (enums/play-modes))
@@ -34,9 +35,13 @@
 
 (s/defschema Edit-Publisher (make-optional Publisher))
 
+(defn wrap-publisher-access [handler]
+  (wrap-id-access handler publisher-access?))
+
 (defroutes* publisher-routes
   (context* "/publishers/:id" []
             :tags ["publishers"]
+            :middlewares [wrap-publisher-access]
             :path-params [id :- java.util.UUID]
             (GET* "/" []
                   :summary "gets a publisher by id"
@@ -48,6 +53,7 @@
             ))
   (GET* "/publishers" []
         :tags ["publishers"]
+        :middlewares [wrap-employee-access]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of publishers"
         (ok (publishers limit offset)))

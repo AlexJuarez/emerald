@@ -17,8 +17,18 @@
    first))
 
 (defn exists? [id]
-  (not (empty? (select accounts
-                       (where {:id id})))))
+  (-> (select accounts
+              (where {:id id}))
+      empty?
+      not
+      ))
+
+(defn access? [id user-id]
+  (->
+   (select user-account-permissions
+           (where {:account_id id :user_id user-id}))
+   empty?
+   not))
 
 (defn prep-for-update [account]
   (into {} (map #(update-fields % changeToArray) account)))

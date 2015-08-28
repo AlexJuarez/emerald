@@ -9,6 +9,11 @@
    [clojure.string :as s]
    [emerald.util.password :as pwutil]))
 
+(defn get [id]
+  (-> (select users
+              (where {:id id :deleted false}))
+      first))
+
 (defn get-by-email-or-username [username]
   (let [username (s/lower-case username)]
     (-> (select users

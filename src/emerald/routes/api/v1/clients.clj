@@ -1,6 +1,7 @@
 (ns emerald.routes.api.v1.clients
   (:use
-   [emerald.util.core])
+   [emerald.util.core]
+   [emerald.util.access])
   (:require
    [emerald.util.session :as session]
    [emerald.models.client :as client]
@@ -18,7 +19,7 @@
   (client/get id))
 
 (defn create-client [slug]
-  (client/add! slug))
+    (client/add! slug))
 
 (defn update-client [id slug]
   (client/update! id slug))
@@ -48,14 +49,14 @@
 
 (s/defschema Edit-Client (make-optional Client))
 
+(defn wrap-client-access [handler]
+  (wrap-id-access handler client-access?))
+
 (defroutes* client-routes
-  (GET* "/clients/pinned" []
-        :tags ["clients"]
-        :summary "looks up a list of pinned clients"
-        (ok (pinned-clients)))
   (context* "/clients/:id" []
             :tags ["clients"]
-            :path-params [id :- java.util.UUID]
+            :middlewares [wrap-client-access]
+            :path-params [id :- (s/both java.util.UUID (s/pred client/exists? 'client/exists?))]
             (GET* "/" []
                   :summary "gets a client by id"
                   (ok (get-client id)))
@@ -76,6 +77,10 @@
                      :summary "removes the pinned client for the user"
                      (ok (delete-pin id)))
             )
+  (GET* "/clients/pinned" []
+        :tags ["clients"]
+        :summary "looks up a list of pinned clients"
+        (ok (pinned-clients)))
   (GET* "/clients" []
         :tags ["clients"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
@@ -83,6 +88,7 @@
         (ok (clients limit offset)))
   (POST* "/clients" []
          :tags ["clients"]
+         :middlewares [wrap-employee-access]
          :body [client Client]
-         :summary "creates a new client"
+         :summary "creates a new client, you need special permissions to access this endpoint"
          (ok (create-client client))))
