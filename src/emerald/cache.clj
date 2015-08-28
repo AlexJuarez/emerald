@@ -10,13 +10,17 @@
 
 (defonce ce (atom nil))
 
+(defn create-connection [address]
+  (if-not (empty? address)
+    (c/text-connection address)))
+
 (defn init-connection []
   (when (nil? @ce)
     (info "Starting couchbase connection")
-    (reset! ce (c/text-connection address))))
+    (reset! ce (create-connection address))))
 
 (defn shutdown-connection []
-  (when (not (nil? @ce))
+  (when-not (nil? @ce)
     (info "Shutting down couchbase connection")
     (c/shutdown @ce)))
 
