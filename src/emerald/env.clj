@@ -39,7 +39,7 @@
     (if
       (.exists mixpo-identity)
       (read-from-identity-file (slurp mixpo-identity))
-      (timbre/warn "could not find mixpo_server.identity at" path))))
+      (timbre/info "could not find mixpo_server.identity at" path))))
 
 (defn- read-tomcat-file []
   (let [emerald-config (io/file tomcat-config-path)]

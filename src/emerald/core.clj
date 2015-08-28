@@ -71,6 +71,7 @@
    :else (do
            (if (env :couchbase) (cache/init-connection))
            (if (env :dev) (migrations/init))
+           (timbre/debug env)
            (enums/init)
            (start-app args))))
 
