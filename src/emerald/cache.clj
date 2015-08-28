@@ -29,16 +29,17 @@
     (info "Shutting down couchbase connection")
     (c/shutdown @ce)))
 
-(defn get-connection []
-  (cast net.spy.memcached.MemcachedClient @ce))
+(defmacro get-connection []
+  `(cast net.spy.memcached.MemcachedClient @ce))
 
 (defrecord CouchBaseSessionStore [namespace ttl-secs]
   session-store/SessionStore
-  (read-session [_ key] (or (when key (c/get (get-connection) (str namespace key))) {}))
-  (delete-session [_ key] (c/delete (get-connection) (str namespace key)) nil)
+  (read-session [_ key] (or (when key (try (c/get (get-connection) (str namespace key)) (catch Exception e (timbre/error e) (timbre/info (get-connection))))) {}))
+  (delete-session [_ key] (try (c/delete (get-connection) (str namespace key)) (catch Exception e (timbre/error e) (timbre/info (get-connection)))) nil)
   (write-session [_ key data]
     (let [key (or key (str (java.util.UUID/randomUUID)))]
-      (c/set (get-connection) (str namespace key) ttl-secs data)
+      (try (c/set (get-connection) (str namespace key) ttl-secs data)
+        (catch Exception e (timbre/error e) (timbre/info (get-connection))))
       key)))
 
 (defn create-couchbase-session-store
