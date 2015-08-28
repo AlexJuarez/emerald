@@ -16,7 +16,7 @@
                           :password "koopa"
                           :test-connection-query true}
                  :jdbc-uri "jdbc:postgresql://localhost/bowser?user=bowser&password=koopa"
-                 :couchbase false
-                 :auth false
+                 :couchbase true
+                 :auth true
                  :log-path "../../logs/emerald.log"
                  }}}

@@ -13,7 +13,8 @@
   (let [t (session/get-in [:session :accessToken])]
     (if (nil? t)
       (if-let [t (generate-token)]
-        (cache/set (str "oauth:" t) {:user_id user-id} (* 60 60 10))
-        (session/put! :accessToken t)
+        (do
+          (cache/set (str "oauth:" t) {:user_id user-id} (* 60 60 10))
+          (session/put! :accessToken t))
         t)
       t)))
