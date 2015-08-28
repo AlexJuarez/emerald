@@ -23,6 +23,7 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 | **log-path** | set to the path of the log output relative to the root directory of the application |
 
 Additionally the couchbase server uri is pulled from mixpo_server.identity file
+
 | Property | Description |
 |:---|:---|
 | **couchbase_server_uri** | the uri for the instance of couchbase, currently set to point at `127.0.0.1:11211` for details see [spyglass][2]|
