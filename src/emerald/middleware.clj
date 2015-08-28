@@ -59,7 +59,7 @@
 (defn authenticated? [request]
   (let [t (or (get (:headers request) "authorization")
               (get (:query-params request) "api_key")
-              (get-in (:cookies request) ["access_key" :value]))
+              (get-in (:cookies request) ["access_token" :value]))
         token (cache/get (str "oauth:" t))
         user-id (or (get token "user_id") (get token :user_id))]
     (sess/put! :user_id user-id)
