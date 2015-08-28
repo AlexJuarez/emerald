@@ -43,18 +43,18 @@
    (->CouchBaseSessionStore namespace (* 60 60 10))))
 
 (defn set [key value & ttl]
-  (if (env :couchbase)
+  (if-not (nil? @ce)
     (c/set (get-connection) key (or (first ttl) (+ (* 60 10) (rand-int 600))) value)
     (mem/set key value)
     ));;Prevent stampede
 
 (defn get [key]
-  (if (env :couchbase)
+  (if-not (nil? @ce)
     (c/get (get-connection) key)
     (mem/get key)))
 
 (defn delete [key]
-  (if (env :couchbase)
+  (if-not (nil? @ce)
     (c/delete (get-connection) key)
     (mem/delete key)))
 
