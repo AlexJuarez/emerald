@@ -67,7 +67,9 @@
 (defn get-user-id [id]
   (if (instance? java.util.UUID id)
     id
-    (java.util.UUID/fromString id)))
+    (if (instance? String id)
+      (java.util.UUID/fromString id)
+      id)))
 
 (defn authenticated? [request]
   (let [t (or (get (:headers request) "authorization")
