@@ -15,6 +15,6 @@
       (if-let [t (generate-token)]
         (do
           (cache/set (str "oauth:" t) {:user_id user-id} (* 60 60 10))
-          (session/put! :accessToken t))
-        t)
+          (session/put! :accessToken t)
+          t))
       t)))

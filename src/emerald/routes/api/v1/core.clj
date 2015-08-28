@@ -16,10 +16,12 @@
    [emerald.middleware :as middleware]
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
+   [taoensso.timbre :as timbre]
    [schema.core :as s]))
 
 (defapi api-routes
-  {:formats [:json-kw]}
+  {:formats [:json-kw]
+   :exception-handler (fn [e] (timbre/error e))}
   (swagger-ui
    "/docs"
    :swagger-docs "/docs.json") ;;Change swagger.json endpoint
