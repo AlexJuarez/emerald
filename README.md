@@ -5,11 +5,12 @@ To build emerald for tomcat deployment run `./lein ring uberwar`
 ## Configuration
 
 The configuration settings for the project can be found in `profiles.clj`.
-On a build the a new file called `.lein-env` is created and needs to be placed with the resulting war.
+On a build the a new file called `.lein-env` is created and needs to be renamed and copyed to `~/tomcat/conf/emerald.config`.
+
+Additionally the built war needs to be copied to
 
     eg. ~/tomcat/webapps/www
         |--api#crud.war
-        |--.lein-env
 
 When the server is built using `./lein ring uberwar` the settings from :profiles/prod are pulled
 
@@ -18,11 +19,17 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 | **dbspec** | should have the correct credentials for the postgres database. for details see [kormasql][1] |
 | **jdbc-uri** | is the jdbc uri used by the migrations in emerald, currently migrations are run using `./lein run migrate` however these migrations are only for testing |
 | **couchbase** | if false, a in memory store will be used instead of couchbase to manage both sessions, and oauth tokens. Switch to true only if a couchbase instance has been properly configured |
-| **couchbase-uri** | the uri for the instance of couchbase, currently set to point at `127.0.0.1:11211` for details see [spyglass][2]|
 | **auth** | false disables authentication for the routes and user context, so routes depending on the current user id will not work. Eg. `/campaigns/:id/pin` |
 | **log-path** | set to the path of the log output relative to the root directory of the application |
 
-> If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token`
+Additionally the couchbase server uri is pulled from mixpo_server.identity file
+| Property | Description |
+|:---|:---|
+| **couchbase_server_uri** | the uri for the instance of couchbase, currently set to point at `127.0.0.1:11211` for details see [spyglass][2]|
+
+    eg. couchbase_server_uri=127.0.0.1:11211
+
+> If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token` or a cookie with the name `access_token`
 
 
 [1]: http://sqlkorma.com/docs#db

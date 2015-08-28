@@ -12,7 +12,7 @@
 (defn grant-for-user [user-id]
   (let [t (session/get-in [:session :accessToken])]
     (if (nil? t)
-      (let [t (generate-token)]
+      (if-let [t (generate-token)]
         (cache/set (str "oauth:" t) {:user_id user-id} (* 60 60 10))
         (session/put! :accessToken t)
         t)

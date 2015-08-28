@@ -9,8 +9,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn creatives []
-  (creative/all))
+(defn creatives [limit offset]
+  (creative/all limit offset))
 
 (defn get-creative [id]
   (creative/get id))
@@ -54,7 +54,7 @@
         :tags ["creatives"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of creatives"
-        (ok (creatives)))
+        (ok (creatives limit offset)))
   (POST* "/creatives" []
          :tags ["creatives"]
          :body [creative Creative]

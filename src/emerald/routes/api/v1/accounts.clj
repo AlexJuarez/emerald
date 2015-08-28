@@ -10,8 +10,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn accounts []
-  (account/all))
+(defn accounts [limit offset]
+  (account/all limit offset))
 
 (defn get-account [id]
   (account/get id))
@@ -69,7 +69,7 @@
         :tags ["accounts"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of accounts"
-        (ok (accounts)))
+        (ok (accounts limit offset)))
   (POST* "/accounts" []
          :tags ["accounts"]
          :body [account Account]

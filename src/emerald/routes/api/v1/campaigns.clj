@@ -11,8 +11,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn campaigns []
-  (campaign/all))
+(defn campaigns [limit offset]
+  (campaign/all limit offset))
 
 (defn get-campaign [id]
   (campaign/get id))
@@ -47,6 +47,7 @@
    :endDate java.util.Date
    :repName String
    :repEmail String
+   (s/optional-key :conversionDomain) String
    (s/optional-key :deleted) Boolean
    (s/optional-key :description) String
    (s/optional-key :measureReach) Boolean
@@ -89,9 +90,9 @@
             )
   (GET* "/campaigns" []
         :tags ["campaigns"]
-        :query-params [{limit :- Long 0} {offset :- Long 0} {dimensions :- String ""}]
+        :query-params [{limit :- Long 0} {offset :- Long 0}]
         :summary "looks up a list of campaigns"
-        (ok (campaigns)))
+        (ok (campaigns limit offset)))
   (POST* "/campaigns" []
          :tags ["campaigns"]
          :body [campaign Campaign]

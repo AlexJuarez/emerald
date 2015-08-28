@@ -11,7 +11,7 @@
             [taoensso.timbre :as timbre]
             [taoensso.timbre.appenders.3rd-party.rotor :as rotor]
             [selmer.parser :as parser]
-            [environ.core :refer [env]]
+            [emerald.env :refer [env]]
             [clojure.tools.nrepl.server :as nrepl]))
 
 (defroutes base-routes

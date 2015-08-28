@@ -2,11 +2,11 @@
   (:refer-clojure :exclude [set get namespace])
   (:use [taoensso.timbre :only [trace debug info warn error fatal]])
   (:require [clojurewerkz.spyglass.client :as c]
-            [environ.core :refer [env]]
+            [emerald.env :refer [env]]
             [emerald.session :as mem]
             [ring.middleware.session.store :as session-store]))
 
-(def ^:private address (env :couchbase-uri))
+(def ^:private address (env :couchbase-server-uri))
 
 (defonce ce (atom nil))
 

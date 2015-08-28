@@ -9,8 +9,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn divisions []
-  (division/all))
+(defn divisions [limit offset]
+  (division/all limit offset))
 
 (defn get-division [id]
   (division/get id))
@@ -68,7 +68,7 @@
         :tags ["divisions"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of divisions"
-        (ok (divisions)))
+        (ok (divisions limit offset)))
   (POST* "/divisions" []
          :tags ["divisions"]
          :body [division Division]

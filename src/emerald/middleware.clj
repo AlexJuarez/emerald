@@ -3,7 +3,7 @@
             [emerald.cache :as cache]
             [emerald.layout :refer [*servlet-context* error-page]]
             [taoensso.timbre :as timbre]
-            [environ.core :refer [env]]
+            [emerald.env :refer [env]]
             [clojure.java.io :as io]
             [emerald.util.session :as sess :refer [wrap-session]]
             [selmer.middleware :refer [wrap-error-page]]

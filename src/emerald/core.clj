@@ -6,7 +6,7 @@
             [emerald.models.enums :as enums]
             [emerald.cache :as cache]
             [emerald.db.migrations :as migrations]
-            [environ.core :refer [env]]
+            [emerald.env :refer [env]]
             [clojure.tools.nrepl.server :as nrepl])
   (:gen-class))
 

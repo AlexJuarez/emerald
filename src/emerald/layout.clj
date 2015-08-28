@@ -5,7 +5,7 @@
             [ring.util.http-response :refer [content-type ok]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
-            [environ.core :refer [env]]))
+            [emerald.env :refer [env]]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *servlet-context*)

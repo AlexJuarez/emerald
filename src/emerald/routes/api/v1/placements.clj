@@ -11,8 +11,8 @@
    [ring.util.http-response :refer :all]
    [schema.core :as s]))
 
-(defn placements []
-  (placement/all))
+(defn placements [limit offset]
+  (placement/all limit offset))
 
 (defn get-placement [id]
   (placement/get id))
@@ -65,7 +65,7 @@
         :tags ["placements"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of placements"
-        (ok (placements)))
+        (ok (placements limit offset)))
   (POST* "/placements" []
          :tags ["placements"]
          :body [placement Placement]

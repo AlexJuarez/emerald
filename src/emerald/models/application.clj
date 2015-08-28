@@ -15,12 +15,12 @@
 
 (defn get-with-credentials [appKey appSecret]
   (-> (select applications
-              (where {:app_key appKey :app_secret appSecret}))
+              (where {:api_key appKey :api_secret appSecret}))
       first))
 
 (defn get-app-id [id]
   (select applications
-          (where {:app_key id})))
+          (where {:api_key id})))
 
 (defn all-for-user [user-id]
   (select applications
@@ -31,8 +31,8 @@
    :description description
    :website website
    :callbackUrls (into-array String (map s/trim (s/split callbackUrl #",")))
-   :appKey (token/generate-token)
-   :appSecret (token/generate-token)
+   :apiKey (token/generate-token)
+   :apiSecret (token/generate-token)
    :userId user-id
    })
 

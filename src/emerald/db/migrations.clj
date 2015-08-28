@@ -7,7 +7,7 @@
    [emerald.db.core :refer [db to-pg-json]]
    [migratus.core :as migratus]
    [cheshire.core :as jr]
-   [environ.core :refer [env]]
+   [emerald.env :refer [env]]
    [to-jdbc-uri.core :refer [to-jdbc-uri]]))
 
 (def migration-uri (env :jdbc-uri))

@@ -8,7 +8,7 @@
             [cheshire.core :refer [generate-string parse-string]]
             [taoensso.timbre :as timbre]
             [clojure.xml :as xml]
-            [environ.core :refer [env]])
+            [emerald.env :refer [env]])
   (:import org.postgresql.util.PGobject
            org.postgresql.jdbc4.Jdbc4Array
            clojure.lang.IPersistentMap
