@@ -61,7 +61,7 @@
               (get (:query-params request) "api_key")
               (get-in (:cookies request) ["access_key" :value]))
         token (cache/get (str "oauth:" t))
-        user-id (get token :user_id)]
+        user-id (or (get token "user_id") (get token :user_id))]
     (sess/put! :user_id user-id)
     (when (empty? (sess/get :user))
       (sess/put! :user (user/get user-id)))
