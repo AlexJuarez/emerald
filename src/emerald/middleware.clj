@@ -14,6 +14,7 @@
             [ring.util.http-response :refer [internal-server-error]]
             [ring.util.response :refer [redirect]]
             [ring.middleware.reload :as reload]
+            [cheshire.core :as jr]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
@@ -56,12 +57,24 @@
 (defn wrap-formats [handler]
   (wrap-restful-format handler :formats [:json-kw :transit-json :transit-msgpack]))
 
+(defn get-token [t]
+  (if-not (empty? t)
+    (let [token (cache/get (str "oauth:" t))]
+      (if (instance? String token)
+        (into {} (map #(vector (keyword (key %)) (val %)) (jr/parse-string token)))
+        token))))
+
+(defn get-user-id [id]
+  (if (instance? java.util.UUID id)
+    id
+    (java.util.UUID/fromString id)))
+
 (defn authenticated? [request]
   (let [t (or (get (:headers request) "authorization")
               (get (:query-params request) "api_key")
               (get-in (:cookies request) ["access_token" :value]))
-        token (cache/get (str "oauth:" t))
-        user-id (or (get token "user_id") (get token :user_id))]
+        token (get-token t)
+        user-id (get-user-id (get token :user_id))]
     (sess/put! :user_id user-id)
     (when (empty? (sess/get :user))
       (sess/put! :user (user/get user-id)))
