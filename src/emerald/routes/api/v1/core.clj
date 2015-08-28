@@ -19,9 +19,14 @@
    [taoensso.timbre :as timbre]
    [schema.core :as s]))
 
+(defn exception-handler [^Exception e]
+  (timbre/error e)
+  (internal-server-error {:type "Server Error"
+                          :message "Our highly trained operatives are working on it"}))
+
 (defapi api-routes
   {:formats [:json-kw]
-   :exception-handler (fn [e] (timbre/error e))}
+   :exception-handler exception-handler}
   (swagger-ui
    "/docs"
    :swagger-docs "/docs.json") ;;Change swagger.json endpoint
