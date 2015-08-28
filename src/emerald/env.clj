@@ -6,7 +6,8 @@
 
 ;;user.home is supposed to be equal to ~ for the path, change if needed
 (defonce tomcat-config-path (str (System/getProperty "user.home") "/tomcat/conf/emerald.config"))
-(defonce mixpo-identity-path (str (System/getProperty "user.home") "/mixpo_server.identity"))
+(defonce mixpo-identity-default-path (str (System/getProperty "user.home") "/mixpo_server.identity"))
+(defonce mixpo-identity-system-path (str "" (System/getenv "MIXPO_IDENTITY")))
 
 (defn- keywordize [s]
   (-> (strlib/lower-case s)
@@ -32,13 +33,13 @@
                    (filter #(not (= "#" (first (strlib/trim %))))))]
     (into {} (map #(convert-line (strlib/trim %) #"=") lines))))
 
-(defn- read-identity-file []
-  (let [mixpo_identity (io/file mixpo-identity-path)]
-    (timbre/debug "looking for file at" mixpo-identity-path)
+(defn- read-identity-file [path]
+  (let [mixpo-identity (io/file path)]
+    (timbre/debug "looking for file at" mixpo-identity)
     (if
-      (.exists mixpo_identity)
-      (read-from-identity-file (slurp mixpo_identity))
-      (timbre/warn "could not find mixpo_server.identity"))))
+      (.exists mixpo-identity)
+      (read-from-identity-file (slurp mixpo-identity))
+      (timbre/warn "could not find mixpo_server.identity at" path))))
 
 (defn- read-tomcat-file []
   (let [emerald-config (io/file tomcat-config-path)]
@@ -52,5 +53,6 @@
   env
   (merge
    (read-tomcat-file)
-   (read-identity-file)
+   (read-identity-file mixpo-identity-default-path)
+   (read-identity-file mixpo-identity-system-path)
    environ/env))
