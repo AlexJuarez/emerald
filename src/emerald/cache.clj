@@ -4,6 +4,7 @@
   (:require [clojurewerkz.spyglass.client :as c]
             [emerald.env :refer [env]]
             [emerald.session :as mem]
+            [taoensso.timbre :as timbre]
             [ring.middleware.session.store :as session-store]))
 
 (def ^:private address (env :couchbase-server-uri))
@@ -12,7 +13,11 @@
 
 (defn create-connection [address]
   (if-not (empty? address)
-    (c/text-connection address)))
+    (try
+      (c/text-connection address)
+      (catch Exception e
+        (timbre/error "Error creating couchbase connection" e)
+        nil))))
 
 (defn init-connection []
   (when (nil? @ce)
