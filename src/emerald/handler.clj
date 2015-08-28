@@ -38,6 +38,9 @@
                            :backlog 10})}})
 
   (if (env :dev) (parser/cache-off!))
+  (if (env :couchbase) (cache/init-connection))
+  (enums/init)
+
   (timbre/info (str
                  "\n-=[emerald started successfully"
                  (when (env :dev) " using the development profile")

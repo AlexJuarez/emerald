@@ -66,13 +66,9 @@
     (timbre/info "server is starting on port " (:port @server))))
 
 (defn -main [& args]
-  (timbre/info env)
-  (timbre/info "starting up the server")
   (cond
    (some #{"migrate" "rollback"} args) (migrations/migrate args)
    :else (do
-           (if (env :couchbase) (cache/init-connection))
            (if (env :dev) (migrations/init))
-           (enums/init)
            (start-app args))))
 
