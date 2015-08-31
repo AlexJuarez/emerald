@@ -20,7 +20,7 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 | **jdbc-uri** | is the jdbc uri used by the migrations in emerald, currently migrations are run using `./lein run migrate` however these migrations are only for testing |
 | **couchbase** | if false, a in memory store will be used instead of couchbase to manage both sessions, and oauth tokens. Switch to true only if a couchbase instance has been properly configured |
 | **auth** | false disables authentication for the routes and user context, so routes depending on the current user id will not work. Eg. `/campaigns/:id/pin` |
-| **log-path** | set to the path of the log output relative to the root directory of the application |
+| **log-path** | set to the path of the log relative to `~/tomcat` for production or `~/` for dev |
 
 > If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token` or a cookie with the name `access_token`
 
