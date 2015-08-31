@@ -26,7 +26,7 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 
 ###Mixpo Identity File
 
-Additionally the couchbase server uri is pulled from `mixpo_server.identity` file, the path is determined by the bash variable `MIXPO_IDENTITY`, or a default location of `~/mixpo_server.identity`
+Additionally the couchbase server uri is pulled from `mixpo_server.identity` file, the path is determined by the bash variable `$MIXPO_IDENTITY`, or a default location of `~/mixpo_server.identity`
 
 | Property | Description |
 |:---|:---|
