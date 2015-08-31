@@ -22,7 +22,11 @@ When the server is built using `./lein ring uberwar` the settings from :profiles
 | **auth** | false disables authentication for the routes and user context, so routes depending on the current user id will not work. Eg. `/campaigns/:id/pin` |
 | **log-path** | set to the path of the log output relative to the root directory of the application |
 
-Additionally the couchbase server uri is pulled from mixpo_server.identity file
+> If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token` or a cookie with the name `access_token`
+
+###Mixpo Identity File
+
+Additionally the couchbase server uri is pulled from `mixpo_server.identity` file, the path is determined by the bash variable `MIXPO_IDENTITY`, or a default location of `~/mixpo_server.identity`
 
 | Property | Description |
 |:---|:---|
@@ -30,7 +34,7 @@ Additionally the couchbase server uri is pulled from mixpo_server.identity file
 
     eg. couchbase_server_uri=127.0.0.1:11211
 
-> If the auth flag is enabled, the server expects a header containing `authorization: access_token` or a query parameter of `api_key=access_token` or a cookie with the name `access_token`
+
 
 
 [1]: http://sqlkorma.com/docs#db
