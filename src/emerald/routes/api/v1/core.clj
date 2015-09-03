@@ -17,16 +17,47 @@
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [taoensso.timbre :as timbre]
-   [schema.core :as s]))
+   [emerald.models.enums :refer [get-enum-table]]
+   [schema.core :as s]
+   [schema.coerce :as sc]
+   [ring.swagger.coerce :as rsc]))
+
+(defn string->enum [s]
+  (if (string? s)
+    (let [v (keyword s)
+          table (get-enum-table v)]
+      (emerald.models.enums.KormaEnum. v table))
+    s))
+
+(defn keyword-enum-matcher [schema]
+  (when (and (instance? emerald.models.enums.KormaEnumSchema schema)
+             (every? keyword? (.-vs ^emerald.models.enums.KormaEnumSchema schema)))
+    string->enum))
+
+(defn json-schema-korma-coercion-matcher
+  [schema]
+  (or (rsc/json-coersions schema)
+      (keyword-enum-matcher schema)
+      (rsc/set-matcher schema)
+      (rsc/set-matcher schema)
+      (rsc/date-time-matcher schema)
+      (rsc/date-matcher schema)
+      (rsc/pattern-matcher schema)))
 
 (defn exception-handler [^Exception e]
   (timbre/error e)
   (internal-server-error {:type "Server Error"
                           :message "Our highly trained operatives are working on it"}))
 
+(defn coercion-matchers [_]
+  {:body json-schema-korma-coercion-matcher
+   :string rsc/query-schema-coercion-matcher
+   :response rsc/json-schema-coercion-matcher})
+
 (defapi api-routes
   {:format {:formats [:json-kw]}
-   :exceptions {:exception-handler exception-handler}}
+   :exceptions {:exception-handler exception-handler}
+   :coercion coercion-matchers}
   (swagger-ui
    "/docs"
    :swagger-docs "/docs.json") ;;Change swagger.json endpoint

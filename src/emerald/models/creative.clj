@@ -26,7 +26,7 @@
 (defn add! [creative]
   (-> (insert* creatives)
       (values (-> creative prep-for-update prep))
-      (exec)))
+      (println)))
 
 (defn update! [id creative]
   (update creatives

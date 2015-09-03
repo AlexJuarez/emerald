@@ -25,8 +25,8 @@
 (s/defschema Creative
   {:name String
    :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
-   :device (apply s/enum (enums/device-types))
-   :type (apply s/enum (enums/ad-types))
+   :device (apply enums/enum-type (enums/device-types))
+   :type (apply enums/enum-type (enums/ad-types))
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long

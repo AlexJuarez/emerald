@@ -1,6 +1,9 @@
 (ns emerald.models.enums
   (:refer-clojure :exclude [update get])
   (:require [emerald.db.core :refer [db]]
+            [schema.core :as schema]
+            [schema.utils :as utils]
+            [schema.macros :as macros :include-macros true]
             [korma.db])
   (:use
    [korma.core]
@@ -13,6 +16,40 @@
 (defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
+
+(defrecord KormaEnum [value source])
+
+(defrecord KormaEnumSchema [vs]
+  ;;based on 0.4.4 version of schema
+  ;;https://github.com/Prismatic/schema/blob/0ad28bff3ec03130cfa25b16138c6b1adc143011/src/cljx/schema/core.cljx
+  ;;changed to spec in v1.0...
+  schema.core.Schema
+  (walker [this]
+        (fn [x]
+          (if (contains? vs (:value x))
+            x
+            (macros/validation-error this x (list vs (utils/value-name x))))))
+  (explain [this] (cons 'enum-type vs)))
+
+(defn enum-type
+  "A value that must be = to some element of vs."
+  [& vs]
+  (KormaEnumSchema. (set vs)))
+
+(def enum-tables
+  {:mixpo.device_type device-types-mem
+   :mixpo.creative_type ad-types-mem
+   :mixpo.expand_anchor expand-anchors-mem
+   :mixpo.expand_direction expand-directions-mem
+   :mixpo.expand_type expand-types-mem
+   :mixpo.play_mode_type play-modes-mem
+   :mixpo.window_type window-types-mem})
+
+(defn get-enum-table [v]
+  (->
+   (filter #(some #{v} @(val %)) enum-tables)
+   first
+   key))
 
 (defn convert-keyword [lst]
   (map #(keyword %) lst))

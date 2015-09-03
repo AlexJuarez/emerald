@@ -22,6 +22,7 @@
                  [org.clojure/tools.nrepl "0.2.10"]
                  [metosin/compojure-api "0.22.1"]
                  [metosin/ring-swagger-ui "2.1.1"]
+                 [prismatic/schema "0.4.4"]
                  [migratus "0.8.2"] ;;table migration
                  [to-jdbc-uri "0.2.0"] ;;jdbc uri parser
                  [org.clojure/java.jdbc "0.3.7"]
