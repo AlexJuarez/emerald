@@ -28,12 +28,12 @@
   {:name String
    :publisherId (s/both java.util.UUID (s/pred publisher/exists? 'publisher/exists?))
    :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
-   (s/optional-key :targetId) java.util.UUID
-   (s/optional-key :playMode) (apply s/enum (enums/play-modes))
-   (s/optional-key :openLinks) (apply s/enum (enums/window-types))
    :flightStart java.util.Date
    :flightEnd java.util.Date
-   :type (apply s/enum (enums/ad-types))
+   :type (apply enums/enum-type (enums/ad-types))
+   (s/optional-key :targetId) java.util.UUID
+   (s/optional-key :playMode) (apply enums/enum-type (enums/play-modes))
+   (s/optional-key :openLinks) (apply enums/enum-type (enums/window-types))
    (s/optional-key :clickThroughUrl) String
    (s/optional-key :clickTrackers) String
    (s/optional-key :impressionTrackers) String

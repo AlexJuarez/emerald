@@ -18,7 +18,9 @@
                        (where {:id id :deleted false})))))
 
 (defn prep [creative]
-  (assoc creative :id (java.util.UUID/randomUUID)))
+  (assoc creative
+    :id (java.util.UUID/randomUUID)
+    :expandable (= true (not (nil? (:expand_mode creative))))))
 
 (defn prep-for-update [creative]
   (into {} (map #(update-fields % changeToArray) creative)))

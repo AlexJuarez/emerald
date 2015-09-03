@@ -17,4 +17,3 @@
 
 (defn make-optional [schema]
   (zipmap (map #(if (keyword? %) (sc/optional-key %) %) (keys schema)) (vals schema)))
-

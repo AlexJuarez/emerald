@@ -20,8 +20,10 @@
                  [bouncer "0.3.3"] ;;validation dsl
                  [prone "0.8.2"] ;;better error reporting
                  [org.clojure/tools.nrepl "0.2.10"]
-                 [metosin/compojure-api "0.22.1"]
+                 [metosin/compojure-api "0.23.1"]
                  [metosin/ring-swagger-ui "2.1.1"]
+                 [metosin/ring-swagger "0.21.0"]
+                 [prismatic/schema "0.4.4"]
                  [migratus "0.8.2"] ;;table migration
                  [to-jdbc-uri "0.2.0"] ;;jdbc uri parser
                  [org.clojure/java.jdbc "0.3.7"]

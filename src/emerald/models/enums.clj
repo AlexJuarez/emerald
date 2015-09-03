@@ -1,6 +1,10 @@
 (ns emerald.models.enums
   (:refer-clojure :exclude [update get])
   (:require [emerald.db.core :refer [db]]
+            [schema.core :as schema]
+            [schema.utils :as utils]
+            [schema.macros :as macros]
+            [ring.swagger.json-schema :as json-schema :include-macros true]
             [korma.db])
   (:use
    [korma.core]
@@ -13,6 +17,43 @@
 (defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
+
+(defrecord KormaEnumSchema [vs]
+  ;;based on 0.4.4 version of schema
+  ;;https://github.com/Prismatic/schema/blob/0ad28bff3ec03130cfa25b16138c6b1adc143011/src/cljx/schema/core.cljx
+  ;;changed to spec in v1.0...
+  schema.core.Schema
+  (walker [this]
+        (fn [x]
+          (if (contains? vs (:value x))
+            x
+            (macros/validation-error this x (list vs (utils/value-name (:value x)))))))
+  (explain [this] (cons 'enum-type vs)))
+
+(defn enum-type
+  "A value that must be = to some element of vs."
+  [& vs]
+  (KormaEnumSchema. (set vs)))
+
+(extend-type KormaEnumSchema
+  json-schema/JsonSchema
+  (convert [e {:keys [in]}]
+           (merge (json-schema/->swagger (class (first (:vs e)))) {:enum (seq (:vs e))})))
+
+(def enum-types
+  {:device_type device-types-mem
+   :creative_type ad-types-mem
+   :expand_anchor expand-anchors-mem
+   :expand_direction expand-directions-mem
+   :expand_type expand-types-mem
+   :play_mode_type play-modes-mem
+   :window_type window-types-mem})
+
+(defn get-enum-type [v]
+  (->
+   (filter #(some #{v} @(val %)) enum-types)
+   first
+   key))
 
 (defn convert-keyword [lst]
   (map #(keyword %) lst))

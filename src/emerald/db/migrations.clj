@@ -4,7 +4,8 @@
    [korma.core]
    [emerald.db.core])
   (:require
-   [emerald.db.core :refer [db to-pg-json]]
+   [emerald.db.core :refer [db]]
+   [emerald.db.helpers :refer [to-pg-json]]
    [migratus.core :as migratus]
    [cheshire.core :as jr]
    [emerald.env :refer [env]]
