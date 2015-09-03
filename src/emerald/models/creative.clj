@@ -20,9 +20,6 @@
 (defn prep [creative]
   (assoc creative
     :id (java.util.UUID/randomUUID)
-    :template false
-    :syndicate false
-    :affected_time (java.util.Date.)
     :expandable (= true (not (nil? (:expand_mode creative))))))
 
 (defn prep-for-update [creative]
