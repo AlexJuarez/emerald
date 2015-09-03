@@ -24,8 +24,9 @@
   (into {} (map #(update-fields % changeToArray) creative)))
 
 (defn add! [creative]
-  (insert creatives
-          (values (-> creative prep-for-update prep))))
+  (-> (insert* creatives)
+      (values (-> creative prep-for-update prep))
+      (exec)))
 
 (defn update! [id creative]
   (update creatives

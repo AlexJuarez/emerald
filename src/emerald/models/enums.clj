@@ -6,13 +6,16 @@
    [korma.core]
    [taoensso.timbre :only [trace debug info warn error fatal]]))
 
-(defonce device-types-mem (atom ["desktop" "tablet" "mobile" "multidevice"]))
-(defonce ad-types-mem (atom ["Display" "In-Banner" "In-Stream" "Rich Media"]))
-(defonce expand-anchors-mem (atom ["bottom" "bottomleft" "bottomright" "left" "right" "top" "topleft" "topright"]))
-(defonce expand-directions-mem (atom ["bottom" "left" "right" "top"]))
-(defonce expand-types-mem (atom ["traditional" "custom" "pushdown" "takeover"]))
-(defonce play-modes-mem (atom ["auto" "click" "rollover"]))
-(defonce window-types-mem (atom ["new" "modal" "same"]))
+(defonce device-types-mem (atom [:desktop :tablet :mobile :multidevice]))
+(defonce ad-types-mem (atom [:Display :In-Banner :In-Stream (keyword "Rich Media")]))
+(defonce expand-anchors-mem (atom [:bottom :bottomleft :bottomright :left :right :top :topleft :topright]))
+(defonce expand-directions-mem (atom [:bottom :left :right :top]))
+(defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
+(defonce play-modes-mem (atom [:auto :click :rollover]))
+(defonce window-types-mem (atom [:new :modal :same]))
+
+(defn convert-keyword [lst]
+  (map #(keyword %) lst))
 
 (defn- device-types* []
   (-> (exec-raw
@@ -20,6 +23,7 @@
    :results)
       first
       :device_types
+      convert-keyword
       ))
 
 (defn device-types [] (into [] @device-types-mem))
@@ -30,6 +34,7 @@
    :results)
       first
       :ad_types
+      convert-keyword
       ))
 
 (defn ad-types [] (into [] @ad-types-mem))
@@ -40,6 +45,7 @@
    :results)
       first
       :expand_anchors
+      convert-keyword
       ))
 
 (defn expand-anchors [] (into [] @expand-anchors-mem))
@@ -50,6 +56,7 @@
    :results)
       first
       :expand_directions
+      convert-keyword
       ))
 
 (defn expand-directions [] (into [] @expand-anchors-mem))
@@ -60,6 +67,7 @@
    :results)
       first
       :expand_types
+      convert-keyword
       ))
 
 (defn expand-types [] (into [] @expand-types-mem))
@@ -70,6 +78,7 @@
    :results)
       first
       :play_modes
+      convert-keyword
       ))
 
 (defn play-modes [] (into [] @play-modes-mem))
@@ -80,6 +89,7 @@
    :results)
       first
       :window_types
+      convert-keyword
       ))
 
 (defn window-types [] (into [] @window-types-mem))
