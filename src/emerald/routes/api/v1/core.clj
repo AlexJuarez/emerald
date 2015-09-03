@@ -17,7 +17,8 @@
    [compojure.api.sweet :refer :all]
    [ring.util.http-response :refer :all]
    [taoensso.timbre :as timbre]
-   [emerald.models.enums :refer [get-enum-table]]
+   [emerald.models.enums :refer [get-enum-type]]
+   [emerald.db.protocols]
    [schema.core :as s]
    [schema.coerce :as sc]
    [ring.swagger.coerce :as rsc]))
@@ -25,8 +26,8 @@
 (defn string->enum [s]
   (if (string? s)
     (let [v (keyword s)
-          table (get-enum-table v)]
-      (emerald.models.enums.KormaEnum. v table))
+          type (get-enum-type v)]
+      (emerald.db.protocols.KormaEnum. v type))
     s))
 
 (defn keyword-enum-matcher [schema]

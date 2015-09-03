@@ -18,8 +18,6 @@
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
 
-(defrecord KormaEnum [value source])
-
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
   ;;https://github.com/Prismatic/schema/blob/0ad28bff3ec03130cfa25b16138c6b1adc143011/src/cljx/schema/core.cljx
@@ -42,18 +40,18 @@
   (convert [e {:keys [in]}]
            (merge (json-schema/->swagger (class (first (:vs e)))) {:enum (seq (:vs e))})))
 
-(def enum-tables
-  {:mixpo.device_type device-types-mem
-   :mixpo.creative_type ad-types-mem
-   :mixpo.expand_anchor expand-anchors-mem
-   :mixpo.expand_direction expand-directions-mem
-   :mixpo.expand_type expand-types-mem
-   :mixpo.play_mode_type play-modes-mem
-   :mixpo.window_type window-types-mem})
+(def enum-types
+  {:device_type device-types-mem
+   :creative_type ad-types-mem
+   :expand_anchor expand-anchors-mem
+   :expand_direction expand-directions-mem
+   :expand_type expand-types-mem
+   :play_mode_type play-modes-mem
+   :window_type window-types-mem})
 
-(defn get-enum-table [v]
+(defn get-enum-type [v]
   (->
-   (filter #(some #{v} @(val %)) enum-tables)
+   (filter #(some #{v} @(val %)) enum-types)
    first
    key))
 

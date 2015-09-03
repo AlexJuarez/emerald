@@ -18,7 +18,12 @@
                        (where {:id id :deleted false})))))
 
 (defn prep [creative]
-  (assoc creative :id (java.util.UUID/randomUUID)))
+  (assoc creative
+    :id (java.util.UUID/randomUUID)
+    :template false
+    :syndicate false
+    :affected_time (java.util.Date.)
+    :expandable (= true (not (nil? (:expand_mode creative))))))
 
 (defn prep-for-update [creative]
   (into {} (map #(update-fields % changeToArray) creative)))
@@ -26,7 +31,7 @@
 (defn add! [creative]
   (-> (insert* creatives)
       (values (-> creative prep-for-update prep))
-      (println)))
+      (exec)))
 
 (defn update! [id creative]
   (update creatives

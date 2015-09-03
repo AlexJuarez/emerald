@@ -3,6 +3,7 @@
    [clojure.java.jdbc :as jdbc]
    [cheshire.core :refer [generate-string parse-string]]
    [taoensso.timbre :as timbre]
+   [emerald.db.protocols]
    [clojure.xml :as xml])
   (:import org.postgresql.util.PGobject
            org.postgresql.jdbc4.Jdbc4Array
@@ -12,6 +13,18 @@
             Date
             Timestamp
             PreparedStatement]))
+
+(defn create-pg [type value]
+  (doto (PGobject.)
+    (.setType type)
+    (.setValue value)))
+
+(defn handle-enum [m]
+  (into {}
+        (for [[k v] m]
+          (if (instance? emerald.db.protocols.KormaEnum v)
+            [k (create-pg (name (:source v)) (name (:value v)))]
+            [k v]))))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))
@@ -45,9 +58,7 @@
     (.setTimestamp stmt idx (Timestamp. (.getTime v)))))
 
 (defn to-pg-json [value]
-  (doto (PGobject.)
-    (.setType "jsonb")
-    (.setValue (generate-string value))))
+  (create-pg "jsonb" (generate-string value)))
 
 (extend-protocol jdbc/ISQLValue
   IPersistentMap

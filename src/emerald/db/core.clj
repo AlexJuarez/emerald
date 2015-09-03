@@ -1,4 +1,5 @@
 (ns emerald.db.core
+  (:refer-clojure :exclude [update])
   (:use [korma.core]
         [emerald.util.core]
         [emerald.db.helpers])
@@ -32,6 +33,10 @@
   user-client-permissions
   user-division-permissions)
 
+(defn prepare-fns [m]
+  (-> (to-dash m)
+      (handle-enum)))
+
 (defentity user-account-permissions
   (table :mixpo.user_account_permissions))
 
@@ -46,7 +51,7 @@
   (table :mixpo.users :users))
 
 (defentity clients
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to channels {:fk :channel_id})
   (has-many geo-profiles {:fk :client_id})
@@ -54,59 +59,59 @@
   (table :mixpo.clients :client))
 
 (defentity accounts
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to divisions {:fk :division_id})
   (belongs-to industries {:fk :industry_id})
   (table :mixpo.accounts :account))
 
 (defentity industries
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.industries :industries))
 
 (defentity campaigns
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to accounts {:fk :account_id})
   (table :mixpo.campaigns :campaigns))
 
 (defentity divisions
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.divisions :divisions))
 
 (defentity channels
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.channels :channel))
 
 (defentity placements
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to publishers {:fk :publisher_id})
   (many-to-many creatives :mixpo.targets {:lfk :placement_id :rfk :creative_id})
   (table :mixpo.placements :placement))
 
 (defentity publishers
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
   (table :mixpo.publishers :publisher))
 
 (defentity creatives
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.creatives :creative))
 
 (defentity geo-profiles
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
   (table :mixpo.geo_profiles :geo_profiles))
 
 (defentity applications
-  (prepare to-dash)
+  (prepare prepare-fns)
   (transform camel-case)
   (belongs-to users {:fk :user_id})
   (table :mixpo.applications :applications))
