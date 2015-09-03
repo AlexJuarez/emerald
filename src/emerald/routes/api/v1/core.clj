@@ -44,10 +44,13 @@
       (rsc/date-matcher schema)
       (rsc/pattern-matcher schema)))
 
-(defn exception-handler [^Exception e]
-  (timbre/error e)
-  (internal-server-error {:type "Server Error"
-                          :message "Our highly trained operatives are working on it"}))
+(defn exception-handler [^Exception e _ _]
+  (let [message (.getMessage e)
+        error-code (if (string? message) (.hashCode message) "unknown")]
+    (timbre/error error-code e)
+    (internal-server-error {:type "Server Error"
+                            :error_code error-code
+                            :message "Our highly trained operatives are working on it"})))
 
 (defn coercion-matchers [_]
   {:body json-schema-korma-coercion-matcher
@@ -56,7 +59,7 @@
 
 (defapi api-routes
   {:format {:formats [:json-kw]}
-   :exceptions {:exception-handler exception-handler}
+   :exceptions {:handlers {:compojure.api.exception/default exception-handler}}
    :coercion coercion-matchers}
   (swagger-ui
    "/docs"

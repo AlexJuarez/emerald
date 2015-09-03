@@ -3,7 +3,8 @@
   (:require [emerald.db.core :refer [db]]
             [schema.core :as schema]
             [schema.utils :as utils]
-            [schema.macros :as macros :include-macros true]
+            [schema.macros :as macros]
+            [ring.swagger.json-schema :as json-schema :include-macros true]
             [korma.db])
   (:use
    [korma.core]
@@ -28,13 +29,18 @@
         (fn [x]
           (if (contains? vs (:value x))
             x
-            (macros/validation-error this x (list vs (utils/value-name x))))))
+            (macros/validation-error this x (list vs (utils/value-name (:value x)))))))
   (explain [this] (cons 'enum-type vs)))
 
 (defn enum-type
   "A value that must be = to some element of vs."
   [& vs]
   (KormaEnumSchema. (set vs)))
+
+(extend-type KormaEnumSchema
+  json-schema/JsonSchema
+  (convert [e {:keys [in]}]
+           (merge (json-schema/->swagger (class (first (:vs e)))) {:enum (seq (:vs e))})))
 
 (def enum-tables
   {:mixpo.device_type device-types-mem
