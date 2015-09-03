@@ -141,7 +141,7 @@
 
 (defentity adtags
   (transform camel-case)
-  (table :mixpo.adtags))
+  (table :mixpo.ad_tags))
 
 (defn to-date [sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))
