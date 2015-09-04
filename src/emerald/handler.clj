@@ -37,6 +37,8 @@
                            :max-size (* 512 1024)
                            :backlog 10})}})
 
+  (timbre/info "logging at" (log-path))
+
   (if (env :dev) (parser/cache-off!))
   (if (env :couchbase) (cache/init-connection))
   (enums/init)

@@ -64,8 +64,12 @@
           (where {:id id}))
   {:success "updated the campaign"})
 
-(defn all []
-  (select campaigns
-          ;;(fields :name :id :account_id)
-          (where {:deleted false})
-          (limit 10)))
+(defn all
+  ([]
+   (all 10 0))
+  ([lim os]
+    (select campaigns
+            ;;(fields :name :id :account_id)
+            (where {:deleted false})
+            (limit lim)
+            (offset os))))
