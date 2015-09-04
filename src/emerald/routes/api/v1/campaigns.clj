@@ -96,7 +96,7 @@
   (GET* "/campaigns" []
         :tags ["campaigns"]
         :middlewares [wrap-employee-access]
-        :query-params [{limit :- Long 0} {offset :- Long 0}]
+        :query-params [{limit :- Long 10} {offset :- Long 0}]
         :summary "looks up a list of campaigns"
         (ok (campaigns limit offset)))
   (POST* "/campaigns" []
