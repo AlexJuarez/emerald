@@ -100,7 +100,7 @@
       convert-keyword
       ))
 
-(defn expand-directions [] (into [] @expand-anchors-mem))
+(defn expand-directions [] (into [] @expand-directions-mem))
 
 (defn- expand-types* []
   (-> (exec-raw

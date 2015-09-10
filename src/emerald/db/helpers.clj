@@ -4,6 +4,7 @@
    [cheshire.core :refer [generate-string parse-string]]
    [taoensso.timbre :as timbre]
    [emerald.db.protocols]
+   [korma.core :as korma]
    [clojure.xml :as xml])
   (:import org.postgresql.util.PGobject
            org.postgresql.jdbc4.Jdbc4Array
@@ -23,7 +24,7 @@
   (into {}
         (for [[k v] m]
           (if (instance? emerald.db.protocols.KormaEnum v)
-            [k (create-pg (name (:source v)) (name (:value v)))]
+            [k (korma/raw (str "'" (name (:value v)) "'"))]
             [k v]))))
 
 (defn to-date [sql-date]

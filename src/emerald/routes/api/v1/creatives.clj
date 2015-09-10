@@ -27,6 +27,7 @@
    :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
    :device (apply enums/enum-type (enums/device-types))
    :type (apply enums/enum-type (enums/ad-types))
+   :clickthroughUrl String
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
