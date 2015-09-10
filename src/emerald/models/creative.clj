@@ -20,7 +20,7 @@
 (defn prep [creative]
   (assoc creative
     :id (java.util.UUID/randomUUID)
-    :expandable (= true (not (nil? (:expand_mode creative))))))
+    :expandable (= true (not (nil? (:expandMode creative))))))
 
 (defn prep-for-update [creative]
   (into {} (map #(update-fields % changeToArray) creative)))
