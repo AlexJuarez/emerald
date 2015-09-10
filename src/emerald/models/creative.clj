@@ -17,6 +17,17 @@
   (not (empty? (select creatives
                        (where {:id id :deleted false})))))
 
+(defn unique?
+  ([m]
+    (let [{:keys [campaignId name]} m]
+      (empty? (select creatives
+                      (where {:campaign_id campaignId :name name})))))
+  ([m id]
+    (let [creative (get id)
+          fields (merge creative m)]
+      (unique? fields))))
+
+
 (defn prep [creative]
   (assoc creative
     :id (java.util.UUID/randomUUID)

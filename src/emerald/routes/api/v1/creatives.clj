@@ -20,7 +20,12 @@
   (creative/add! slug))
 
 (defn update-creative [id slug]
-  (creative/update! id slug))
+  (let [checks (some #{:name :campaignId} (keys slug))]
+    (if (and
+         (not (nil? checks))
+         (not (creative/unique? slug id)))
+      (bad-request {:errors {:name "provided name is the same as another name in this campaign"}})
+      (ok (creative/update! id slug)))))
 
 (s/defschema Creative
   {:name String
@@ -39,6 +44,7 @@
    (s/optional-key :expandedHeight) Long})
 
 (s/defschema Edit-Creative (make-optional Creative))
+(s/defschema Create-Creative (s/both Creative (s/pred creative/unique? 'creative/unique?)))
 
 (defn wrap-creative-access [handler]
   (wrap-id-access handler creative-access?))
@@ -54,7 +60,7 @@
             (PUT* "/" []
                   :body [creative Edit-Creative]
                   :summary "updates a creative"
-                  (ok (update-creative id creative))
+                  (update-creative id creative)
             ))
   (GET* "/creatives" []
         :tags ["creatives"]
@@ -64,6 +70,6 @@
         (ok (creatives limit offset)))
   (POST* "/creatives" []
          :tags ["creatives"]
-         :body [creative Creative]
+         :body [creative Create-Creative]
          :summary "creates a new creative"
          (ok (create-creative creative))))
