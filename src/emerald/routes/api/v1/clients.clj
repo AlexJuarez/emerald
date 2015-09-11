@@ -43,7 +43,7 @@
 
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
-   :name String
+   :name (s/both String (s/pred client/unique-name? 'client/unique-name?))
    (s/optional-key :deleted) Boolean
    (s/optional-key :requireRepInfo) Boolean})
 

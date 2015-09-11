@@ -13,6 +13,13 @@
            (where {:id id}))
    first))
 
+(defn unique-name? [name]
+  (->
+   (select clients
+           (where {:name name}))
+   empty?
+   not))
+
 (defn exists? [id]
   (not (empty? (get id))))
 
