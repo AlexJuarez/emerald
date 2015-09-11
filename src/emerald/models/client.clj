@@ -17,8 +17,7 @@
   (->
    (select clients
            (where {:name name}))
-   empty?
-   not))
+   empty?))
 
 (defn exists? [id]
   (not (empty? (get id))))
