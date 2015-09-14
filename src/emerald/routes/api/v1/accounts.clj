@@ -38,6 +38,7 @@
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?) (s/pred division-access? 'division-access?))
    :name String
+   (s/optional-key :leadCaptureEmail) String
    (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String
    (s/optional-key :clickthroughUrl) String})
