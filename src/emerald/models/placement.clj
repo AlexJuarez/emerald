@@ -14,7 +14,7 @@
            (with publishers
                  (fields [:name :publisher.name] [:id :publisher.id]))
            (with creatives
-                 (fields :id :name))
+                 (fields :id :name :thumbnail_url_prefix))
            (where {:id id :deleted false}))
    first
    ))
