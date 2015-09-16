@@ -14,9 +14,8 @@
    [emerald.routes.api.v1.oauth :refer [oauth-routes]]
    [emerald.routes.api.v1.upload :refer [upload-routes]]
    [emerald.middleware :as middleware]
+   [emerald.util.exception :refer [request-validation-handler default-handler]]
    [compojure.api.sweet :refer :all]
-   [ring.util.http-response :refer :all]
-   [taoensso.timbre :as timbre]
    [emerald.models.enums :refer [get-enum-type]]
    [emerald.db.protocols]
    [schema.core :as s]
@@ -45,14 +44,6 @@
       (rsc/date-matcher schema)
       (rsc/pattern-matcher schema)))
 
-(defn exception-handler [^Exception e _ _]
-  (let [message (.getMessage e)
-        error-code (if (string? message) (.hashCode message) "unknown")]
-    (timbre/error error-code e)
-    (internal-server-error {:type "Server Error"
-                            :error_code error-code
-                            :message "Our highly trained operatives are working on it"})))
-
 (defn coercion-matchers [_]
   {:body json-schema-korma-coercion-matcher
    :string rsc/query-schema-coercion-matcher
@@ -60,7 +51,8 @@
 
 (defapi api-routes
   {:format {:formats [:json-kw]}
-   :exceptions {:handlers {:compojure.api.exception/default exception-handler}}
+   :exceptions {:handlers {:compojure.api.exception/default default-handler
+                           :compojure.api.exception/request-validation request-validation-handler}}
    :coercion coercion-matchers}
   (swagger-ui
    "/docs"
