@@ -65,7 +65,7 @@
                (where {:id id}))))
    (if (:pinned client) (pin! id user-id))
    (if (= (:pinned client) false) (unpin! id user-id)))
-  {:success "updated the client"})
+  (get id))
 
 (defn all
   ([]

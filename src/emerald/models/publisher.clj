@@ -26,7 +26,7 @@
   (update publishers
           (set-fields publisher)
           (where {:id id}))
-  {:success "updated the publisher"})
+  (get id))
 
 (defn all
   ([]

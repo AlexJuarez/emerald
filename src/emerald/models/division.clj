@@ -62,7 +62,7 @@
                (where {:id id}))))
    (if (:pinned division) (pin! id user-id))
    (if (= false (:pinned division)) (unpin! id user-id)))
-  {:success "updated the division"})
+  (get id user-id))
 
 (defn all
   ([]

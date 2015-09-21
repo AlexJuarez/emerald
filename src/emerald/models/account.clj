@@ -75,7 +75,7 @@
    (if (:pinned account) (pin! id user-id))
    (if (= false (:pinned account)) (unpin! id user-id))
    )
-  {:success "updated the account"})
+  (get id user-id))
 
 (defn all
   ([]

@@ -45,7 +45,7 @@
   (update creatives
           (set-fields (-> creative prep-for-update))
           (where {:id id}))
-  {:success "updated the creative"})
+  (get id))
 
 (defn all
   ([]

@@ -35,7 +35,7 @@
   (update placements
           (set-fields (prep-for-update placement))
           (where {:id id}))
-  {:success "updated the placement"})
+  (get id))
 
 (defn all
   ([]

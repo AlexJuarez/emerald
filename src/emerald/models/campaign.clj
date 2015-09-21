@@ -75,7 +75,7 @@
                (where {:id id}))))
    (if (:pinned campaign) (pin! id user-id))
    (if (= false (:pinned campaign)) (unpin! id user-id)))
-  {:success "updated the campaign"})
+  (get id user-id))
 
 (defn all
   ([]
