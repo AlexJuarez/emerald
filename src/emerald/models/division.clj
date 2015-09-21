@@ -5,15 +5,6 @@
    [korma.core]
    [emerald.db.core]))
 
-(defn get [id]
-  (->
-   (select divisions
-           (where {:id id :deleted false}))
-   first))
-
-(defn exists? [id]
-  (not (empty? (get id))))
-
 (defn access? [id user-id]
   (-> (select user-division-permissions
               (where {:division_id id :user_id user-id}))
@@ -23,6 +14,21 @@
 (defn get-pin [division-id user-id]
   (first (select division-pins
                  (where {:division_id division-id :user_id user-id}))))
+
+(defn pinned? [id user-id]
+  (not (nil? (get-pin id user-id))))
+
+(defn get
+  ([id] (get id nil))
+  ([id user-id]
+   (->
+    (select divisions
+            (where {:id id :deleted false}))
+    first
+    (assoc :pinned (pinned? id user-id)))))
+
+(defn exists? [id]
+  (not (empty? (get id))))
 
 (defn pin! [division-id user-id]
   (when (nil? (get-pin division-id user-id))
@@ -40,14 +46,22 @@
 (defn prep [division]
   (assoc division :id (java.util.UUID/randomUUID)))
 
+(defn prep-for-update [division]
+  (dissoc division :pinned))
+
 (defn add! [division]
   (insert divisions
-          (values division)))
+          (values (-> division prep prep-for-update))))
 
-(defn update! [id division]
-  (update divisions
-          (set-fields division)
-          (where {:id id}))
+(defn update! [id division user-id]
+  (transaction
+   (let [division (prep-for-update division)]
+     (when (not (empty? division))
+       (update divisions
+               (set-fields division)
+               (where {:id id}))))
+   (if (:pinned division) (pin! id user-id))
+   (if (= false (:pinned division)) (unpin! id user-id)))
   {:success "updated the division"})
 
 (defn all

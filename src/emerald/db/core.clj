@@ -54,6 +54,7 @@
   (prepare prepare-fns)
   (transform camel-case)
   (belongs-to channels {:fk :channel_id})
+  (has-many client-pins {:fk :client_id})
   (has-many geo-profiles {:fk :client_id})
   (has-many publishers {:fk :client_id})
   (table :mixpo.clients :client))
@@ -61,6 +62,7 @@
 (defentity accounts
   (prepare prepare-fns)
   (transform camel-case)
+  (has-many account-pins {:fk :account_id})
   (belongs-to divisions {:fk :division_id})
   (belongs-to industries {:fk :industry_id})
   (table :mixpo.accounts :account))
@@ -73,12 +75,14 @@
 (defentity campaigns
   (prepare prepare-fns)
   (transform camel-case)
+  (has-many campaign-pins {:fk :campaign_id})
   (belongs-to accounts {:fk :account_id})
   (table :mixpo.campaigns :campaigns))
 
 (defentity divisions
   (prepare prepare-fns)
   (transform camel-case)
+  (has-many division-pins {:fk :division_id})
   (table :mixpo.divisions :divisions))
 
 (defentity channels

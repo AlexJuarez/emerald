@@ -16,13 +16,13 @@
   (campaign/all limit offset))
 
 (defn get-campaign [id]
-  (campaign/get id))
+  (campaign/get id (session/get :user_id)))
 
 (defn create-campaign [slug]
   (campaign/add! slug))
 
 (defn update-campaign [id slug]
-  (campaign/update! id slug))
+  (campaign/update! id slug (session/get :user_id)))
 
 (defn get-creatives [id]
   (creative/all-for-campaign id))
@@ -33,14 +33,6 @@
 (defn pinned-campaigns []
   (campaign/all-pins (session/get :user_id)))
 
-(defn create-pin [id]
-  (campaign/pin! id (session/get :user_id))
-  {"success" "campaign has been pinned"})
-
-(defn delete-pin [id]
-  (campaign/unpin! id (session/get :user_id))
-  {"succss" "campaign has been successfully removed"})
-
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?) (s/pred account-access? 'account-access?))
    :name String
@@ -48,6 +40,7 @@
    :endDate java.util.Date
    :repName String
    :repEmail String
+   (s/optional-key :pinned) Boolean
    (s/optional-key :description) String
    (s/optional-key :conversionDomain) String
    (s/optional-key :deleted) Boolean
@@ -65,6 +58,10 @@
   (wrap-id-access handler campaign-access?))
 
 (defroutes* campaign-routes
+  (GET* "/campaigns/pinned" []
+        :tags ["campaigns"]
+        :summary "looks up a list of pinned campaigns"
+        (ok (pinned-campaigns)))
   (context* "/campaigns/:id" []
             :tags ["campaigns"]
             :middlewares [wrap-campaign-access]
@@ -81,18 +78,7 @@
             (PUT* "/" []
                   :body [campaign Edit-Campaign]
                   :summary "updates a campaign"
-                  (ok (update-campaign id campaign)))
-            (POST* "/pin" []
-                   :summary "pins an campaign for the user"
-                   (ok (create-pin id)))
-            (DELETE* "/pin" []
-                     :summary "removes the pinned campaign for the user"
-                     (ok (delete-pin id)))
-            )
-  (GET* "/campaigns/pinned" []
-        :tags ["campaigns"]
-        :summary "looks up a list of pinned campaigns"
-        (ok (pinned-campaigns)))
+                  (ok (update-campaign id campaign))))
   (GET* "/campaigns" []
         :tags ["campaigns"]
         :middlewares [wrap-employee-access]

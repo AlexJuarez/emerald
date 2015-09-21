@@ -14,28 +14,22 @@
   (division/all limit offset))
 
 (defn get-division [id]
-  (division/get id))
+  (division/get id (session/get :user_id)))
 
 (defn create-division [slug]
   (division/add! slug))
 
 (defn update-division [id slug]
-  (division/update! id slug))
+  (division/update! id slug (session/get :user_id)))
 
 (defn pinned-divisions []
-  (division/all-pins (session/get :user_id)))
-
-(defn create-pin [id]
-  (division/pin! id (session/get :user_id))
-  {"success" "division has been pinned"})
-
-(defn delete-pin [id]
-  (division/unpin! id (session/get :user_id))
-  {"success" "division has been successfully removed"})
+  (->> (division/all-pins (session/get :user_id))
+       (map #(first (vals %)))))
 
 (s/defschema Division
   {:name String
    :clientId (s/both java.util.UUID (s/pred client/exists? 'client/exists?) (s/pred client-access? 'client-access?))
+   (s/optional-key :pinned) Boolean
    (s/optional-key :deleted) Boolean
    (s/optional-key :geoProfileId) java.util.UUID
    (s/optional-key :description) String
@@ -47,6 +41,10 @@
   (wrap-id-access handler division-access?))
 
 (defroutes* division-routes
+  (GET* "/divisions/pinned" []
+        :tags ["divisions"]
+        :summary "looks up a list of pinned divisions"
+        (ok (pinned-divisions)))
   (context* "/divisions/:id" []
             :tags ["divisions"]
             :middlewares [wrap-division-access]
@@ -58,17 +56,7 @@
                   :body [division Edit-Division]
                   :summary "updates a division"
                   (ok (update-division id division)))
-            (POST* "/pin" []
-                   :summary "pins an division for the user"
-                   (ok (create-pin id)))
-            (DELETE* "/pin" []
-                     :summary "removes the pinned division for the user"
-                     (ok (delete-pin id)))
             )
-  (GET* "/divisions/pinned" []
-        :tags ["divisions"]
-        :summary "looks up a list of pinned divisions"
-        (ok (pinned-divisions)))
   (GET* "/divisions" []
         :tags ["divisions"]
         :middlewares [wrap-employee-access]
