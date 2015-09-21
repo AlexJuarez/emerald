@@ -15,29 +15,22 @@
   (account/all limit offset))
 
 (defn get-account [id]
-  (account/get id))
+  (account/get id (session/get :user_id)))
 
 (defn create-account [slug]
   (account/add! slug))
 
 (defn update-account [id slug]
-  (account/update! id slug))
+  (account/update! id slug (session/get :user_id)))
 
 (defn pinned-accounts []
   (account/all-pins (session/get :user_id)))
-
-(defn create-pin [id]
-  (account/pin! id (session/get :user_id))
-  {"success" "account has been pinned"})
-
-(defn delete-pin [id]
-  (account/unpin! id (session/get :user_id))
-  {"succss" "account has been successfully removed"})
 
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?) (s/pred division-access? 'division-access?))
    :name String
+   (s/optional-key :pinned) Boolean
    (s/optional-key :leadCaptureEmail) String
    (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String
@@ -49,6 +42,10 @@
   (wrap-id-access handler account-access?))
 
 (defroutes* account-routes
+  (GET* "/accounts/pinned" []
+        :tags ["accounts"]
+        :summary "looks up a list of pinned accounts"
+        (ok (pinned-accounts)))
   (context* "/accounts/:id" []
             :tags ["accounts"]
             :middlewares [wrap-account-access]
@@ -60,17 +57,7 @@
                   :body [account Edit-Account]
                   :summary "updates a account"
                   (ok (update-account id account)))
-            (POST* "/pin" []
-                   :summary "pins an account for the user"
-                   (ok (create-pin id)))
-            (DELETE* "/pin" []
-                     :summary "removes the pinned account for the user"
-                     (ok (delete-pin id)))
             )
-  (GET* "/accounts/pinned" []
-        :tags ["accounts"]
-        :summary "looks up a list of pinned accounts"
-        (ok (pinned-accounts)))
   (GET* "/accounts" []
         :tags ["accounts"]
         :middlewares [wrap-employee-access]

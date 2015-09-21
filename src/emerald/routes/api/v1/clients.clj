@@ -16,13 +16,13 @@
   (client/all limit offset))
 
 (defn get-client [id]
-  (client/get id))
+  (client/get id (session/get :user_id)))
 
 (defn create-client [slug]
     (client/add! slug))
 
 (defn update-client [id slug]
-  (client/update! id slug))
+  (client/update! id slug (session/get :user_id)))
 
 (defn get-geo-profiles [id]
   (geo-profile/all-for-client id))
@@ -31,19 +31,13 @@
   (publisher/all-for-client id))
 
 (defn pinned-clients []
-  (client/all-pins (session/get :user_id)))
-
-(defn create-pin [id]
-  (client/pin! id (session/get :user_id))
-  {"success" "client has been pinned"})
-
-(defn delete-pin [id]
-  (client/unpin! id (session/get :user_id))
-  {"succss" "client has been successfully removed"})
+  (->> (client/all-pins (session/get :user_id))
+      (map #(first (vals %)))))
 
 (s/defschema Client
   {:channelId (s/both java.util.UUID (s/pred channel/exists? 'channel/exists?))
    :name (s/both String (s/pred client/unique-name? 'client/unique-name?))
+   (s/optional-key :pinned) Boolean
    (s/optional-key :deleted) Boolean
    (s/optional-key :requireRepInfo) Boolean})
 
@@ -53,6 +47,10 @@
   (wrap-id-access handler client-access?))
 
 (defroutes* client-routes
+  (GET* "/clients/pinned" []
+        :tags ["clients"]
+        :summary "looks up a list of pinned clients"
+        (ok (pinned-clients)))
   (context* "/clients/:id" []
             :tags ["clients"]
             :middlewares [wrap-client-access]
@@ -70,17 +68,7 @@
                   :body [client Edit-Client]
                   :summary "updates a client"
                   (ok (update-client id client)))
-            (POST* "/pin" []
-                   :summary "pins an client for the user"
-                   (ok (create-pin id)))
-            (DELETE* "/pin" []
-                     :summary "removes the pinned client for the user"
-                     (ok (delete-pin id)))
             )
-  (GET* "/clients/pinned" []
-        :tags ["clients"]
-        :summary "looks up a list of pinned clients"
-        (ok (pinned-clients)))
   (GET* "/clients" []
         :tags ["clients"]
         :query-params [{limit :- Long 10} {offset :- Long 0}]

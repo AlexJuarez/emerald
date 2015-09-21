@@ -5,32 +5,42 @@
    [korma.core]
    [emerald.db.core]))
 
-(defn get [id]
-  (->
-   (select clients
-           (with channels
-                 (fields [:name :channel.name] [:type :channel.type]))
-           (where {:id id}))
-   first))
-
 (defn unique-name? [name]
   (->
    (select clients
            (where {:name name}))
    empty?))
 
-(defn exists? [id]
-  (not (empty? (get id))))
-
 (defn prep [client]
   (assoc client :id (java.util.UUID/randomUUID)))
+
+(defn prep-for-update [client]
+  (dissoc client :pinned))
 
 (defn get-pin [client-id user-id]
   (first (select client-pins
                  (where {:client_id client-id :user_id user-id}))))
 
+(defn pinned? [id user-id]
+  (not (nil? (get-pin id user-id))))
+
+(defn get
+  ([id user-id]
+    (->
+     (select clients
+             (with channels
+                   (fields [:name :channel.name] [:type :channel.type]))
+             (where {:id id}))
+     first
+     (assoc :pinned (pinned? id user-id))))
+  ([id]
+   (get id nil)))
+
+(defn exists? [id]
+  (not (empty? (get id))))
+
 (defn pin! [client-id user-id]
-  (when (nil? (get-pin client-id user-id))
+  (when (not (pinned? client-id user-id))
     (insert client-pins
             (values {:client_id client-id :user_id user-id}))))
 
@@ -44,12 +54,17 @@
 
 (defn add! [client]
   (insert clients
-          (values client)))
+          (values (-> client prep prep-for-update))))
 
-(defn update! [id client]
-  (update clients
-          (set-fields client)
-          (where {:id id}))
+(defn update! [id client user-id]
+  (transaction
+   (let [client (prep-for-update client)]
+     (when (not (empty? client))
+       (update clients
+               (set-fields client)
+               (where {:id id}))))
+   (if (:pinned client) (pin! id user-id))
+   (if (= (:pinned client) false) (unpin! id user-id)))
   {:success "updated the client"})
 
 (defn all
