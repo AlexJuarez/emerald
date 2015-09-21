@@ -51,7 +51,6 @@
    (s/optional-key :description) String
    (s/optional-key :conversionDomain) String
    (s/optional-key :deleted) Boolean
-   (s/optional-key :description) String
    (s/optional-key :measureReach) Boolean
    (s/optional-key :googleAnalytics) Boolean
    (s/optional-key :conversionTracking) Boolean
