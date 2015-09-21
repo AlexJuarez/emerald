@@ -23,8 +23,8 @@
    empty?
    not))
 
-(defn prep-for-update [account]
-  (-> (into {} (map #(update-fields % changeToArray) account))
+(defn prep-for-update [campaign]
+  (-> (into {} (map #(update-fields % changeToArray) campaign))
       (dissoc :pinned)))
 
 
