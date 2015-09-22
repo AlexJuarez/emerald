@@ -50,8 +50,7 @@
    (s/optional-key :conversionTracking) Boolean
    (s/optional-key :objective) String
    (s/optional-key :budget) Long
-   (s/optional-key :keywords) String
-   (s/optional-key :clickthroughUrl) String})
+   (s/optional-key :keywords) String})
 
 (s/defschema Edit-Campaign (make-optional Campaign))
 
