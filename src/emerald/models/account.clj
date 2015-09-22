@@ -70,7 +70,7 @@
    (let [account (prep-for-update account)]
      (when (not (empty? account))
        (update accounts
-               (set-fields (-> account prep-for-update))
+               (set-fields account)
                (where {:id id}))))
    (if (:pinned account) (pin! id user-id))
    (if (= false (:pinned account)) (unpin! id user-id))

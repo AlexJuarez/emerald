@@ -71,7 +71,7 @@
    (let [campaign (prep-for-update campaign)]
      (when (not (empty? campaign))
        (update campaigns
-               (set-fields (-> campaign prep-for-update))
+               (set-fields campaign)
                (where {:id id}))))
    (if (:pinned campaign) (pin! id user-id))
    (if (= false (:pinned campaign)) (unpin! id user-id)))
