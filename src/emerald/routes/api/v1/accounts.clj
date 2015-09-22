@@ -24,7 +24,8 @@
   (account/update! id slug (session/get :user_id)))
 
 (defn pinned-accounts []
-  (account/all-pins (session/get :user_id)))
+  (->> (account/all-pins (session/get :user_id))
+       (map #(first (vals %)))))
 
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))

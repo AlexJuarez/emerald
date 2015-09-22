@@ -31,7 +31,8 @@
   (placement/all-for-campaign id))
 
 (defn pinned-campaigns []
-  (campaign/all-pins (session/get :user_id)))
+  (->> (campaign/all-pins (session/get :user_id))
+       (map #(first (vals %)))))
 
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?) (s/pred account-access? 'account-access?))
