@@ -21,8 +21,8 @@
     (layout/render "apps.html" {:applications applications})))
 
 (defn app-page [id req]
-  (let [application (app/get id (get-in req [:session :user :id]))
-        token (token/grant-for-user (session/get-in [:session :user :id]))]
+  (let [application (app/get id (session/get-in [:user :id]))
+        token (token/grant-for-user (session/get-in [:user :id]))]
     (layout/render "applications/test.html" (assoc application :accessToken token))))
 
 (defn app-creation-page
