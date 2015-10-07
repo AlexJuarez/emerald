@@ -13,6 +13,7 @@
    :expandTypes (enums/expand-types)
    :playModes (enums/play-modes)
    :windowTypes (enums/window-types)
+   :rateTypes (enums/rate-types)
    })
 
 (defroutes* enum-routes

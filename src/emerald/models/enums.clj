@@ -17,6 +17,7 @@
 (defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
+(defonce rate-types-mem (atom [:CPC :CPM :CPV :CPCV (keyword "Fixed Fee") (keyword "Added Value")]))
 
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
@@ -47,7 +48,8 @@
    :mixpo.expand_direction expand-directions-mem
    :mixpo.expand_type expand-types-mem
    :mixpo.play_mode_type play-modes-mem
-   :mixpo.window_type window-types-mem})
+   :mixpo.window_type window-types-mem
+   :mixpo.rate_type rate-types-mem})
 
 (defn get-enum-type [v]
   (->
@@ -135,6 +137,17 @@
 
 (defn window-types [] (into [] @window-types-mem))
 
+(defn- rate-types* []
+    (-> (exec-raw
+   ["select enum_range(NULL::mixpo.rate_type) as rate_types"]
+   :results)
+      first
+      :rate_types
+      convert-keyword
+      ))
+
+(defn rate-types [] (into [] @rate-types-mem))
+
 (defn init []
   (info "Populating enums locally")
   (try
@@ -145,5 +158,6 @@
     (reset! expand-types-mem (expand-types*))
     (reset! play-modes-mem (play-modes*))
     (reset! window-types-mem (window-types*))
+    (reset! rate-types-mem (rate-types*))
     (catch Exception e (error e "Failed to update enums"))
     ))

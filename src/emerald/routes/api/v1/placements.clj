@@ -41,12 +41,18 @@
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
+   (s/optional-key :lightboxOpacity) Long
    (s/optional-key :bookedImpressions) Long
-   (s/optional-key :cost) Long
+   (s/optional-key :rate_type) (apply enums/enum-type (enums/rate-types))
+   (s/optional-key :cost_per_rate) Long
+   (s/optional-key :budget) Long
    (s/optional-key :allowAnimations) Boolean
    (s/optional-key :skip321) Boolean
    (s/optional-key :audioOff) Boolean
-   (s/optional-key :muteOnRollOut) Boolean})
+   (s/optional-key :muteOnRollOut) Boolean
+   (s/optional-key :expandBeforeCountdown) Boolean
+   (s/optional-key :autoplayAudioOnRollover) Boolean
+   (s/optional-key :hideClickToPlay) Boolean})
 
 (s/defschema Edit-Placement (make-optional Placement))
 
