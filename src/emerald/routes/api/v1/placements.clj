@@ -43,8 +43,9 @@
    (s/optional-key :embedWidth) Long
    (s/optional-key :lightboxOpacity) Long
    (s/optional-key :bookedImpressions) Long
-   (s/optional-key :rate_type) (apply enums/enum-type (enums/rate-types))
-   (s/optional-key :cost_per_rate) Long
+   (s/optional-key :rateType) (apply enums/enum-type (enums/rate-types))
+   (s/optional-key :expandType) (apply enums/enum-type (enums/expand-types))
+   (s/optional-key :costPerRate) Long
    (s/optional-key :budget) Long
    (s/optional-key :allowAnimations) Boolean
    (s/optional-key :skip321) Boolean
