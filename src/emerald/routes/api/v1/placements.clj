@@ -36,7 +36,9 @@
    (s/optional-key :openLinks) (apply enums/enum-type (enums/window-types))
    (s/optional-key :clickThroughUrl) String
    (s/optional-key :clickTrackers) String
+   (s/optional-key :applytolanding) Boolean
    (s/optional-key :impressionTrackers) String
+   (s/optional-key :adTagId) java.util.UUID
    (s/optional-key :viewTrackers) String
    (s/optional-key :deleted) Boolean
    (s/optional-key :embedHeight) Long
@@ -54,6 +56,7 @@
    (s/optional-key :audioOff) Boolean
    (s/optional-key :muteOnRollOut) Boolean
    (s/optional-key :expandBeforeCountdown) Boolean
+   (s/optional-key :spanish) Boolean
    (s/optional-key :autoplayAudioOnRollover) Boolean
    (s/optional-key :hideClickToPlay) Boolean})
 
