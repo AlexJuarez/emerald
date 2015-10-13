@@ -13,8 +13,9 @@
    (select placements
            (with publishers
                  (fields [:name :publisher.name] [:id :publisher.id]))
-           (with creatives
-                 (fields :id :name :thumbnail_url_prefix))
+           (with targets
+                 (with creatives
+                       (fields :id :name :thumbnail_url_prefix)))
            (where {:id id :deleted false}))
    first
    ))

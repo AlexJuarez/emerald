@@ -17,6 +17,7 @@
 (defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
+(defonce target-types-mem (atom [:creative :daypart (keyword "device target") :rotate :sequence (keyword "survey control")]))
 
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
@@ -135,15 +136,32 @@
 
 (defn window-types [] (into [] @window-types-mem))
 
+(defn- target-types* []
+  (-> (exec-raw
+   ["select enum_range(NULL::mixpo.target_type) as target_types"]
+   :results)
+      first
+      :target_types
+      convert-keyword
+      ))
+
+(defn target-types [] (into [] @target-types-mem))
+
+(defn reset-enum [mem new-value-fn]
+  (try
+    (let [new-value (new-value-fn)]
+      (when-not (= @mem new-value)
+        (warn "Enum value has changed" @mem (into [] new-value)))
+      (reset! mem new-value))
+    (catch Exception e (error e "Failed to update one of the enums"))))
+
 (defn init []
   (info "Populating enums locally")
-  (try
-    (reset! device-types-mem (device-types*))
-    (reset! ad-types-mem (ad-types*))
-    (reset! expand-anchors-mem (expand-anchors*))
-    (reset! expand-directions-mem (expand-directions*))
-    (reset! expand-types-mem (expand-types*))
-    (reset! play-modes-mem (play-modes*))
-    (reset! window-types-mem (window-types*))
-    (catch Exception e (error e "Failed to update enums"))
-    ))
+  (reset-enum device-types-mem device-types*)
+  (reset-enum ad-types-mem ad-types*)
+  (reset-enum expand-anchors-mem expand-anchors*)
+  (reset-enum expand-directions-mem expand-directions*)
+  (reset-enum expand-types-mem expand-types*)
+  (reset-enum play-modes-mem play-modes*)
+  (reset-enum window-types-mem window-types*)
+  (reset-enum target-types-mem target-types*))
