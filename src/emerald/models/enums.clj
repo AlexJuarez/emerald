@@ -14,10 +14,11 @@
 (defonce ad-types-mem (atom [:Display :In-Banner :In-Stream (keyword "Rich Media")]))
 (defonce expand-anchors-mem (atom [:bottom :bottomleft :bottomright :left :right :top :topleft :topright]))
 (defonce expand-directions-mem (atom [:bottom :left :right :top]))
-(defonce expand-types-mem (atom [:traditional :custom :pushdown :takeover]))
+(defonce expand-types-mem (atom [:traditional :directional :pushdown :takeover]))
 (defonce play-modes-mem (atom [:auto :click :rollover]))
 (defonce window-types-mem (atom [:new :modal :same]))
 (defonce target-types-mem (atom [:creative :daypart (keyword "device target") :rotate :sequence (keyword "survey control")]))
+(defonce rate-types-mem (atom [:CPC :CPM :CPV :CPCV (keyword "Fixed Fee") (keyword "Added Value")]))
 
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
@@ -48,7 +49,8 @@
    :mixpo.expand_direction expand-directions-mem
    :mixpo.expand_type expand-types-mem
    :mixpo.play_mode_type play-modes-mem
-   :mixpo.window_type window-types-mem})
+   :mixpo.window_type window-types-mem
+   :mixpo.rate_type rate-types-mem})
 
 (defn get-enum-type [v]
   (->
@@ -147,6 +149,17 @@
 
 (defn target-types [] (into [] @target-types-mem))
 
+(defn- rate-types* []
+    (-> (exec-raw
+   ["select enum_range(NULL::mixpo.rate_type) as rate_types"]
+   :results)
+      first
+      :rate_types
+      convert-keyword
+      ))
+
+(defn rate-types [] (into [] @rate-types-mem))
+
 (defn reset-enum [mem new-value-fn]
   (try
     (let [new-value (new-value-fn)]
@@ -164,4 +177,5 @@
   (reset-enum expand-types-mem expand-types*)
   (reset-enum play-modes-mem play-modes*)
   (reset-enum window-types-mem window-types*)
-  (reset-enum target-types-mem target-types*))
+  (reset-enum target-types-mem target-types*)
+  (reset-enum rate-types-mem rate-types*))

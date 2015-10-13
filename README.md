@@ -1,6 +1,29 @@
 # ![Emerald](http://obsidian.mixpo.com/images/emerald-iconx32.png)Emerald
 
 To build emerald for tomcat deployment run `./lein ring uberwar`
+## Initial Setup
+
+##### 1. Build the latest mixpo.com bowser database
+
+- Pull the latest mixpo.com source code and open the db directory
+
+        ./postgresql-install dev # installs the latest postgres and memory settings
+        ./db-update data # builds bowser database
+
+##### 2. Install a couchbase instance locally
+- Install the couchbase community edition for your OS. Start the couchbase daemon
+- Open your web browser to localhost:8091 and set up your username and password. The default settings should be fine (uncheck the replication checkbox), just keep clicking 'next'. **TODO: Add a configuration script for this step**
+
+##### 3. Point mixpo_server.identity to your couchbase instance
+- Edit your ~/mixpo_server.identity file and add the line
+
+        couchbase_server_uri=127.0.0.1:11211
+
+## Quickstart
+
+To start a dev web server for the application, run:
+
+    ./lein run
 
 ## Configuration
 
@@ -58,9 +81,3 @@ Lein is included in the repository for easy of use.
 To update this script see [Leiningen][5].
 
 [5]: https://github.com/technomancy/leiningen
-
-## Running
-
-To start a dev web server for the application, run:
-
-    ./lein run

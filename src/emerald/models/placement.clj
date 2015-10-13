@@ -21,7 +21,8 @@
    ))
 
 (defn prep [placement]
-  (assoc placement :id (java.util.UUID/randomUUID)))
+  (assoc placement :id (java.util.UUID/randomUUID))
+  (assoc placement :expandable true))
 
 (defn prep-for-update [placement]
   (into {} (map #(update-fields % trackers) placement)))
