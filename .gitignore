@@ -12,3 +12,4 @@ profiles.clj
 *.swp
 .idea/
 resources/templates/.idea
+**/*.iml
