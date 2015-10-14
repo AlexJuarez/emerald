@@ -14,6 +14,8 @@
   placements
   publishers
   creatives
+  target-creatives
+  targets
   clients
   channels
   accounts
@@ -94,8 +96,17 @@
   (prepare prepare-fns)
   (transform camel-case)
   (belongs-to publishers {:fk :publisher_id})
-  (many-to-many creatives :mixpo.targets {:lfk :placement_id :rfk :creative_id})
+  (has-many targets {:fk :placement_id})
   (table :mixpo.placements :placement))
+
+(defentity targets
+  (belongs-to placements {:fk :placement_id})
+  (many-to-many creatives :mixpo.target_creatives {:lfk :src_target_id :rfk :creative_id})
+  (table :mixpo.targets :targets))
+
+(defentity target-creatives
+  (belongs-to creatives {:fk :creative_id})
+  (table :mixpo.target_creatives :target_creatives))
 
 (defentity publishers
   (prepare prepare-fns)
