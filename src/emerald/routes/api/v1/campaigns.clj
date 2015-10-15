@@ -48,6 +48,7 @@
    (s/optional-key :measureReach) Boolean
    (s/optional-key :googleAnalytics) Boolean
    (s/optional-key :conversionTracking) Boolean
+   (s/optional-key :conversionEvent) Boolean
    (s/optional-key :objective) String
    (s/optional-key :budget) Long
    (s/optional-key :keywords) String})
