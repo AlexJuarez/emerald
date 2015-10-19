@@ -38,8 +38,10 @@
     (timbre/debug "looking for file at" mixpo-identity)
     (if
       (.exists mixpo-identity)
-      (read-from-identity-file (slurp mixpo-identity))
-      (timbre/info "could not find mixpo_server.identity at" path))))
+      (do
+        (timbre/info "loaded .identity at" path)
+        (read-from-identity-file (slurp mixpo-identity)))
+      (timbre/debug "could not find mixpo_server.identity at" path))))
 
 (defn- read-tomcat-file []
   (let [emerald-config (io/file tomcat-config-path)]
@@ -52,7 +54,7 @@
 (defonce ^{:doc "A map of enviroment variables including external configuration"}
   env
   (merge
+   environ/env
    (read-tomcat-file)
    (read-identity-file mixpo-identity-default-path)
-   (read-identity-file mixpo-identity-system-path)
-   environ/env))
+   (read-identity-file mixpo-identity-system-path)))
