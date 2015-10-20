@@ -52,6 +52,8 @@
    (s/optional-key :budget) Long
    (s/optional-key :expandAnchor) (apply enums/enum-type (enums/expand-anchors))
    (s/optional-key :expandDirection) (apply enums/enum-type (enums/expand-directions))
+   (s/optional-key :vastMediaFileType) (apply enums/enum-type (enums/vast-media-file-types))
+   (s/optional-key :vastMimeType) (apply enums/enum-type (enums/vast-mime-types))
    (s/optional-key :allowAnimations) Boolean
    (s/optional-key :skip321) Boolean
    (s/optional-key :audioOff) Boolean

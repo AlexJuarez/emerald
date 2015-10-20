@@ -15,6 +15,8 @@
    :windowTypes (enums/window-types)
    :rateTypes (enums/rate-types)
    :targetTypes (enums/target-types)
+   :vastMediaFileTypes (enums/vast-media-file-types)
+   :vastMimeTypes (enums/vast-mime-types)
    })
 
 (defroutes* enum-routes

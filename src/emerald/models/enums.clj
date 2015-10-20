@@ -19,6 +19,8 @@
 (defonce window-types-mem (atom [:new :modal :same]))
 (defonce target-types-mem (atom [:creative :daypart (keyword "device target") :rotate :sequence (keyword "survey control")]))
 (defonce rate-types-mem (atom [:CPC :CPM :CPV :CPCV (keyword "Fixed Fee") (keyword "Added Value")]))
+(defonce vast-mime-types-mem (atom [:video/x-mp4 :video/mp4]))
+(defonce vast-media-file-types-mem (atom [:universal :javascript :flash]))
 
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
@@ -50,6 +52,8 @@
    :mixpo.expand_type expand-types-mem
    :mixpo.play_mode_type play-modes-mem
    :mixpo.window_type window-types-mem
+   :mixpo.vast-mime-type vast-mime-types-mem
+   :mixpo.vast-media-file-type vast-media-file-types-mem
    :mixpo.rate_type rate-types-mem})
 
 (defn get-enum-type [v]
@@ -160,6 +164,28 @@
 
 (defn rate-types [] (into [] @rate-types-mem))
 
+(defn- vast-mime-types* []
+    (-> (exec-raw
+   ["select enum_range(NULL::mixpo.vast_mime_type) as vast_mime_types"]
+   :results)
+      first
+      :vast_mime_types
+      convert-keyword
+      ))
+
+(defn vast-mime-types [] (into [] @vast-mime-types-mem))
+
+(defn- vast-media-file-types* []
+    (-> (exec-raw
+   ["select enum_range(NULL::mixpo.vast_media_file_types) as vast_media_file_types"]
+   :results)
+      first
+      :vast_media_file_types
+      convert-keyword
+      ))
+
+(defn vast-media-file-types [] (into [] @vast-media-file-types))
+
 (defn reset-enum [mem new-value-fn]
   (try
     (let [new-value (new-value-fn)]
@@ -178,4 +204,6 @@
   (reset-enum play-modes-mem play-modes*)
   (reset-enum window-types-mem window-types*)
   (reset-enum target-types-mem target-types*)
+  (reset-enum vast-mime-types-mem vast-mime-types*)
+  (reset-enum vast-media-file-types-mem vast-media-file-types*)
   (reset-enum rate-types-mem rate-types*))
