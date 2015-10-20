@@ -52,8 +52,8 @@
    :mixpo.expand_type expand-types-mem
    :mixpo.play_mode_type play-modes-mem
    :mixpo.window_type window-types-mem
-   :mixpo.vast-mime-type vast-mime-types-mem
-   :mixpo.vast-media-file-type vast-media-file-types-mem
+   :mixpo.vast_mime_type vast-mime-types-mem
+   :mixpo.mixpo.vast_media_file_type vast-media-file-types-mem
    :mixpo.rate_type rate-types-mem})
 
 (defn get-enum-type [v]
@@ -165,7 +165,7 @@
 (defn rate-types [] (into [] @rate-types-mem))
 
 (defn- vast-mime-types* []
-    (-> (exec-raw
+  (-> (exec-raw
    ["select enum_range(NULL::mixpo.vast_mime_type) as vast_mime_types"]
    :results)
       first
@@ -176,7 +176,7 @@
 (defn vast-mime-types [] (into [] @vast-mime-types-mem))
 
 (defn- vast-media-file-types* []
-    (-> (exec-raw
+  (-> (exec-raw
    ["select enum_range(NULL::mixpo.vast_media_file_type) as vast_media_file_types"]
    :results)
       first

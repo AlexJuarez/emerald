@@ -73,6 +73,7 @@
   (let [message (.getMessage e)
         error-code (if (string? message) (.hashCode message) "unknown")]
     (timbre/error error-code e)
+    (timbre/trace e)
     (internal-server-error {:type "Server Error"
                             :error_code error-code
                             :message "Our highly trained operatives are working on it"})))

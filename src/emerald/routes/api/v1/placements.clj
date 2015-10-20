@@ -48,8 +48,8 @@
    (s/optional-key :bookedImpressions) Long
    (s/optional-key :rateType) (apply enums/enum-type (enums/rate-types))
    (s/optional-key :expandType) (apply enums/enum-type (enums/expand-types))
-   (s/optional-key :costPerRate) Long
-   (s/optional-key :budget) Long
+   (s/optional-key :costPerRate) Float
+   (s/optional-key :budget) Float
    (s/optional-key :expandAnchor) (apply enums/enum-type (enums/expand-anchors))
    (s/optional-key :expandDirection) (apply enums/enum-type (enums/expand-directions))
    (s/optional-key :vastMediaFileType) (apply enums/enum-type (enums/vast-media-file-types))
