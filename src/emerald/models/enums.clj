@@ -177,14 +177,14 @@
 
 (defn- vast-media-file-types* []
     (-> (exec-raw
-   ["select enum_range(NULL::mixpo.vast_media_file_types) as vast_media_file_types"]
+   ["select enum_range(NULL::mixpo.vast_media_file_type) as vast_media_file_types"]
    :results)
       first
       :vast_media_file_types
       convert-keyword
       ))
 
-(defn vast-media-file-types [] (into [] @vast-media-file-types))
+(defn vast-media-file-types [] (into [] @vast-media-file-types-mem))
 
 (defn reset-enum [mem new-value-fn]
   (try
