@@ -30,7 +30,7 @@
    :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
    :flightStart java.util.Date
    :flightEnd java.util.Date
-   :type (apply enums/enum-type (enums/ad-types))
+   (s/optional-key :type) (apply enums/enum-type (enums/ad-types))
    (s/optional-key :targetId) java.util.UUID
    (s/optional-key :playMode) (apply enums/enum-type (enums/play-modes))
    (s/optional-key :openLinks) (apply enums/enum-type (enums/window-types))
@@ -48,8 +48,8 @@
    (s/optional-key :bookedImpressions) Long
    (s/optional-key :rateType) (apply enums/enum-type (enums/rate-types))
    (s/optional-key :expandType) (apply enums/enum-type (enums/expand-types))
-   (s/optional-key :costPerRate) Float
-   (s/optional-key :budget) Float
+   (s/optional-key :costPerRate) Double
+   (s/optional-key :budget) Double
    (s/optional-key :expandAnchor) (apply enums/enum-type (enums/expand-anchors))
    (s/optional-key :expandDirection) (apply enums/enum-type (enums/expand-directions))
    (s/optional-key :vastMediaFileType) (apply enums/enum-type (enums/vast-media-file-types))
