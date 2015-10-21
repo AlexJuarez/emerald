@@ -39,8 +39,8 @@
    :name String
    :startDate java.util.Date
    :endDate java.util.Date
-   :repName String
-   :repEmail String
+   (s/optional-key :repName) String
+   (s/optional-key :repEmail) String
    (s/optional-key :pinned) Boolean
    (s/optional-key :description) String
    (s/optional-key :conversionDomain) String
