@@ -19,7 +19,9 @@
   (placement/get id))
 
 (defn create-placement [slug]
-  (placement/add! slug))
+  (let [results (placement/add! slug)
+        publisher (publisher/get (:publisherId results))]
+    (merge results {:publisher publisher})))
 
 (defn update-placement [id slug]
   (placement/update! id slug))
