@@ -78,7 +78,7 @@
 
 (defn- ad-types* []
   (-> (exec-raw
-   ["select enum_range(NULL::mixpo.creative_type) as ad_types"]
+   ["select enum_range(NULL::mixpo.ad_type) as ad_types"]
    :results)
       first
       :ad_types
