@@ -45,6 +45,7 @@
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
    (s/optional-key :autoExpandEveryHours) Long
+   (s/optional-key :autoCollapseAfterSeconds) Long
    (s/optional-key :takeoverLightboxOpacity) Long
    (s/optional-key :autoplayRetries) Long
    (s/optional-key :bookedImpressions) Long
