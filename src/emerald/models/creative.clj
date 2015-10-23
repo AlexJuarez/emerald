@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [update get])
   (:use
    [emerald.util.model]
-   [korma.core]
+   [korma.core :only (raw)]
+   [korma.db :only (transaction)]
    [emerald.db.core]))
 
 (defonce ^:private changeToArray #{:keywords})
@@ -27,19 +28,44 @@
           fields (merge creative m)]
       (unique? fields))))
 
-
 (defn prep [creative]
   (assoc creative
     :id (java.util.UUID/randomUUID)
-    :expandable (= true (not (nil? (:expandMode creative))))))
+    :expandable (= true (not (nil? (:expandType creative))))))
 
 (defn prep-for-update [creative]
   (into {} (map #(update-fields % changeToArray) creative)))
 
 (defn add! [creative]
-  (-> (insert* creatives)
-      (values (-> creative prep-for-update prep))
-      (exec)))
+  (letfn [(add-display-timeline-templates [creative]
+            (into creative 
+              { :videotimeline (raw
+                  (str "'<visualtimeline><slide duration=\"0\" guid=\"" 
+                       (:mediaId creative) 
+                       "\"/></visualtimeline>'::XML"))
+                :audiotimeline (raw "'<audiotimeline/>'::XML")
+                :texttimeline  (raw "'<texttimeline/>'::XML") }))
+
+          (add-media-info [creative]
+            (-> creative
+              (into 
+                (select media 
+                  (fields [:width :embed_width] [:height :embed_height] [:url_prefix :thumbnail_url_prefix])
+                  (where { :id (:mediaId creative) })))
+              (dissoc :mediaId)))]
+
+    (transaction
+        (let [creative-id
+          (-> (insert* creatives)
+              (values (-> creative 
+                        prep-for-update 
+                        prep 
+                        add-media-info
+                        add-display-timeline-templates))
+              (exec))]
+          (insert creative-media 
+            (values { :creative_id (:id creative-id) 
+                      :media_id (:mediaId creative) }))))))
 
 (defn update! [id creative]
   (update creatives

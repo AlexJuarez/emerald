@@ -37,7 +37,8 @@
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
    (s/optional-key :keywords) String
-   (s/optional-key :expandMode) (apply enums/enum-type (enums/expand-types))
+   (s/optional-key :mediaId) java.util.UUID
+   (s/optional-key :expandType) (apply enums/enum-type (enums/expand-types))
    (s/optional-key :expandAnchor) (apply enums/enum-type (enums/expand-anchors))
    (s/optional-key :expandDirection) (apply enums/enum-type (enums/expand-directions))
    (s/optional-key :expandedWidth) Long
