@@ -38,7 +38,6 @@
 
 (defn add-display! [creative]
   (letfn [(add-display-timeline-templates [creative]
-            (println creative)
             (into creative 
               { :videotimeline (raw
                   (str "'<visualtimeline><slide duration=\"0\" guid=\"" 
