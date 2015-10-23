@@ -36,8 +36,9 @@
 (defn prep-for-update [creative]
   (into {} (map #(update-fields % changeToArray) creative)))
 
-(defn add! [creative]
+(defn add-display! [creative]
   (letfn [(add-display-timeline-templates [creative]
+            (println creative)
             (into creative 
               { :videotimeline (raw
                   (str "'<visualtimeline><slide duration=\"0\" guid=\"" 
@@ -60,12 +61,18 @@
               (values (-> creative 
                         prep-for-update 
                         prep 
-                        add-media-info
-                        add-display-timeline-templates))
+                        add-display-timeline-templates
+                        add-media-info))
               (exec))]
           (insert creative-media 
             (values { :creative_id (:id creative-id) 
                       :media_id (:mediaId creative) }))))))
+
+(defn add! [creative]
+  (if
+    (= :Display (:value (:type creative)))
+      (add-display! creative)
+      (throw (Exception. "Complex ad passover to java needs to be implemented"))))
 
 (defn update! [id creative]
   (update creatives
