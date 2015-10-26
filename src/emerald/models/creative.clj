@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [update get])
   (:use
    [emerald.util.model]
-   [korma.core :only (raw)]
+   [korma.core]
    [korma.db :only (transaction)]
    [emerald.db.core]))
 
@@ -37,6 +37,8 @@
   (into {} (map #(update-fields % changeToArray) creative)))
 
 (defn add-display! [creative]
+  ; define 2 helper functions for populating media-item based and server-generated, to combine
+  ; with the user-input creatvie map
   (letfn [(add-display-timeline-templates [creative]
             (into creative 
               { :videotimeline (raw
@@ -71,7 +73,11 @@
   (if
     (= :Display (:value (:type creative)))
       (add-display! creative)
-      (throw (Exception. "Complex ad passover to java needs to be implemented"))))
+
+      ; default to temporary 'fake' creative insert, no real ad content
+      (-> (insert* creatives)
+        (values (-> creative prep-for-update prep))
+        (exec))))
 
 (defn update! [id creative]
   (update creatives
