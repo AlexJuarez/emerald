@@ -24,6 +24,9 @@
 (defn update-client [id slug]
   (client/update! id slug (session/get :user_id)))
 
+(defn remove-client [id]
+  (client/remove! id))
+
 (defn get-geo-profiles [id]
   (geo-profile/all-for-client id))
 
@@ -68,6 +71,9 @@
                   :body [client Edit-Client]
                   :summary "updates a client"
                   (ok (update-client id client)))
+            (DELETE* "/" []
+                  :summary "deletes a client and cascades to delete all child entities"
+                  (ok (remove-client id)))
             )
   (GET* "/clients" []
         :tags ["clients"]

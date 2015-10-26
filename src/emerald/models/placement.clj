@@ -1,5 +1,7 @@
 (ns emerald.models.placement
   (:refer-clojure :exclude [get update])
+  (:require
+   [emerald.util.enums :as enum-util])
   (:use
    [emerald.util.model]
    [korma.db :only (transaction)]
@@ -14,6 +16,7 @@
            (with publishers
                  (fields [:name :publisher.name] [:id :publisher.id]))
            (with targets
+                 (where {:type (enum-util/string->enum-sql "creative")})
                  (with creatives
                        (fields :id :name :thumbnail_url_prefix)))
            (where {:id id :deleted false}))

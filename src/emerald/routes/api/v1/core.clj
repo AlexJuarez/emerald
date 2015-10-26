@@ -16,18 +16,11 @@
    [emerald.middleware :as middleware]
    [emerald.util.exception :refer [request-validation-handler default-handler]]
    [compojure.api.sweet :refer :all]
-   [emerald.models.enums :refer [get-enum-type]]
+   [emerald.util.enums :refer [string->enum]]
    [emerald.db.protocols]
    [schema.core :as s]
    [schema.coerce :as sc]
    [ring.swagger.coerce :as rsc]))
-
-(defn string->enum [s]
-  (if (string? s)
-    (let [v (keyword s)
-          type (get-enum-type v)]
-      (emerald.db.protocols.KormaEnum. v type))
-    s))
 
 (defn keyword-enum-matcher [schema]
   (when (and (instance? emerald.models.enums.KormaEnumSchema schema)

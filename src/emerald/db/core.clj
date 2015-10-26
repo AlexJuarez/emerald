@@ -56,48 +56,59 @@
   (prepare prepare-fns)
   (transform camel-case)
   (belongs-to channels {:fk :channel_id})
+  (has-many divisions {:fk :client_id})
   (has-many client-pins {:fk :client_id})
   (has-many geo-profiles {:fk :client_id})
   (has-many publishers {:fk :client_id})
   (table :mixpo.clients :client))
 
+(defentity divisions
+  (prepare prepare-fns)
+  (transform camel-case)
+  (belongs-to clients {:fk :client_id})
+  (has-many accounts {:fk :division_id})
+  (has-many division-pins {:fk :division_id})
+  (table :mixpo.divisions :divisions))
+
 (defentity accounts
   (prepare prepare-fns)
   (transform camel-case)
+  (has-many campaigns {:fk :account_id})
   (has-many account-pins {:fk :account_id})
   (belongs-to divisions {:fk :division_id})
   (belongs-to industries {:fk :industry_id})
   (table :mixpo.accounts :account))
+
+(defentity campaigns
+  (prepare prepare-fns)
+  (transform camel-case)
+  (has-many campaign-pins {:fk :campaign_id})
+  (has-many placements {:fk :campaign_id})
+  (belongs-to accounts {:fk :account_id})
+  (table :mixpo.campaigns :campaigns))
+
+(defentity placements
+  (prepare prepare-fns)
+  (transform camel-case)
+  (belongs-to campaigns {:fk :campaign_id})
+  (belongs-to publishers {:fk :publisher_id})
+  (has-many targets {:fk :placement_id})
+  (table :mixpo.placements :placement))
+
+(defentity creatives
+  (prepare prepare-fns)
+  (transform camel-case)
+  (table :mixpo.creatives :creative))
 
 (defentity industries
   (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.industries :industries))
 
-(defentity campaigns
-  (prepare prepare-fns)
-  (transform camel-case)
-  (has-many campaign-pins {:fk :campaign_id})
-  (belongs-to accounts {:fk :account_id})
-  (table :mixpo.campaigns :campaigns))
-
-(defentity divisions
-  (prepare prepare-fns)
-  (transform camel-case)
-  (has-many division-pins {:fk :division_id})
-  (table :mixpo.divisions :divisions))
-
 (defentity channels
   (prepare prepare-fns)
   (transform camel-case)
   (table :mixpo.channels :channel))
-
-(defentity placements
-  (prepare prepare-fns)
-  (transform camel-case)
-  (belongs-to publishers {:fk :publisher_id})
-  (has-many targets {:fk :placement_id})
-  (table :mixpo.placements :placement))
 
 (defentity targets
   (belongs-to placements {:fk :placement_id})
@@ -113,11 +124,6 @@
   (transform camel-case)
   (belongs-to clients {:fk :client_id})
   (table :mixpo.publishers :publisher))
-
-(defentity creatives
-  (prepare prepare-fns)
-  (transform camel-case)
-  (table :mixpo.creatives :creative))
 
 (defentity geo-profiles
   (prepare prepare-fns)
