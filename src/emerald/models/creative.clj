@@ -1,6 +1,9 @@
 (ns emerald.models.creative
   (:refer-clojure :exclude [update get])
+  (:require
+   [emerald.util.enums :as enum-util])
   (:use
+   [emerald.models.helpers]
    [emerald.util.model]
    [korma.core]
    [emerald.db.core]))
@@ -46,6 +49,21 @@
           (set-fields (-> creative prep-for-update))
           (where {:id id}))
   (get id))
+
+(defn select-child-ids [placement-ids]
+ (if (empty? placement-ids)
+   []
+   (->> (select targets
+                (fields :creative.id)
+                (join creatives)
+                (where {:type (enum-util/string->enum-sql "creative")
+                        :placement_id [in placement-ids]}))
+        (map #(:id %))
+        (into []))))
+
+(defn children [placement-ids]
+  (let [creative-ids (select-child-ids placement-ids)]
+    {:creative_ids creative-ids}))
 
 (defn all
   ([]

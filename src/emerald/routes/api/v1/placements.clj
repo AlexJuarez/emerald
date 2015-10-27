@@ -3,6 +3,8 @@
    [emerald.util.core]
    [emerald.util.access])
   (:require
+   [emerald.models.transaction :as transaction]
+   [emerald.helpers.transaction :refer [children-by-placement]]
    [emerald.models.placement :as placement]
    [emerald.models.publisher :as publisher]
    [emerald.models.campaign :as campaign]
@@ -25,6 +27,13 @@
 
 (defn update-placement [id slug]
   (placement/update! id slug))
+
+(defn children [id]
+  (children-by-placement id))
+
+(defn remove-placement [id]
+  (let [children (children id)]
+    (transaction/remove! children)))
 
 (s/defschema Placement
   {:name String
@@ -67,6 +76,9 @@
    (s/optional-key :autoplayAudioOnRollover) Boolean
    (s/optional-key :hideClickToPlay) Boolean})
 
+(s/defschema Placement-Children {:placement_ids [java.util.UUID]
+                                 :creative_ids [java.util.UUID]})
+
 (s/defschema Edit-Placement (make-optional Placement))
 
 (defn wrap-placement-access [handler]
@@ -84,7 +96,15 @@
                   :body [placement Edit-Placement]
                   :summary "updates a placement"
                   (ok (update-placement id placement))
-            ))
+            )
+            (GET* "/children" []
+                  :return Placement-Children
+                  :summary "gets the child ids for a account"
+                  (ok (children id)))
+            (DELETE* "/" []
+                  :summary "deletes a account and cascades to delete all child entities"
+                  (ok (remove-placement id)))
+            )
   (GET* "/placements" []
         :tags ["placements"]
         :middlewares [wrap-employee-access]

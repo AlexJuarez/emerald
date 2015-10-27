@@ -8,7 +8,7 @@
             [emerald.models.enums :as enums]
             [emerald.db.core :as db]
             [compojure.route :as route]
-            [taoensso.timbre :as timbre]
+            [taoensso.timbre :as log]
             [taoensso.timbre.appenders.3rd-party.rotor :as rotor]
             [selmer.parser :as parser]
             [emerald.env :refer [env]]
@@ -30,20 +30,20 @@
    put any initialization code here"
   []
 
-  (timbre/merge-config!
+  (log/merge-config!
     {:level     (if (env :dev) :trace :info)
      :appenders {:rotor (rotor/rotor-appender
                           {:path (log-path)
                            :max-size (* 512 1024)
                            :backlog 10})}})
 
-  (timbre/info "logging at" (log-path))
+  (log/info "logging at" (log-path))
 
   (if (env :dev) (parser/cache-off!))
   (if (env :couchbase) (cache/init-connection))
   (enums/init)
 
-  (timbre/info (str
+  (log/info (str
                  "\n-=[emerald started successfully"
                  (when (env :dev) " using the development profile")
                  "]=-")))
@@ -52,9 +52,9 @@
   "destroy will be called when your application
    shuts down, put any clean up code here"
   []
-  (timbre/info "emerald is shutting down...")
+  (log/info "emerald is shutting down...")
   (cache/shutdown-connection)
-  (timbre/info "shutdown complete!"))
+  (log/info "shutdown complete!"))
 
 (def app-base
   (routes

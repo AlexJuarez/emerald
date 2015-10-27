@@ -3,6 +3,8 @@
    [emerald.util.core]
    [emerald.util.access])
   (:require
+   [emerald.models.transaction :as transaction]
+   [emerald.helpers.transaction :refer [children-by-campaign]]
    [emerald.util.session :as session]
    [emerald.models.campaign :as campaign]
    [emerald.models.account :as account]
@@ -34,6 +36,13 @@
   (->> (campaign/all-pins (session/get :user_id))
        (map #(first (vals %)))))
 
+(defn children [id]
+  (children-by-campaign id))
+
+(defn remove-campaign [id]
+  (let [children (children id)]
+    (transaction/remove! children)))
+
 (s/defschema Campaign
   {:accountId (s/both java.util.UUID (s/pred account/exists? 'account/exists?) (s/pred account-access? 'account-access?))
    :name String
@@ -52,6 +61,10 @@
    (s/optional-key :objective) String
    (s/optional-key :budget) Long
    (s/optional-key :keywords) String})
+
+(s/defschema Campaign-Children {:campaign_ids [java.util.UUID]
+                                :placement_ids [java.util.UUID]
+                                :creative_ids [java.util.UUID]})
 
 (s/defschema Edit-Campaign (make-optional Campaign))
 
@@ -79,7 +92,15 @@
             (PUT* "/" []
                   :body [campaign Edit-Campaign]
                   :summary "updates a campaign"
-                  (ok (update-campaign id campaign))))
+                  (ok (update-campaign id campaign)))
+            (GET* "/children" []
+                  :return Campaign-Children
+                  :summary "gets the child ids for a campaign"
+                  (ok (children id)))
+            (DELETE* "/" []
+                  :summary "deletes a campaign and cascades to delete all child entities"
+                  (ok (remove-campaign id)))
+            )
   (GET* "/campaigns" []
         :tags ["campaigns"]
         :middlewares [wrap-employee-access]

@@ -1,10 +1,9 @@
 (ns emerald.cache
   (:refer-clojure :exclude [set get namespace])
-  (:use [taoensso.timbre :only [trace debug info warn error fatal]])
   (:require [clojurewerkz.spyglass.client :as c]
             [emerald.env :refer [env]]
             [emerald.session :as mem]
-            [taoensso.timbre :as timbre]
+            [taoensso.timbre :as log]
             [ring.middleware.session.store :as session-store]))
 
 (def ^:private address (env :couchbase-server-uri))
@@ -16,17 +15,17 @@
     (try
       (c/text-connection address)
       (catch Exception e
-        (timbre/error "Error creating couchbase connection" e)
+        (log/error "Error creating couchbase connection" e)
         nil))))
 
 (defn init-connection []
   (when (nil? @ce)
-    (info "Starting couchbase connection")
+    (log/info "Starting couchbase connection")
     (reset! ce (create-connection address))))
 
 (defn shutdown-connection []
   (when-not (nil? @ce)
-    (info "Shutting down couchbase connection")
+    (log/info "Shutting down couchbase connection")
     (c/shutdown @ce)))
 
 (defn get-connection []

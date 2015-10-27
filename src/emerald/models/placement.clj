@@ -3,6 +3,7 @@
   (:require
    [emerald.util.enums :as enum-util])
   (:use
+   [emerald.models.helpers]
    [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
@@ -41,6 +42,10 @@
           (set-fields (prep-for-update placement))
           (where {:id id}))
   (get id))
+
+(defn children [campaign-ids]
+  (let [placement-ids (select-ids placements :campaign_id campaign-ids)]
+    {:placement_ids placement-ids}))
 
 (defn all
   ([]

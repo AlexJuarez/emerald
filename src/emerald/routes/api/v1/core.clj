@@ -13,6 +13,7 @@
    [emerald.routes.api.v1.adtags :refer [adtag-routes]]
    [emerald.routes.api.v1.oauth :refer [oauth-routes]]
    [emerald.routes.api.v1.upload :refer [upload-routes]]
+   [emerald.routes.api.v1.transactions :refer [transaction-routes]]
    [emerald.middleware :as middleware]
    [emerald.util.exception :refer [request-validation-handler default-handler]]
    [compojure.api.sweet :refer :all]
@@ -65,5 +66,6 @@
                adtag-routes
                industry-routes
                upload-routes
+               transaction-routes
                enum-routes
                channel-routes))

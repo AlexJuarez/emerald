@@ -3,7 +3,7 @@
    [ring.util.http-response :refer [bad-request internal-server-error]]
    [clojure.walk :refer [postwalk]]
    [clojure.core.match :refer [match]]
-   [taoensso.timbre :as timbre]
+   [taoensso.timbre :as log]
    [schema.utils :as su])
   (:import [schema.utils ValidationError NamedError]))
 
@@ -72,8 +72,8 @@
 (defn default-handler [^Exception e _ _]
   (let [message (.getMessage e)
         error-code (if (string? message) (.hashCode message) "unknown")]
-    (timbre/error error-code e)
-    (timbre/trace e)
+    (log/error error-code e)
+    (log/trace e)
     (internal-server-error {:type "Server Error"
                             :error_code error-code
                             :message "Our highly trained operatives are working on it"})))

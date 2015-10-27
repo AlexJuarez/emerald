@@ -5,10 +5,10 @@
             [schema.utils :as utils]
             [schema.macros :as macros]
             [ring.swagger.json-schema :as json-schema :include-macros true]
+            [taoensso.timbre :as log]
             [korma.db])
   (:use
-   [korma.core]
-   [taoensso.timbre :only [trace debug info warn error fatal]]))
+   [korma.core]))
 
 (defonce device-types-mem (atom [:desktop :tablet :mobile :multidevice]))
 (defonce ad-types-mem (atom [:Display :In-Banner :In-Stream (keyword "Rich Media")]))
@@ -191,12 +191,12 @@
   (try
     (let [new-value (new-value-fn)]
       (when-not (= (sort @mem) (sort new-value))
-        (warn "Enum value has changed" @mem (into [] new-value)))
+        (log/warn "Enum value has changed" @mem (into [] new-value)))
       (reset! mem new-value))
-    (catch Exception e (error e "Failed to update one of the enums"))))
+    (catch Exception e (log/error e "Failed to update one of the enums"))))
 
 (defn init []
-  (info "Populating enums locally")
+  (log/info "Populating enums locally")
   (reset-enum device-types-mem device-types*)
   (reset-enum ad-types-mem ad-types*)
   (reset-enum expand-anchors-mem expand-anchors*)
