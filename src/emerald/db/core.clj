@@ -25,6 +25,7 @@
   divisions
   accounts
   geo-profiles
+  media
   applications
   users
   client-pins
@@ -156,3 +157,13 @@
 (defentity adtags
   (transform camel-case)
   (table :mixpo.ad_tags))
+
+(defentity media
+  (transform camel-case)
+  (table :mixpo.media))
+
+(defentity creative-media
+  (transform camel-case)
+  (table :mixpo.creative_media)
+  (belongs-to media {:fk :media_id})
+  (belongs-to creatives {:fk :creative_id}))
