@@ -12,10 +12,10 @@
     (apply conj [] ids)
     (conj [] ids)))
 
-(defmacro children-by [id pk key childrenfn childbyfn]
+(defmacro children-by [id pk fk childrenfn childbyfn]
   `(let [ids# (create-ids-vec ~id)
          children# (~childrenfn ids#)]
-     (merge {(keyword ~pk) ids#} children# (~childbyfn (get children# ~key)))))
+     (merge {(keyword ~pk) ids#} children# (~childbyfn (get children# ~fk)))))
 
 (defn children-by-placement [placement-id]
   (let [placement-ids (create-ids-vec placement-id)]

@@ -36,6 +36,8 @@
    "you do not have access to this client"
    ['not ['publisher/exists? value]]
    "this publisher does not exist"
+   ['not ['long-or-null? value]]
+   "this value needs to be a number or null"
    :else
    (str x)))
 
