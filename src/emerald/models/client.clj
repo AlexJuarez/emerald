@@ -43,7 +43,11 @@
     first)))
 
 (defn exists? [id]
-  (not (empty? (get id))))
+  (->
+   (select clients
+           (where {:id id}))
+   empty?
+   not))
 
 (defn pin! [client-id user-id]
   (when (not (pinned? client-id user-id))
