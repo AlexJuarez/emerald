@@ -60,7 +60,7 @@
               (dissoc :mediaId)))]
 
     (transaction
-        (let [creative-id
+        (let [creative-inserted
           (-> (insert* creatives)
               (values (-> creative 
                         prep-for-update 
@@ -69,8 +69,9 @@
                         add-media-info))
               (exec))]
           (insert creative-media 
-            (values { :creative_id (:id creative-id) 
-                      :media_id (:mediaId creative) }))))))
+            (values { :creative_id (:id creative-inserted) 
+                      :media_id (:mediaId creative) }))
+          creative-inserted))))
 
 (defn add! [creative]
   (if
