@@ -2,7 +2,7 @@
   (:require [emerald.session :as session]
             [emerald.cache :as cache]
             [emerald.layout :refer [*servlet-context* error-page]]
-            [taoensso.timbre :as timbre]
+            [taoensso.timbre :as log]
             [emerald.env :refer [env]]
             [clojure.java.io :as io]
             [emerald.models.user :as user]
@@ -37,7 +37,7 @@
     (try
       (handler req)
       (catch Throwable t
-        (timbre/error t)
+        (log/error t)
         (internal-server-error
           (error-page {:code 500
                        :title "Something very bad has happened!"

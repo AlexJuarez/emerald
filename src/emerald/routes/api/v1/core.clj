@@ -13,21 +13,15 @@
    [emerald.routes.api.v1.adtags :refer [adtag-routes]]
    [emerald.routes.api.v1.oauth :refer [oauth-routes]]
    [emerald.routes.api.v1.upload :refer [upload-routes]]
+   [emerald.routes.api.v1.transactions :refer [transaction-routes]]
    [emerald.middleware :as middleware]
    [emerald.util.exception :refer [request-validation-handler default-handler]]
    [compojure.api.sweet :refer :all]
-   [emerald.models.enums :refer [get-enum-type]]
+   [emerald.util.enums :refer [string->enum]]
    [emerald.db.protocols]
    [schema.core :as s]
    [schema.coerce :as sc]
    [ring.swagger.coerce :as rsc]))
-
-(defn string->enum [s]
-  (if (string? s)
-    (let [v (keyword s)
-          type (get-enum-type v)]
-      (emerald.db.protocols.KormaEnum. v type))
-    s))
 
 (defn keyword-enum-matcher [schema]
   (when (and (instance? emerald.models.enums.KormaEnumSchema schema)
@@ -72,5 +66,6 @@
                adtag-routes
                industry-routes
                upload-routes
+               transaction-routes
                enum-routes
                channel-routes))

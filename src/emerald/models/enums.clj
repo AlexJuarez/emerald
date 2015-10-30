@@ -5,10 +5,10 @@
             [schema.utils :as utils]
             [schema.macros :as macros]
             [ring.swagger.json-schema :as json-schema :include-macros true]
+            [taoensso.timbre :as log]
             [korma.db])
   (:use
-   [korma.core]
-   [taoensso.timbre :only [trace debug info warn error fatal]]))
+   [korma.core]))
 
 (defonce device-types-mem (atom [:desktop :tablet :mobile :multidevice]))
 (defonce ad-types-mem (atom [:Display :In-Banner :In-Stream (keyword "Rich Media")]))
@@ -20,7 +20,7 @@
 (defonce target-types-mem (atom [:creative :daypart (keyword "device target") :rotate :sequence (keyword "survey control")]))
 (defonce rate-types-mem (atom [:CPC :CPM :CPV :CPCV (keyword "Fixed Fee") (keyword "Added Value")]))
 (defonce vast-mime-types-mem (atom [:video/x-mp4 :video/mp4]))
-(defonce vast-media-file-types-mem (atom [:universal :javascript :flash]))
+(defonce vast-media-file-types-mem (atom [:universal :flash :javascript]))
 
 (defrecord KormaEnumSchema [vs]
   ;;based on 0.4.4 version of schema
@@ -46,14 +46,15 @@
 
 (def enum-types
   {:mixpo.device_type device-types-mem
-   :mixpo.creative_type ad-types-mem
+   :mixpo.ad_type ad-types-mem
    :mixpo.expand_anchor expand-anchors-mem
    :mixpo.expand_direction expand-directions-mem
    :mixpo.expand_type expand-types-mem
    :mixpo.play_mode_type play-modes-mem
    :mixpo.window_type window-types-mem
+   :mixpo.target_type target-types-mem
    :mixpo.vast_mime_type vast-mime-types-mem
-   :mixpo.mixpo.vast_media_file_type vast-media-file-types-mem
+   :mixpo.vast_media_file_type vast-media-file-types-mem
    :mixpo.rate_type rate-types-mem})
 
 (defn get-enum-type [v]
@@ -189,13 +190,13 @@
 (defn reset-enum [mem new-value-fn]
   (try
     (let [new-value (new-value-fn)]
-      (when-not (= @mem new-value)
-        (warn "Enum value has changed" @mem (into [] new-value)))
+      (when-not (= (sort @mem) (sort new-value))
+        (log/warn "Enum value has changed" @mem (into [] new-value)))
       (reset! mem new-value))
-    (catch Exception e (error e "Failed to update one of the enums"))))
+    (catch Exception e (log/error e "Failed to update one of the enums"))))
 
 (defn init []
-  (info "Populating enums locally")
+  (log/info "Populating enums locally")
   (reset-enum device-types-mem device-types*)
   (reset-enum ad-types-mem ad-types*)
   (reset-enum expand-anchors-mem expand-anchors*)

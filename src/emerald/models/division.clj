@@ -1,6 +1,7 @@
 (ns emerald.models.division
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.models.helpers]
    [korma.db :only (transaction)]
    [korma.core]
    [emerald.db.core]))
@@ -63,6 +64,10 @@
    (if (:pinned division) (pin! id user-id))
    (if (= false (:pinned division)) (unpin! id user-id)))
   (get id user-id))
+
+(defn children [client-ids]
+  (let [division-ids (select-ids divisions :client_id client-ids)]
+    {:division_ids division-ids}))
 
 (defn all
   ([]

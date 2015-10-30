@@ -5,6 +5,8 @@
   (:require
    [emerald.util.session :as session]
    [emerald.models.client :as client]
+   [emerald.models.transaction :as transaction]
+   [emerald.helpers.transaction :refer [children-by-client]]
    [emerald.models.channel :as channel]
    [emerald.models.geo-profile :as geo-profile]
    [emerald.models.publisher :as publisher]
@@ -23,6 +25,13 @@
 
 (defn update-client [id slug]
   (client/update! id slug (session/get :user_id)))
+
+(defn children [id]
+  (children-by-client id))
+
+(defn remove-client [id]
+  (let [children (children id)]
+    (transaction/remove! children)))
 
 (defn get-geo-profiles [id]
   (geo-profile/all-for-client id))
@@ -43,6 +52,13 @@
 
 (s/defschema Edit-Client (make-optional Client))
 
+(s/defschema Client-Children {:client_ids [java.util.UUID]
+                              :division_ids [java.util.UUID]
+                              :account_ids [java.util.UUID]
+                              :campaign_ids [java.util.UUID]
+                              :placement_ids [java.util.UUID]
+                              :creative_ids [java.util.UUID]})
+
 (defn wrap-client-access [handler]
   (wrap-id-access handler client-access?))
 
@@ -61,6 +77,10 @@
             (GET* "/geoProfiles" []
                   :summary "gets the available geo-profiles for a client"
                   (ok (get-geo-profiles id)))
+            (GET* "/children" []
+                  :return Client-Children
+                  :summary "gets the child ids for a client"
+                  (ok (children id)))
             (GET* "/publishers" []
                   :summary "gets the available publishers for a client"
                   (ok (get-publishers id)))
@@ -68,6 +88,9 @@
                   :body [client Edit-Client]
                   :summary "updates a client"
                   (ok (update-client id client)))
+            (DELETE* "/" []
+                  :summary "deletes a client and cascades to delete all child entities"
+                  (ok (remove-client id)))
             )
   (GET* "/clients" []
         :tags ["clients"]

@@ -1,6 +1,9 @@
 (ns emerald.models.client
   (:refer-clojure :exclude [get update])
+  (:require
+   [emerald.util.enums :as enum-util])
   (:use
+   [emerald.models.helpers]
    [korma.db :only (transaction)]
    [korma.core]
    [emerald.db.core]))
@@ -26,18 +29,25 @@
 
 (defn get
   ([id user-id]
-    (->
-     (select clients
-             (with channels
-                   (fields [:name :channel.name] [:type :channel.type]))
-             (where {:id id}))
-     first
-     (assoc :pinned (pinned? id user-id))))
+   (->
+    (select clients
+            (with channels
+                  (fields [:name :channel.name] [:type :channel.type]))
+            (where {:id id}))
+    first
+    (assoc :pinned (pinned? id user-id))))
   ([id]
-   (get id nil)))
+   (->
+    (select clients
+            (where {:id id :deleted false}))
+    first)))
 
 (defn exists? [id]
-  (not (empty? (get id))))
+  (->
+   (select clients
+           (where {:id id}))
+   empty?
+   not))
 
 (defn pin! [client-id user-id]
   (when (not (pinned? client-id user-id))

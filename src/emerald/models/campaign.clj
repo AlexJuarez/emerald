@@ -1,6 +1,7 @@
 (ns emerald.models.campaign
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.models.helpers]
    [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
@@ -76,6 +77,10 @@
    (if (:pinned campaign) (pin! id user-id))
    (if (= false (:pinned campaign)) (unpin! id user-id)))
   (get id user-id))
+
+(defn children [account-ids]
+  (let [campaign-ids (select-ids campaigns :account_id account-ids)]
+    {:campaign_ids campaign-ids}))
 
 (defn all
   ([]

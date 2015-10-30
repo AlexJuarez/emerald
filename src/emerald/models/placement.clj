@@ -1,6 +1,9 @@
 (ns emerald.models.placement
   (:refer-clojure :exclude [get update])
+  (:require
+   [emerald.util.enums :as enum-util])
   (:use
+   [emerald.models.helpers]
    [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
@@ -14,6 +17,7 @@
            (with publishers
                  (fields [:name :publisher.name] [:id :publisher.id]))
            (with targets
+                 (where {:type (enum-util/string->enum-sql "creative")})
                  (with creatives
                        (fields :id :name :thumbnail_url_prefix)))
            (where {:id id :deleted false}))
@@ -38,6 +42,10 @@
           (set-fields (prep-for-update placement))
           (where {:id id}))
   (get id))
+
+(defn children [campaign-ids]
+  (let [placement-ids (select-ids placements :campaign_id campaign-ids)]
+    {:placement_ids placement-ids}))
 
 (defn all
   ([]

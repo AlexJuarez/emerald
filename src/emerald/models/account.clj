@@ -1,6 +1,7 @@
 (ns emerald.models.account
   (:refer-clojure :exclude [update get])
   (:use
+   [emerald.models.helpers]
    [emerald.util.model]
    [korma.db :only (transaction)]
    [korma.core]
@@ -76,6 +77,10 @@
    (if (= false (:pinned account)) (unpin! id user-id))
    )
   (get id user-id))
+
+(defn children [division-ids]
+  (let [account-ids (select-ids accounts :division_id division-ids)]
+    {:account_ids account-ids}))
 
 (defn all
   ([]

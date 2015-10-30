@@ -2,7 +2,7 @@
   (:require [clojure.string :as strlib]
             [environ.core :as environ]
             [clojure.java.io :as io]
-            [taoensso.timbre :as timbre]))
+            [taoensso.timbre :as log]))
 
 ;;user.home is supposed to be equal to ~ for the path, change if needed
 (defonce tomcat-config-path (str (System/getProperty "user.home") "/tomcat/conf/emerald.config"))
@@ -19,7 +19,7 @@
   (let [s (keywordize (name k))]
     (if-not
       (= k s)
-      (timbre/debug "enviroment key" k "has been corrected to" s))
+      (log/debug "enviroment key" k "has been corrected to" s))
     s))
 
 (defn- convert-line [line delimiter]
@@ -35,19 +35,19 @@
 
 (defn- read-identity-file [path]
   (let [mixpo-identity (io/file path)]
-    (timbre/debug "looking for file at" mixpo-identity)
+    (log/debug "looking for file at" mixpo-identity)
     (if
       (.exists mixpo-identity)
       (do
-        (timbre/info "loaded .identity at" path)
+        (log/info "loaded .identity at" path)
         (read-from-identity-file (slurp mixpo-identity)))
-      (timbre/debug "could not find mixpo_server.identity at" path))))
+      (log/debug "could not find mixpo_server.identity at" path))))
 
 (defn- read-tomcat-file []
   (let [emerald-config (io/file tomcat-config-path)]
-    (timbre/debug "looking for file at" tomcat-config-path)
+    (log/debug "looking for file at" tomcat-config-path)
     (if (.exists emerald-config)
-      (do (timbre/info "loaded tomcat config file for emerald")
+      (do (log/info "loaded tomcat config file for emerald")
       (into {} (for [[k v] (read-string (slurp emerald-config))]
                  [(sanitize k) v]))))))
 

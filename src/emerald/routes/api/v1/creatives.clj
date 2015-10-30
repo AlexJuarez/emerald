@@ -27,6 +27,9 @@
       (bad-request {:errors {:name "provided name is the same as another name in this campaign"}})
       (ok (creative/update! id slug)))))
 
+(defn long-or-null? [value]
+  (or (instance? Long value) (nil? value)))
+
 (s/defschema Creative
   {:name String
    :campaignId (s/both java.util.UUID (s/pred campaign/exists? 'campaign/exists?) (s/pred campaign-access? 'campaign-access?))
@@ -37,11 +40,12 @@
    (s/optional-key :embedHeight) Long
    (s/optional-key :embedWidth) Long
    (s/optional-key :keywords) String
-   (s/optional-key :expandMode) (apply enums/enum-type (enums/expand-types))
+   (s/optional-key :mediaId) java.util.UUID
+   (s/optional-key :expandType) (apply enums/enum-type (enums/expand-types))
    (s/optional-key :expandAnchor) (apply enums/enum-type (enums/expand-anchors))
    (s/optional-key :expandDirection) (apply enums/enum-type (enums/expand-directions))
-   (s/optional-key :expandedWidth) Long
-   (s/optional-key :expandedHeight) Long})
+   (s/optional-key :expandedWidth) (s/pred long-or-null? 'long-or-null?)
+   (s/optional-key :expandedHeight) (s/pred long-or-null? 'long-or-null?)})
 
 (s/defschema Edit-Creative (make-optional Creative))
 (s/defschema Create-Creative (s/both Creative (s/pred creative/unique? 'creative/unique?)))

@@ -2,7 +2,7 @@
   (:require [emerald.util.session :as sess]
             [buddy.auth.middleware :refer [wrap-authentication]]
             [buddy.auth.accessrules :refer [restrict]]
-            [taoensso.timbre :as timbre]
+            [taoensso.timbre :as log]
             [cheshire.core :as json]
             [emerald.models.division :as division]
             [emerald.models.campaign :as campaign]
@@ -21,7 +21,7 @@
      (let [id# (try
                  (java.util.UUID/fromString (get (:params request#) :id))
                  (catch Exception e#
-                   (when (not (= (type e#) java.lang.NullPointerException)) (timbre/error "id cast error" e#))
+                   (when (not (= (type e#) java.lang.NullPointerException)) (log/error "id cast error" e#))
                    ""))
                  ]
        (~f id#))))

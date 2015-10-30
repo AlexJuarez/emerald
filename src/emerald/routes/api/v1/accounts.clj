@@ -3,6 +3,8 @@
    [emerald.util.core]
    [emerald.util.access])
   (:require
+   [emerald.models.transaction :as transaction]
+   [emerald.helpers.transaction :refer [children-by-account]]
    [emerald.util.session :as session]
    [emerald.models.account :as account]
    [emerald.models.industry :as industry]
@@ -27,6 +29,13 @@
   (->> (account/all-pins (session/get :user_id))
        (map #(first (vals %)))))
 
+(defn children [id]
+  (children-by-account id))
+
+(defn remove-account [id]
+  (let [children (children id)]
+    (transaction/remove! children)))
+
 (s/defschema Account
   {:industryId (s/both java.util.UUID (s/pred industry/exists? 'industry/exists?))
    :divisionId (s/both java.util.UUID (s/pred division/exists? 'division/exists?) (s/pred division-access? 'division-access?))
@@ -36,6 +45,11 @@
    (s/optional-key :deleted) Boolean
    (s/optional-key :keywords) String
    (s/optional-key :clickthroughUrl) String})
+
+(s/defschema Account-Children {:account_ids [java.util.UUID]
+                               :campaign_ids [java.util.UUID]
+                               :placement_ids [java.util.UUID]
+                               :creative_ids [java.util.UUID]})
 
 (s/defschema Edit-Account (make-optional Account))
 
@@ -58,6 +72,13 @@
                   :body [account Edit-Account]
                   :summary "updates a account"
                   (ok (update-account id account)))
+            (GET* "/children" []
+                  :return Account-Children
+                  :summary "gets the child ids for a account"
+                  (ok (children id)))
+            (DELETE* "/" []
+                  :summary "deletes a account and cascades to delete all child entities"
+                  (ok (remove-account id)))
             )
   (GET* "/accounts" []
         :tags ["accounts"]
