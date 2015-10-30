@@ -11,6 +11,7 @@
 
 (declare
   adtags
+  adtag-templates
   placements
   publishers
   creatives
@@ -147,6 +148,11 @@
   (transform camel-case)
   (table :mixpo.user_campaign_pins))
 
+(defentity adtag-templates
+   (transform camel-case)
+   (table :mixpo.ad_tag_templates))
+
 (defentity adtags
   (transform camel-case)
-  (table :mixpo.ad_tags))
+  (belongs-to adtag-templates {:fk :ad_tags.ad_tag_template_id})
+  (table :mixpo.ad_tags :ad_tags))

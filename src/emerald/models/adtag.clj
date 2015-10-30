@@ -6,4 +6,6 @@
    [emerald.db.core]))
 
 (defn all []
-  (select adtags))
+  (select adtags
+          (fields [:ad_tags.name :ad_tag_templates.template])
+          (join adtag-templates)))
